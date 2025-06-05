@@ -1,11 +1,21 @@
 // チャックルン ゲームサイトのスクリプト
 document.addEventListener('DOMContentLoaded', function() {
+    // フローティングキャラクターのランダムアニメーション
+    const characters = document.querySelectorAll('.floating-characters img');
+    characters.forEach(character => {
+        // ランダムな浮遊効果を追加
+        const randomDelay = Math.random() * 2;
+        const randomDuration = 5 + Math.random() * 3;
+        character.style.animationDelay = `${randomDelay}s`;
+        character.style.animationDuration = `${randomDuration}s`;
+    });
+    
     // ナビゲーションのスクロール制御
     const navLinks = document.querySelectorAll('.game-nav a, .download-btn');
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            if (this.getAttribute('href').startsWith('#')) {
+            if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 const targetSection = document.querySelector(targetId);

@@ -122,8 +122,9 @@ a {
 .hero-content {
     flex: 1;
     color: white;
-    z-index: 2;
-    max-width: 600px;
+    z-index: 5; /* キャラクターより前面に配置 */
+    max-width: 500px;
+    position: relative;
 }
 
 .hero-logo {
@@ -231,6 +232,9 @@ a {
     position: relative;
     height: 100%;
     z-index: 1;
+    display: flex;
+    justify-content: center;
+    margin-left: 20px; /* コンテンツとの間隔を調整 */
 }
 
 .main-visual {
@@ -240,15 +244,44 @@ a {
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
 }
 
+.floating-characters {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none; /* クリックイベントを下層に通過させる */
+}
+
 .character-visual {
     position: absolute;
-    bottom: -50px;
-    right: -50px;
-    width: 300px;
+    width: 200px;
     height: auto;
-    transform: rotate(10deg);
     filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.3));
+}
+
+.character-1 {
+    bottom: -20px;
+    right: 50%;
     animation: float 6s ease-in-out infinite;
+    z-index: 3;
+}
+
+.character-2 {
+    bottom: 30px;
+    right: 25%;
+    animation: float 7s ease-in-out infinite;
+    animation-delay: 0.5s;
+    z-index: 2;
+}
+
+.character-3 {
+    bottom: -10px;
+    right: 0;
+    animation: float 5s ease-in-out infinite;
+    animation-delay: 1s;
+    z-index: 1;
 }
 
 @keyframes float {
@@ -454,6 +487,46 @@ section {
 .gameplay-image img {
     width: 100%;
     border-radius: 10px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* トレーラーセクション */
+.trailer-section {
+    background-color: var(--dark-color);
+    padding: 80px 0;
+    color: white;
+}
+
+.trailer-section .section-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9のアスペクト比 */
+    height: 0;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* 縦スクリーンショット */
+.vertical-screenshot {
+    max-height: 500px;
+    width: auto;
+    margin: 0 auto;
+    display: block;
+    border-radius: 15px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -723,6 +796,7 @@ section {
     .hero-content {
         text-align: center;
         margin-bottom: 50px;
+        max-width: 100%;
     }
     
     .hero-tagline {
@@ -737,8 +811,25 @@ section {
         flex-direction: column;
     }
     
-    .character-visual {
-        display: none;
+    .floating-characters {
+        position: relative;
+        height: 200px;
+        margin-top: 30px;
+    }
+    
+    .character-1 {
+        right: 60%;
+        bottom: 0;
+    }
+    
+    .character-2 {
+        right: 30%;
+        bottom: 20px;
+    }
+    
+    .character-3 {
+        right: 0%;
+        bottom: 0;
     }
 }
 
@@ -789,5 +880,17 @@ section {
     
     .feature-card {
         padding: 20px;
+    }
+    
+    .character-visual {
+        width: 120px; /* モバイルでのキャラクターサイズを小さく */
+    }
+    
+    .floating-characters {
+        height: 150px;
+    }
+    
+    .video-container {
+        padding-bottom: 65%; /* モバイルでの動画アスペクト比調整 */
     }
 }
