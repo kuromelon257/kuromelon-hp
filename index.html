@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>くろメロン | ポートフォリオ</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script defer src="assets/js/main.js"></script>
 </head>
 <body>
     <header class="site-header">
         <div class="container">
-            <h1 class="logo">Kuromelon Portfolio</h1>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#works">Works</a></li>
-                    <li><a href="chackrun/">Chackrun</a></li>
-                </ul>
-            </nav>
+            <div class="header-content">
+                <h1 class="logo">Kuromelon<span class="accent">.</span></h1>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#works">Works</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="chackrun/" class="nav-special">Chackrun</a></li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </header>
 
@@ -30,29 +38,181 @@
 
     <section id="about" class="about">
         <div class="container">
-            <h2>About Me</h2>
-            <p>SwiftとSpriteKitでゲームを作り、日々学びを共有しています。</p>
+            <div class="section-header">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">自己紹介</p>
+            </div>
+            <div class="about-content">
+                <p>SwiftとSpriteKitでゲームを作り、日々学びを共有しています。iOSアプリ開発とゲーム制作を中心に活動し、使いやすく美しいUIの設計と実装に情熱を注いでいます。</p>
+            </div>
         </div>
     </section>
 
     <section id="works" class="works">
         <div class="container">
-            <h2>Works</h2>
-            <div class="work-grid">
-                <div class="work-item">
-                    <img src="assets/images/chackrun_thumb.jpg" alt="Chackrun thumbnail">
-                    <h3>1分バトル！！チャックルン</h3>
-                    <p>オンライン2D対戦アクションゲーム</p>
-                    <a href="chackrun/" class="btn-secondary">詳細を見る</a>
+            <div class="section-header">
+                <h2 class="section-title">Featured Works</h2>
+                <p class="section-subtitle">主な制作実績</p>
+            </div>
+
+            <div class="featured-grid">
+                <!-- 1つ目の作品 -->
+                <div class="featured-item">
+                    <a href="chackrun/" class="work-link">
+                        <div class="work-image">
+                            <img src="assets/images/chackrun_thumb.jpg" alt="Chackrun thumbnail">
+                            <div class="work-overlay">
+                                <div class="view-project">詳細を見る</div>
+                            </div>
+                        </div>
+                        <div class="work-content">
+                            <h3>1分バトル！！チャックルン</h3>
+                            <p>オンライン2D対戦アクションゲーム</p>
+                            <div class="work-tags">
+                                <span class="tag">#Swift</span>
+                                <span class="tag">#SpriteKit</span>
+                                <span class="tag">#GameCenter</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-                <!-- Add more work items here -->
+                
+                <!-- 2つ目の作品 (サンプル) -->
+                <div class="featured-item">
+                    <a href="#" class="work-link">
+                        <div class="work-image">
+                            <img src="assets/images/chackrun_thumb.jpg" alt="Project 2 thumbnail">
+                            <div class="work-overlay">
+                                <div class="view-project">詳細を見る</div>
+                            </div>
+                        </div>
+                        <div class="work-content">
+                            <h3>プロジェクト2</h3>
+                            <p>iOS向けユーティリティアプリ</p>
+                            <div class="work-tags">
+                                <span class="tag">#Swift</span>
+                                <span class="tag">#UIKit</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 3つ目の作品 (サンプル) -->
+                <div class="featured-item">
+                    <a href="#" class="work-link">
+                        <div class="work-image">
+                            <img src="assets/images/chackrun_thumb.jpg" alt="Project 3 thumbnail">
+                            <div class="work-overlay">
+                                <div class="view-project">詳細を見る</div>
+                            </div>
+                        </div>
+                        <div class="work-content">
+                            <h3>プロジェクト3</h3>
+                            <p>ARを活用した教育アプリ</p>
+                            <div class="work-tags">
+                                <span class="tag">#Swift</span>
+                                <span class="tag">#ARKit</span>
+                                <span class="tag">#教育</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 4つ目の作品 (サンプル) -->
+                <div class="featured-item">
+                    <a href="#" class="work-link">
+                        <div class="work-image">
+                            <img src="assets/images/chackrun_thumb.jpg" alt="Project 4 thumbnail">
+                            <div class="work-overlay">
+                                <div class="view-project">詳細を見る</div>
+                            </div>
+                        </div>
+                        <div class="work-content">
+                            <h3>プロジェクト4</h3>
+                            <p>健康管理アプリ</p>
+                            <div class="work-tags">
+                                <span class="tag">#Swift</span>
+                                <span class="tag">#HealthKit</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- 5つ目の作品 (サンプル) -->
+                <div class="featured-item">
+                    <a href="#" class="work-link">
+                        <div class="work-image">
+                            <img src="assets/images/chackrun_thumb.jpg" alt="Project 5 thumbnail">
+                            <div class="work-overlay">
+                                <div class="view-project">詳細を見る</div>
+                            </div>
+                        </div>
+                        <div class="work-content">
+                            <h3>プロジェクト5</h3>
+                            <p>生産性向上アプリ</p>
+                            <div class="work-tags">
+                                <span class="tag">#Swift</span>
+                                <span class="tag">#CloudKit</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="other-works">
+                <h3 class="other-works-title">その他の制作物</h3>
+                <div class="other-works-list">
+                    <div class="other-work-item">
+                        <a href="#">
+                            <h4>小規模プロジェクト1</h4>
+                            <p><span class="tag">#Swift</span> <span class="tag">#ミニゲーム</span></p>
+                        </a>
+                    </div>
+                    <div class="other-work-item">
+                        <a href="#">
+                            <h4>小規模プロジェクト2</h4>
+                            <p><span class="tag">#Unity</span> <span class="tag">#WebGL</span></p>
+                        </a>
+                    </div>
+                    <div class="other-work-item">
+                        <a href="#">
+                            <h4>小規模プロジェクト3</h4>
+                            <p><span class="tag">#Swift</span> <span class="tag">#WatchKit</span></p>
+                        </a>
+                    </div>
+                    <div class="other-work-item">
+                        <a href="#">
+                            <h4>小規模プロジェクト4</h4>
+                            <p><span class="tag">#SwiftUI</span> <span class="tag">#Widget</span></p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Contact</h2>
+                <p class="section-subtitle">お問い合わせ</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>制作依頼・お仕事のご相談など、お気軽にご連絡ください。</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="far fa-envelope"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2025 Kuromelon. All rights reserved.</p>
+            <p>&copy; 2025 Kuromelon257. All rights reserved.</p>
         </div>
     </footer>
 </body>
