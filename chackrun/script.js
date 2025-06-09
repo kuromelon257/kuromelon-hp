@@ -91,8 +91,72 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 画像の遅延読み込み
+// スクロールアニメーション
+function handleScrollAnimation() {
+    const elements = document.querySelectorAll('.scroll-reveal');
+    
+    elements.forEach(element => {
+        // 要素が画面内に入ったかチェック
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150; // 要素が見える位置を調整
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('visible');
+        } else {
+            // スクロール上に戻ったときにアニメーションをリセット（オプション）
+            // element.classList.remove('visible');
+        }
+    });
+}
+
+// 初期化関数：ターゲット要素にクラスを追加
 document.addEventListener('DOMContentLoaded', function() {
+    // スクロールアニメーション用の要素指定
+    const storyImage = document.querySelector('.story-section .story-image');
+    const storyText = document.querySelector('.story-section .story-text');
+    const gameplayText = document.querySelector('.gameplay-section .gameplay-text');
+    const gameplayImage = document.querySelector('.gameplay-section .gameplay-image');
+    const featureCards = document.querySelectorAll('.feature-card');
+    const characterCards = document.querySelectorAll('.character-card');
+    
+    // スクロールアニメーション用のクラス追加
+    if (storyImage) {
+        storyImage.classList.add('scroll-reveal', 'from-left');
+    }
+    
+    if (storyText) {
+        storyText.classList.add('scroll-reveal', 'from-right');
+    }
+    
+    if (gameplayText) {
+        gameplayText.classList.add('scroll-reveal', 'from-left');
+    }
+    
+    if (gameplayImage) {
+        gameplayImage.classList.add('scroll-reveal', 'from-right');
+    }
+    
+    // 特徴カードに順番に表示されるエフェクトを追加
+    featureCards.forEach((card, index) => {
+        card.classList.add('scroll-reveal', 'from-bottom');
+        // 遅延を付ける
+        card.style.transitionDelay = `${index * 0.1}s`;
+    });
+    
+    // キャラクターカードに順番に表示されるエフェクトを追加
+    characterCards.forEach((card, index) => {
+        card.classList.add('scroll-reveal', 'from-bottom');
+        // 遅延を付ける
+        card.style.transitionDelay = `${index * 0.1}s`;
+    });
+    
+    // スクロールイベントリスナー追加
+    window.addEventListener('scroll', handleScrollAnimation);
+    
+    // ページロード時にも一度実行
+    handleScrollAnimation();
+    
+    // 画像の遅延読み込み
     const lazyImages = document.querySelectorAll('img[data-src]');
     
     if ('IntersectionObserver' in window) {

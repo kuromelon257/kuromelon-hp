@@ -1,11 +1,11 @@
-/* チャックルン ゲームランディングページのスタイル */
+/* チャックルン ゲームランディングページのスタイル - 森をイメージした配色 */
 :root {
-    --primary-color: #ff6b6b;
-    --secondary-color: #4ecdc4;
-    --accent-color: #ffd166;
-    --dark-color: #2a2a2a;
-    --light-color: #f8f9fa;
-    --gradient-bg: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%);
+    --primary-color: #2e8b57; /* シーグリーン */
+    --secondary-color: #3a7ca5; /* ブルー */
+    --accent-color: #8bc34a; /* ライム */
+    --dark-color: #1b5e20; /* ダークグリーン */
+    --light-color: #f1f8e9; /* 薄い緑がかった白 */
+    --gradient-bg: linear-gradient(135deg, #2e8b57 0%, #3a7ca5 100%);
 }
 
 * {
@@ -77,6 +77,11 @@ a {
     font-weight: 600;
     position: relative;
     padding: 5px 0;
+    transition: color 0.3s;
+}
+
+.game-nav a:hover {
+    color: var(--primary-color);
 }
 
 .game-nav a:not(.nav-download)::after {
@@ -97,13 +102,14 @@ a {
 .nav-download {
     background-color: var(--primary-color);
     color: white;
-    padding: 8px 15px;
+    padding: 10px 20px;
     border-radius: 20px;
     transition: transform 0.3s, background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(27, 94, 32, 0.2); /* 森の影 */
 }
 
 .nav-download:hover {
-    background-color: #ff5252;
+    background-color: #1b5e20; /* より濃い森のグリーン */
     transform: translateY(-2px);
 }
 
@@ -178,8 +184,9 @@ a {
     font-size: 1.2rem;
     font-weight: 700;
     transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(27, 94, 32, 0.15);
     margin-bottom: 30px;
+    border: 2px solid rgba(139, 195, 74, 0.3); /* 薄い緑の境界線 */
 }
 
 .btn-inner {
@@ -334,6 +341,14 @@ section {
 
 .story-image {
     flex: 1;
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease;
+}
+
+.story-image.fade-in {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .story-image img {
@@ -369,7 +384,7 @@ section {
     position: absolute;
     width: 300px;
     height: 300px;
-    background-color: rgba(255, 107, 107, 0.1);
+    background-color: rgba(46, 139, 87, 0.15); /* 森のグリーン */
     border-radius: 50%;
     top: -150px;
     left: -150px;
@@ -381,7 +396,7 @@ section {
     position: absolute;
     width: 200px;
     height: 200px;
-    background-color: rgba(78, 205, 196, 0.1);
+    background-color: rgba(58, 124, 165, 0.15); /* 森の湖のブルー */
     border-radius: 50%;
     bottom: -100px;
     right: -100px;
@@ -401,7 +416,14 @@ section {
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s, opacity 0.8s ease;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.feature-card.fade-in {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .feature-card:hover {
@@ -449,6 +471,14 @@ section {
 
 .gameplay-text {
     flex: 1;
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease;
+}
+
+.gameplay-text.fade-in {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .gameplay-title {
@@ -482,10 +512,22 @@ section {
 
 .gameplay-image {
     flex: 1;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameplay-image.fade-in {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .gameplay-image img {
-    width: 100%;
+    max-width: 100%;
+    height: auto;
     border-radius: 10px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
@@ -528,6 +570,7 @@ section {
     display: block;
     border-radius: 15px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    object-fit: contain; /* アスペクト比を保持 */
 }
 
 /* キャラクターセクション */
@@ -784,6 +827,31 @@ section {
     text-align: center;
     opacity: 0.6;
     font-size: 0.9rem;
+}
+
+/* スクロールアニメーション用のクラス */
+.scroll-reveal {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+}
+
+.scroll-reveal.from-left {
+    transform: translateX(-50px);
+}
+
+.scroll-reveal.from-right {
+    transform: translateX(50px);
+}
+
+.scroll-reveal.from-bottom {
+    transform: translateY(30px);
+}
+
+.scroll-reveal.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0);
 }
 
 /* レスポンシブデザイン */
