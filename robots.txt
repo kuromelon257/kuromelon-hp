@@ -1,8 +1,3 @@
 User-agent: *
 Allow: /
 Sitemap: https://kuromelon257.com/sitemap.xml
-
-# くろメロン(Kuromelon257)公式サイト
-# ゲーム開発者・くろメロンの公式ウェブサイト
-# チャックルン、他ゲーム情報について
-# お問い合わせ: contact@kuromelon257.com
