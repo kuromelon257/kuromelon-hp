@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         twitterBtn.addEventListener('click', function(e) {
             e.preventDefault();
             const shareText = 'チャックルン - 1分バトル！！最速で熱くなれる対戦アクションゲーム';
-            const shareUrl = 'https://kuromelon257.com/chackrun/';
+            const shareUrl = 'https://kuromelon.com/chackrun/';
             window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
         });
     }
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (lineBtn) {
         lineBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const shareUrl = 'https://kuromelon257.com/chackrun/';
+            const shareUrl = 'https://kuromelon.com/chackrun/';
             window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}`, '_blank');
         });
     }
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (facebookBtn) {
         facebookBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const shareUrl = 'https://kuromelon257.com/chackrun/';
+            const shareUrl = 'https://kuromelon.com/chackrun/';
             window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
         });
     }
