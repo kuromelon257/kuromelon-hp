@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel>
-  <title>Kuromelon Blog</title>
+  <title>くろメロンのブログ</title>
   <link>https://kuromelon257.github.io/blog/</link>
-  <description>Issues to static blog feed</description>
+  <description>くろメロンの技術ブログ - iOS開発、Swift、プログラミングの情報を発信</description>
   
     <item>
       <title>くろメロンのブログを開設しました！</title>
