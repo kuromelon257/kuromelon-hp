@@ -255,8 +255,23 @@ main.container::before {
    シンタックスハイライト - くろメロン技術ブログカスタムテーマ
    ============================================================ */
 
+/* GitHubスタイルを上書き */
+.content .highlight {
+    background: none !important;
+    border: none !important;
+    margin: 1.5rem 0 !important;
+}
+
+.content .highlight pre {
+    background: var(--blog-bg-code) !important;
+    border: 1px solid var(--blog-border) !important;
+    border-radius: var(--blog-radius) !important;
+    padding: 1.5rem !important;
+    margin: 0 !important;
+}
+
 /* ベースコードブロック */
-.hljs {
+.hljs, .content pre code {
     background: var(--blog-bg-code) !important;
     color: var(--blog-text) !important;
     border-radius: var(--blog-radius);
@@ -264,6 +279,17 @@ main.container::before {
     overflow-x: auto;
     font-family: var(--blog-font-code) !important;
     line-height: 1.6;
+    display: block;
+    margin: 0;
+}
+
+.content pre {
+    background: var(--blog-bg-code) !important;
+    border: 1px solid var(--blog-border) !important;
+    border-radius: var(--blog-radius) !important;
+    margin: 1.5rem 0 !important;
+    position: relative;
+    overflow: hidden;
 }
 
 /* Swift/JavaScript キーワード (func, var, let, if, class, import) */

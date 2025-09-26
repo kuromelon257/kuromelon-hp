@@ -106,11 +106,51 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
   return await res.text();
 }
 
-// サイトの絶対オリジン + ベースパス（User/Org Pages と Project Pages の両対応）
+// GitHubのコードブロックをhighlight.js用に変換
+function transformGitHubCodeBlocks(html) {
+  if (!html) return html;
+  
+  console.log(`[INFO] コードブロック変換開始...`);
+  
+  // GitHub形式のコードブロックパターンを変換
+  // <div class="highlight highlight-source-swift"><pre class="notranslate">...</pre></div>
+  // → <pre><code class="language-swift">...</code></pre>
+  
+  let transformedHtml = html.replace(
+    /<div class="highlight highlight-source-(\w+)"[^>]*>\s*<pre[^>]*>([\s\S]*?)<\/pre>\s*<\/div>/g,
+    (match, language, code) => {
+      // GitHubのspanタグを保持したまま、構造だけ変更
+      // highlight.jsが再処理しやすいように最小限の変換
+      const processedCode = code
+        .replace(/class="notranslate"/g, '') // 不要なクラスを削除
+        .trim();
+      
+      console.log(`[INFO] ${language}コードブロック変換: ${processedCode.length}文字`);
+      
+      return `<pre><code class="language-${language}">${processedCode}</code></pre>`;
+    }
+  );
+  
+  // 言語が指定されていない汎用コードブロック
+  transformedHtml = transformedHtml.replace(
+    /<div class="highlight"[^>]*>\s*<pre[^>]*>([\s\S]*?)<\/pre>\s*<\/div>/g,
+    (match, code) => {
+      const processedCode = code
+        .replace(/class="notranslate"/g, '')
+        .trim();
+      
+      console.log(`[INFO] 汎用コードブロック変換: ${processedCode.length}文字`);
+      
+      return `<pre><code>${processedCode}</code></pre>`;
+    }
+  );
+  
+  return transformedHtml;
+}
+
+// サイトの絶対オリジン（独自ドメイン kuromelon.com 使用）
 function getSiteOrigin() {
-  const owner = process.env.GITHUB_REPOSITORY_OWNER || "example";
-  const base  = SITE_BASE === "/" ? "" : SITE_BASE.replace(/\/$/, "");
-  return `https://${owner}.github.io${base}`;
+  return "https://kuromelon.com";
 }
 
 // トップページ用ブログセクション生成
@@ -122,7 +162,7 @@ async function generateTopPageBlogSection(posts, siteOrigin) {
   
   const blogItems = recentPosts.map(p => {
     const date = ymd(p.createdAt);
-    const url = `${SITE_BASE.replace(/\/+$/, "")}${p.path}`;
+    const url = `${siteOrigin}${p.path}`;
     return `
     <div class="blog-card">
       <div class="blog-card-header">
@@ -153,7 +193,7 @@ async function generateTopPageBlogSection(posts, siteOrigin) {
         ${blogItems || '<p class="no-posts">記事準備中です...</p>'}
       </div>
       <div class="blog-more">
-        <a href="${SITE_BASE.replace(/\/+$/, "")}/blog/" class="btn-secondary">
+        <a href="${siteOrigin}/blog/" class="btn-secondary">
           <i class="fas fa-rss"></i> ブログ一覧を見る
         </a>
       </div>
@@ -221,7 +261,11 @@ async function main() {
 
     // ====== Markdown → HTML変換 ======
     const bodyMarkdown = it.body || ""; // Issue本文（Markdownテキスト）
-    const bodyHtml = await convertMarkdownToHtml(bodyMarkdown); // HTMLに変換
+    let bodyHtml = await convertMarkdownToHtml(bodyMarkdown); // HTMLに変換
+    
+    // GitHubのコードブロックをhighlight.js用に変換
+    bodyHtml = transformGitHubCodeBlocks(bodyHtml);
+    
     console.log(`[INFO] 記事 #${number}: Markdown変換完了 (${bodyMarkdown.length} chars → ${bodyHtml.length} chars)`);
     
     const absUrl   = `${siteOrigin}/${BLOG_DIR}/${dirName}/`; // 絶対URL（canonical/OGP用）
@@ -233,7 +277,7 @@ async function main() {
     
     // 画像候補（本文の最初の画像、なければリポジトリ内の chackrun_thumb.jpg 等）
     const firstImg = pickFirstImage(bodyHtml) || "/assets/images/chackrun_thumb.jpg";
-    const ogImage = firstImg.startsWith("http") ? firstImg : `${siteOrigin}${firstImg.replace(/^\//, "")}`;
+    const ogImage = firstImg.startsWith("http") ? firstImg : `${siteOrigin}${firstImg}`;
 
     // publisher 情報（くろメロン用に設定）
     const publisher = {
@@ -284,9 +328,21 @@ async function main() {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      hljs.highlightAll();
-      // コードブロックに言語ラベルを追加
+      // GitHubのスタイルをリセットしてからhighlight.jsを適用
       document.querySelectorAll('pre code').forEach(function(block) {
+        // GitHubのspanスタイルをクリア
+        const spans = block.querySelectorAll('span');
+        spans.forEach(span => {
+          span.className = '';
+          span.style = '';
+        });
+        
+        // highlight.jsを手動で適用
+        if (block.className.includes('language-')) {
+          hljs.highlightElement(block);
+        }
+        
+        // 言語ラベルを追加
         const language = block.className.match(/language-(\w+)/);
         if (language) {
           const label = document.createElement('div');
@@ -295,6 +351,9 @@ async function main() {
           block.parentNode.insertBefore(label, block);
         }
       });
+      
+      // 残りのコードブロックも処理
+      hljs.highlightAll();
     });
   </script>
   
@@ -392,7 +451,7 @@ ${footer}
 
   // 6) 一覧ページ生成（/blog/index.html）
   const listItems = posts.map(p => {
-    return `<li><a href="${SITE_BASE.replace(/\/+$/, "")}${p.path}">${htmlEscape(p.title)}</a> <span class="date">${ymd(p.createdAt)}</span></li>`;
+    return `<li><a href="${siteOrigin}${p.path}">${htmlEscape(p.title)}</a> <span class="date">${ymd(p.createdAt)}</span></li>`;
   }).join("\n");
 
   // ブログ一覧ページにもダークテーマCSS + シンタックスハイライトを適用
@@ -421,7 +480,7 @@ ${headerWithBlogCSS}
   <ul class="post-list">
     ${listItems || "<li>まだ記事がありません</li>"}
   </ul>
-  <p class="rss-link"><a href="${SITE_BASE.replace(/\/+$/, "")}/rss.xml">📡 RSS購読</a></p>
+  <p class="rss-link"><a href="${siteOrigin}/rss.xml">📡 RSS購読</a></p>
 </main>
 ${footer}
 `.trim();
