@@ -79,6 +79,33 @@ async function ghFetchJSON(url) {
   return res.json();
 }
 
+// Markdown → HTML変換（GitHub API使用）
+async function convertMarkdownToHtml(markdown, repo = REPO) {
+  if (!markdown) return "";
+  
+  console.log(`[INFO] Markdown → HTML変換中...`);
+  const res = await fetch(`${API_BASE}/markdown`, {
+    method: "POST",
+    headers: {
+      "Accept": "application/vnd.github+json",
+      "Content-Type": "application/json",
+      ...(GH_TOKEN ? { "Authorization": `Bearer ${GH_TOKEN}` } : {})
+    },
+    body: JSON.stringify({
+      text: markdown,
+      mode: "gfm", // GitHub Flavored Markdown
+      context: repo
+    })
+  });
+  
+  if (!res.ok) {
+    console.warn(`[WARN] Markdown変換失敗、そのまま使用: ${res.status}`);
+    return markdown; // 失敗したらそのまま返す
+  }
+  
+  return await res.text();
+}
+
 // サイトの絶対オリジン + ベースパス（User/Org Pages と Project Pages の両対応）
 function getSiteOrigin() {
   const owner = process.env.GITHUB_REPOSITORY_OWNER || "example";
@@ -121,7 +148,11 @@ async function main() {
     const outDir  = path.join(BLOG_DIR, dirName);
     await fs.mkdir(outDir, { recursive: true });
 
-    const bodyHtml = it.body || ""; // Issue本文（そのままHTMLとして扱う）
+    // ====== Markdown → HTML変換 ======
+    const bodyMarkdown = it.body || ""; // Issue本文（Markdownテキスト）
+    const bodyHtml = await convertMarkdownToHtml(bodyMarkdown); // HTMLに変換
+    console.log(`[INFO] 記事 #${number}: Markdown変換完了 (${bodyMarkdown.length} chars → ${bodyHtml.length} chars)`);
+    
     const absUrl   = `${siteOrigin}/${BLOG_DIR}/${dirName}/`; // 絶対URL（canonical/OGP用）
     const desc     = stripTags(bodyHtml).slice(0, 160);       // 簡易メタディスクリプション
 

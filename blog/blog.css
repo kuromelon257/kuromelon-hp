@@ -261,6 +261,64 @@ main.container::before {
     border: 1px solid var(--blog-border);
 }
 
+/* テーブル（Markdownでよく使う）*/
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: var(--blog-bg-code);
+    border-radius: var(--blog-radius);
+    overflow: hidden;
+    box-shadow: var(--blog-shadow-sm);
+}
+
+.content th, .content td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--blog-border);
+}
+
+.content th {
+    background: var(--blog-bg-secondary);
+    color: var(--blog-primary);
+    font-weight: 600;
+    font-family: var(--blog-font-heading);
+}
+
+.content td {
+    color: var(--blog-text);
+}
+
+.content tr:hover {
+    background: rgba(0, 212, 255, 0.05);
+}
+
+/* GitHub風のタスクリスト */
+.content .task-list-item {
+    list-style: none;
+    margin-left: -1.5rem;
+}
+
+.content .task-list-item input[type="checkbox"] {
+    margin-right: 0.5rem;
+    accent-color: var(--blog-primary);
+}
+
+/* GitHub風の警告ボックス */
+.content .highlight {
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: var(--blog-radius);
+    border-left: 4px solid var(--blog-primary);
+    background: var(--blog-bg-secondary);
+}
+
+/* インラインコードのハイライト */
+.content .highlight-language {
+    color: var(--blog-secondary);
+    font-weight: 500;
+}
+
 /* リスト */
 .content ul, .content ol {
     margin: 1.5rem 0;
