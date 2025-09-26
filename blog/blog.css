@@ -251,6 +251,195 @@ main.container::before {
     color: var(--blog-text);
 }
 
+/* ============================================================
+   シンタックスハイライト - くろメロン技術ブログカスタムテーマ
+   ============================================================ */
+
+/* ベースコードブロック */
+.hljs {
+    background: var(--blog-bg-code) !important;
+    color: var(--blog-text) !important;
+    border-radius: var(--blog-radius);
+    padding: 1.5rem !important;
+    overflow-x: auto;
+    font-family: var(--blog-font-code) !important;
+    line-height: 1.6;
+}
+
+/* Swift/JavaScript キーワード (func, var, let, if, class, import) */
+.hljs-keyword {
+    color: #ff6ec7 !important;
+    font-weight: 600;
+}
+
+/* 文字列 "Hello World", 'text' */
+.hljs-string {
+    color: #a8e6cf !important;
+}
+
+/* 数値 123, 0.5, true, false, nil */
+.hljs-number, .hljs-literal {
+    color: #ffd93d !important;
+    font-weight: 500;
+}
+
+/* 関数名 viewDidLoad(), onClick() */
+.hljs-title.function_, .hljs-title.function {
+    color: var(--blog-primary) !important;
+    font-weight: 600;
+}
+
+/* クラス名・型名 String, UIViewController, Int, View */
+.hljs-type, .hljs-class .hljs-title, .hljs-title.class_ {
+    color: #74b9ff !important;
+    font-weight: 600;
+}
+
+/* コメント // これはコメント, /* ブロックコメント */ */
+.hljs-comment {
+    color: #636e72 !important;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* 変数名・プロパティ name, message, view */
+.hljs-variable, .hljs-property {
+    color: #fab1a0 !important;
+}
+
+/* 演算子 +, -, =, ==, && */
+.hljs-operator {
+    color: #fd79a8 !important;
+    font-weight: 500;
+}
+
+/* 属性・アノテーション @IBOutlet, @State, @objc */
+.hljs-meta, .hljs-built_in {
+    color: #00cec9 !important;
+    font-weight: 600;
+}
+
+/* HTML タグ <div>, <span>, <body> */
+.hljs-tag {
+    color: #e84393 !important;
+}
+
+.hljs-name {
+    color: #00b894 !important;
+    font-weight: 500;
+}
+
+/* HTML属性 class="hoge", id="test" */
+.hljs-attr {
+    color: var(--blog-primary) !important;
+}
+
+/* HTML属性値 "container", "main" */
+.hljs-string {
+    color: #a8e6cf !important;
+}
+
+/* CSS セレクター .class, #id, body */
+.hljs-selector-tag, .hljs-selector-class, .hljs-selector-id {
+    color: #00cec9 !important;
+    font-weight: 500;
+}
+
+/* CSS プロパティ color, background, margin */
+.hljs-attribute {
+    color: var(--blog-primary) !important;
+}
+
+/* CSS 値 #ffffff, 1rem, center */
+.hljs-number, .hljs-built_in {
+    color: #ffd93d !important;
+}
+
+/* JavaScript DOM querySelector, addEventListener */
+.hljs-title.function_ {
+    color: var(--blog-secondary) !important;
+}
+
+/* 正規表現 /pattern/g */
+.hljs-regexp {
+    color: #e17055 !important;
+}
+
+/* シンボル・定数 :symbol, CONSTANT */
+.hljs-symbol {
+    color: #a29bfe !important;
+    font-weight: 500;
+}
+
+/* エスケープシーケンス \n, \t */
+.hljs-subst {
+    color: #fd79a8 !important;
+}
+
+/* 強調表示（エラー箇所など） */
+.hljs-emphasis {
+    font-style: italic;
+    color: var(--blog-accent) !important;
+}
+
+.hljs-strong {
+    font-weight: bold;
+    color: var(--blog-text-accent) !important;
+}
+
+/* 言語別特別対応 */
+/* Swift専用 */
+.hljs-swift .hljs-keyword {
+    color: #ff6ec7 !important;
+}
+
+.hljs-swift .hljs-built_in {
+    color: #74b9ff !important;
+}
+
+/* JavaScript専用 */
+.hljs-javascript .hljs-keyword {
+    color: #a29bfe !important;
+}
+
+/* CSS専用 */
+.hljs-css .hljs-attribute {
+    color: var(--blog-primary) !important;
+}
+
+/* 行番号（オプション） */
+.hljs-ln-numbers {
+    color: var(--blog-text-muted);
+    border-right: 1px solid var(--blog-border);
+    padding-right: 1rem;
+    margin-right: 1rem;
+    user-select: none;
+}
+
+/* 言語ラベル */
+.code-language-label {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    background: rgba(0, 212, 255, 0.2);
+    color: var(--blog-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--blog-font-code);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--blog-primary);
+    backdrop-filter: blur(4px);
+}
+
+/* コードブロックのホバー効果 */
+.content pre:hover .code-language-label {
+    background: rgba(0, 212, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+}
+
 /* 画像 */
 .content img {
     max-width: 100%;
