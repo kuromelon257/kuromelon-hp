@@ -5,10 +5,10 @@
   <description>Issues to static blog feed</description>
   
     <item>
-      <title>テストのブログです</title>
+      <title>くろメロンのブログを開設しました！</title>
       <link>https://kuromelon257.github.io/blog/2/</link>
       <guid>https://kuromelon257.github.io/blog/2/</guid>
       <pubDate>Fri, 26 Sep 2025 15:07:34 GMT</pubDate>
-      <description>テストのブログです（Issue #2）</description>
+      <description>くろメロンのブログを開設しました！（Issue #2）</description>
     </item>
 </channel></rss>
