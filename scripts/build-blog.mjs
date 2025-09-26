@@ -1,67 +1,61 @@
-// 目的:
-// - "blog" ラベル付きの Issue を GitHub API から取得
-// - Issue本文（HTML）をヘッダー/フッターに挟んで各記事ページを生成
-// - 記事一覧 (/blog/index.html) と RSS (rss.xml) も生成
+// ============================================================
+// GitHub Issues → 静的ブログ変換スクリプト
+// ------------------------------------------------------------
+// やること：
+// 1. GitHub API から「LABEL=blog」の Issue を取得
+// 2. Issue本文（HTMLとしてそのまま扱う）を記事にする
+// 3. templates/header.html + 本文 + templates/footer.html を合体
+// 4. /blog/以下に記事ページと一覧ページを出力
+// 5. rss.xml を生成
 //
-// 前提:
-// - templates/header.html と templates/footer.html を用意（共通レイアウト）
-// - Issue本文は「そのままHTMLとして」埋め込む（Markdown変換はしない）
-//
-// 注意点:
-// - Issue本文をそのままHTMLとして出すため、投稿者を信頼できる前提で運用してください（XSS等のリスク）
-// - プロジェクトPages（/repo/パス配信）なら SITE_BASE を "/<repo>/" にする
-//
-// 実行環境:
-// - Node.js v20（グローバル fetch 利用）
-// - Actions からは GH_TOKEN, REPO, LABEL, BLOG_DIR, SITE_BASE を環境変数で受け取る
+// 日本語ログを多めに出力するので、Actionsのログで確認できます。
+// ============================================================
 
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-// __dirname 相当（ESMでは直接使えないためお約束の書き方）
+// __dirname 相当を作成（ESMでは直接__dirnameが使えない）
 const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
+const __dirname = path.dirname(__filename);
 
-// ==== 環境変数の読み込み（無ければデフォルト値） ==========================
-const REPO     = process.env.REPO     || "";       // "owner/repo"
-const GH_TOKEN = process.env.GH_TOKEN || "";       // GitHub API 認証用
-const LABEL    = process.env.LABEL    || "blog";   // 公開対象ラベル
-const BLOG_DIR = process.env.BLOG_DIR || "blog";   // 出力先ディレクトリ
-const SITE_BASE= process.env.SITE_BASE|| "/";      // サイトのベースパス（末尾に "/" を推奨）
+// ==== 環境変数（.yml 側から渡す） ==== //
+const REPO      = process.env.REPO     || "";
+const GH_TOKEN  = process.env.GH_TOKEN || "";
+const LABEL     = process.env.LABEL    || "blog";
+const BLOG_DIR  = process.env.BLOG_DIR || "blog";
+const SITE_BASE = process.env.SITE_BASE|| "/";
 
-// ==== GitHub API エンドポイント ===========================================
-const API_BASE = `https://api.github.com`;
+// ==== GitHub API エンドポイント ==== //
+const API_BASE  = `https://api.github.com`;
 const ISSUE_API = `${API_BASE}/repos/${REPO}/issues?state=open&labels=${encodeURIComponent(LABEL)}&per_page=100`;
-// 備考: per_page=100 で最大100件。大量になる場合はページネーションを拡張してください（TODO）
 
-// ==== 小物ユーティリティ ===================================================
+// ==== ユーティリティ ==== //
 
-// タイトルなど「タグに入れる部分」はエスケープして安全に
+// HTMLタグに入れる部分はエスケープ
 function htmlEscape(s = "") {
-  return s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
+  return s.replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+  }[c]));
 }
 
-// タイトルからURL用のスラッグを作る（日本語・記号にもそこそこ耐性）
+// タイトルをURLスラッグに変換
 function toSlug(title = "", fallback = "") {
-  const base = title
-    .trim()
-    .toLowerCase()
-    // 全角・半角・スペース系をハイフンに寄せる（雑だが実用的）
-    .replace(/[\s　/\\]+/g, "-")
-    // URLに不向きな文字を除去
-    .replace(/[^a-z0-9\-._~]/g, "");
+  const base = title.trim().toLowerCase()
+    .replace(/[\s　/\\]+/g, "-")     // スペース類をハイフンに
+    .replace(/[^a-z0-9\-._~]/g, ""); // 不正文字除去
   return base || fallback;
 }
 
-// 日付表示（YYYY-MM-DD）
+// 日付フォーマット YYYY-MM-DD
 function ymd(iso = "") {
   if (!iso) return "";
   return new Date(iso).toISOString().slice(0, 10);
 }
 
-// fetchの薄いラッパ（GitHub APIをトークン付きで叩く）
+// GitHub API を叩いて JSON 取得
 async function ghFetchJSON(url) {
+  console.log(`[INFO] APIリクエスト: ${url}`);
   const res = await fetch(url, {
     headers: {
       "Accept": "application/vnd.github+json",
@@ -70,44 +64,47 @@ async function ghFetchJSON(url) {
   });
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`GitHub API error: ${res.status} ${text}`);
+    throw new Error(`GitHub API エラー: ${res.status} ${text}`);
   }
   return res.json();
 }
 
-// ==== メイン処理 ===========================================================
-
+// ==== メイン処理 ==== //
 async function main() {
-  // 1) テンプレート読み込み（共通のヘッダー/フッター）
+  console.log("[INFO] ブログ生成処理を開始します");
+
+  // 1) テンプレート読み込み
+  console.log("[INFO] テンプレート読込開始");
   const header = await fs.readFile(path.join("templates", "header.html"), "utf8");
   const footer = await fs.readFile(path.join("templates", "footer.html"), "utf8");
+  console.log("[INFO] テンプレート読込完了");
 
-  // 2) 出力先ディレクトリを作成（存在しなければ作る）
+  // 2) 出力ディレクトリ作成
+  console.log(`[INFO] 出力ディレクトリを作成: ${BLOG_DIR}`);
   await fs.mkdir(BLOG_DIR, { recursive: true });
 
-  // 3) Issue一覧を取得
-  //    - /issues APIはPRも混じるので、"pull_request" フィールドの有無で除外
+  // 3) Issue取得
+  console.log(`[INFO] Issue取得開始: ラベル="${LABEL}"`);
   const all = await ghFetchJSON(ISSUE_API);
-  const issues = all.filter(it => !it.pull_request); // PRは除外
+  const issues = all.filter(it => !it.pull_request);
+  console.log(`[INFO] 取得件数: ${all.length} / 公開対象: ${issues.length}`);
+
+  const posts = [];
 
   // 4) 各記事ページを生成
-  //    - URL: /blog/<number>-<slug>/index.html
-  //    - タイトルはエスケープ、本文はそのまま（HTML）
-  const posts = [];
   for (const it of issues) {
-    const number    = it.number;
-    const title     = it.title || `(no title #${number})`;
-    const titleEsc  = htmlEscape(title);
+    const number = it.number;
+    const title  = it.title || `(no title #${number})`;
+    const titleEsc = htmlEscape(title);
     const createdAt = it.created_at || it.updated_at || new Date().toISOString();
-    const slug      = toSlug(title, `post-${number}`);
-    const dirName   = `${number}-${slug}`;                 // 例: "12-hello-world"
-    const outDir    = path.join(BLOG_DIR, dirName);
+    const slug = toSlug(title, `post-${number}`);
+    const dirName = `${number}-${slug}`;
+    const outDir = path.join(BLOG_DIR, dirName);
+
     await fs.mkdir(outDir, { recursive: true });
 
-    // 記事本文（Issue本文）はそのままHTMLとして埋め込む
-    const bodyHtml  = it.body || ""; // 何も書かれてないときは空文字
+    const bodyHtml = it.body || ""; // Issue本文（そのままHTMLとして扱う）
 
-    // 記事ページの中身（必要に応じて構造は調整してください）
     const html = `
 ${header}
 <main class="container">
@@ -123,22 +120,22 @@ ${footer}
 `.trim();
 
     await fs.writeFile(path.join(outDir, "index.html"), html, "utf8");
+    console.log(`[INFO] 記事生成: ${outDir}/index.html`);
 
-    // 一覧/フィード用に記録
     posts.push({
       number,
       title,
       titleEsc,
       createdAt,
-      path: `/${BLOG_DIR}/${dirName}/`, // 公開時パス（先頭スラッシュ始まり）
+      path: `/${BLOG_DIR}/${dirName}/`,
       issueUrl: it.html_url
     });
   }
 
-  // 5) 新しい順に並べ替え（created_at 降順）
+  // 5) 新しい順に並べ替え
   posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  // 6) 一覧ページ (/blog/index.html) を生成
+  // 6) 一覧ページ生成
   const listItems = posts.map(p => {
     return `<li><a href="${SITE_BASE.replace(/\/+$/, "")}${p.path}">${htmlEscape(p.title)}</a> <span class="date">${ymd(p.createdAt)}</span></li>`;
   }).join("\n");
@@ -156,10 +153,9 @@ ${footer}
 `.trim();
 
   await fs.writeFile(path.join(BLOG_DIR, "index.html"), indexHtml, "utf8");
+  console.log(`[INFO] 一覧生成: ${BLOG_DIR}/index.html`);
 
-  // 7) RSS (rss.xml) を生成（最小実装）
-  //    - User/Org Pages: SITE_BASE は "/" を想定
-  //    - Project Pages: "https://<user>.github.io/<repo>" で公開されるため、後述の siteOrigin を調整
+  // 7) RSS生成
   const siteOrigin = `https://${process.env.GITHUB_REPOSITORY_OWNER || "example"}.github.io${SITE_BASE === "/" ? "" : SITE_BASE.replace(/\/$/, "")}`;
   const rssItems = posts.slice(0, 50).map(p => `
     <item>
@@ -179,12 +175,14 @@ ${footer}
 </channel></rss>`;
 
   await fs.writeFile("rss.xml", rss, "utf8");
+  console.log("[INFO] RSS生成: rss.xml");
 
-  console.log(`Generated ${posts.length} post(s).`);
+  // 完了
+  console.log(`[INFO] 生成完了: 記事 ${posts.length} 件`);
 }
 
-// 例外はログって非0で終了（Actionsで失敗として検知できる）
+// ==== 実行 ==== //
 main().catch(err => {
-  console.error(err);
+  console.error(`[ERROR] ビルド失敗: ${err.message}`);
   process.exit(1);
 });

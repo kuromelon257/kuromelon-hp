@@ -1,60 +1,62 @@
-# このワークフローは「GitHub Issues を材料に、静的HTMLを生成してコミット」するための設定です
-# ファイル場所: .github/workflows/build-blog.yml
+name: Build Blog from Issues
 
-name: Build Blog from Issues  # ワークフロー名（Actions 画面に表示されます）
-
-on:                           # いつ（どんなイベントで）動かすか
-  workflow_dispatch:          # 手動実行できるようにする（Actions 画面から Run）
-  issues:                     # Issue に変化があったときに自動実行
+on:
+  workflow_dispatch:
+  issues:
     types: [opened, edited, labeled, unlabeled, closed]
-    # - opened   : 新規作成
-    # - edited   : タイトルや本文などの編集
-    # - labeled  : ラベルが付与された
-    # - unlabeled: ラベルが外された
-    # - closed   : クローズされた（公開から外す等の運用に使える）
-  # もし「毎日定時で再生成」したいなら下を有効化（任意）
-  # schedule:
-  #   - cron: "0 0 * * *"     # UTCの0時。JSTだと毎日09:00
 
 permissions:
-  contents: write             # リポジトリにコミット＆プッシュするための権限
+  contents: write
+
+# ← 同時実行を抑止（open と label が同時に来ても片方に）
+concurrency:
+  group: blog-build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest    # GitHubが用意するLinux環境で実行
+    runs-on: ubuntu-latest
+
+    # ← ここに移動：全ステップから参照できる
+    env:
+      REPO: ${{ github.repository }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LABEL: blog
+      BLOG_DIR: blog
+      SITE_BASE: /
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        # リポジトリの内容を作業ディレクトリにチェックアウト
+        with:
+          fetch-depth: 0   # ← rebase/pull が安全に
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'  # Node 20 を使用（グローバル fetch が使える）
+          node-version: '20'
 
       - name: Build blog from issues
-        env:
-          REPO: ${{ github.repository }}        # 例 "kuromelon257/kuromelon-hp"
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHubが自動で用意するトークン（API叩く時に使う）
-          LABEL: blog                           # 公開対象にする Issue のラベル名（必要に応じて変更OK）
-          BLOG_DIR: blog                        # 出力先フォルダ名（/blog/ 以下に生成）
-          SITE_BASE: /                          # サイトのベースパス。User/Org Pagesは "/"、Project Pagesは "/<repo>/" に変更
         run: |
-          node -v
-          # Nodeスクリプトを実行（scripts/build-blog.mjs はリポジトリ内に配置）
+          set -euo pipefail
+          echo "INFO: Node version: $(node -v)"
           node scripts/build-blog.mjs
 
       - name: Commit & Push generated files
         run: |
-          # botユーザーでコミットする設定
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # 生成物をステージング
-          git add ${{ env.BLOG_DIR }} || true
-          git add rss.xml || true
+          echo "INFO: 最新取得 & rebase"
+          git fetch origin
+          git pull --rebase origin main || true
 
-          # 変更があるときだけコミット（無ければスキップ）
+          echo "INFO: 生成物をステージング"
+          git add "$BLOG_DIR" rss.xml || true
+
+          echo "INFO: 変更件数: $(git status --porcelain | wc -l)"
           git commit -m "chore(blog): rebuild from issues [skip ci]" || echo "no changes"
+
+          echo "INFO: push 実行"
           git push
