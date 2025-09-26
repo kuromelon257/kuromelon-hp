@@ -1,0 +1,507 @@
+/* ============================================================
+   くろメロンのブログ専用スタイル - ダークテックブログテーマ 
+   ============================================================ */
+
+/* ダークテックブログ用カラーパレット */
+:root {
+    /* プライマリカラー - サイバーブルー */
+    --blog-primary: #00d4ff;
+    --blog-primary-dark: #0099cc;
+    --blog-secondary: #ff6b35;
+    --blog-accent: #ff4757;
+    --blog-success: #2ed573;
+    --blog-warning: #ffa502;
+    
+    /* ダークテーマ背景 */
+    --blog-bg: #0a0a0a;
+    --blog-bg-secondary: #1a1a1a;
+    --blog-bg-card: #252525;
+    --blog-bg-code: #1e1e1e;
+    --blog-bg-header: rgba(10, 10, 10, 0.95);
+    
+    /* テキストカラー */
+    --blog-text: #e0e0e0;
+    --blog-text-secondary: #b0b0b0;
+    --blog-text-muted: #707070;
+    --blog-text-accent: #ffffff;
+    --blog-text-link: var(--blog-primary);
+    
+    /* ボーダー・シャドウ */
+    --blog-border: #333333;
+    --blog-border-accent: #404040;
+    --blog-shadow-sm: 0 2px 8px rgba(0, 212, 255, 0.1);
+    --blog-shadow-md: 0 4px 16px rgba(0, 212, 255, 0.15);
+    --blog-shadow-lg: 0 8px 24px rgba(0, 212, 255, 0.2);
+    --blog-shadow-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+    
+    /* フォント */
+    --blog-font-body: 'Source Code Pro', 'Noto Sans JP', 'SF Mono', Monaco, monospace;
+    --blog-font-heading: 'Inter', 'Noto Sans JP', sans-serif;
+    --blog-font-code: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', monospace;
+    
+    /* サイズ・スペース */
+    --blog-radius: 0.75rem;
+    --blog-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ブログページ全体のリセット・ベーススタイル */
+body {
+    background: var(--blog-bg) !important;
+    color: var(--blog-text) !important;
+    font-family: var(--blog-font-body) !important;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    
+    /* サイバー風グラデーション背景 */
+    background: linear-gradient(135deg, 
+        var(--blog-bg) 0%, 
+        #0f0f0f 50%, 
+        var(--blog-bg-secondary) 100%) !important;
+    background-attachment: fixed;
+    
+    /* 細かいドットパターン */
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 80% 50%, rgba(255, 107, 53, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px, 30px 30px;
+}
+
+/* ヘッダーのダーク化 */
+header {
+    background: var(--blog-bg-header) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--blog-border) !important;
+    box-shadow: var(--blog-shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header nav {
+    padding: 1rem 0;
+}
+
+header nav a {
+    color: var(--blog-text) !important;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--blog-transition);
+    padding: 0.5rem 1rem;
+    border-radius: var(--blog-radius);
+}
+
+header nav a:hover {
+    color: var(--blog-primary) !important;
+    background: rgba(0, 212, 255, 0.1);
+    box-shadow: var(--blog-shadow-sm);
+}
+
+/* コンテナのスタイリング */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* メイン記事エリア */
+main.container {
+    background: var(--blog-bg-card);
+    border-radius: var(--blog-radius);
+    box-shadow: var(--blog-shadow-lg);
+    margin: 2rem auto;
+    border: 1px solid var(--blog-border);
+    position: relative;
+    overflow: hidden;
+}
+
+/* サイバー風のトップボーダー効果 */
+main.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--blog-primary) 0%, 
+        var(--blog-secondary) 50%, 
+        var(--blog-accent) 100%);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* 記事コンテンツ */
+.post {
+    padding: 2.5rem;
+}
+
+.post h1 {
+    font-family: var(--blog-font-heading);
+    color: var(--blog-text-accent);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    
+    /* グラデーションテキスト効果 */
+    background: linear-gradient(135deg, var(--blog-primary), var(--blog-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.post .meta {
+    color: var(--blog-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--blog-border);
+}
+
+.post .meta a {
+    color: var(--blog-primary);
+    text-decoration: none;
+    transition: var(--blog-transition);
+}
+
+.post .meta a:hover {
+    color: var(--blog-secondary);
+    text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+}
+
+/* 記事コンテンツ内のスタイリング */
+.content h2, .content h3, .content h4 {
+    font-family: var(--blog-font-heading);
+    color: var(--blog-text-accent);
+    margin: 2rem 0 1rem 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--blog-primary);
+    position: relative;
+}
+
+.content h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.content h3 {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: var(--blog-text);
+}
+
+.content a {
+    color: var(--blog-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: var(--blog-transition);
+}
+
+.content a:hover {
+    color: var(--blog-secondary);
+    border-bottom-color: var(--blog-secondary);
+    text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
+}
+
+/* コードブロック */
+.content pre, .content code {
+    font-family: var(--blog-font-code);
+    background: var(--blog-bg-code);
+    border: 1px solid var(--blog-border);
+    border-radius: var(--blog-radius);
+}
+
+.content pre {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    box-shadow: var(--blog-shadow-sm);
+    position: relative;
+}
+
+.content pre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--blog-primary) 50%, 
+        transparent 100%);
+}
+
+.content code {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.9em;
+    color: var(--blog-primary);
+}
+
+.content pre code {
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--blog-text);
+}
+
+/* 画像 */
+.content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--blog-radius);
+    box-shadow: var(--blog-shadow-md);
+    margin: 1.5rem 0;
+    border: 1px solid var(--blog-border);
+}
+
+/* リスト */
+.content ul, .content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.content li {
+    margin-bottom: 0.5rem;
+    color: var(--blog-text);
+}
+
+.content li::marker {
+    color: var(--blog-primary);
+}
+
+/* 引用 */
+.content blockquote {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--blog-bg-secondary);
+    border-left: 4px solid var(--blog-primary);
+    border-radius: 0 var(--blog-radius) var(--blog-radius) 0;
+    font-style: italic;
+    position: relative;
+}
+
+.content blockquote::before {
+    content: '"';
+    font-size: 4rem;
+    color: var(--blog-primary);
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    opacity: 0.3;
+}
+
+/* ブログ一覧ページ */
+main.container h1 {
+    font-family: var(--blog-font-heading);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    font-weight: 700;
+    
+    /* グラデーションテキスト効果 */
+    background: linear-gradient(135deg, var(--blog-primary), var(--blog-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.blog-description {
+    text-align: center;
+    color: var(--blog-text-secondary);
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    font-family: var(--blog-font-body);
+}
+
+.rss-link {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.rss-link a {
+    color: var(--blog-primary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--blog-primary);
+    border-radius: var(--blog-radius);
+    transition: var(--blog-transition);
+    display: inline-block;
+}
+
+.rss-link a:hover {
+    background: var(--blog-primary);
+    color: var(--blog-bg);
+    box-shadow: var(--blog-shadow-glow);
+}
+
+.post-list {
+    list-style: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.post-list li {
+    background: var(--blog-bg-card);
+    margin: 1rem 0;
+    padding: 1.5rem;
+    border-radius: var(--blog-radius);
+    border: 1px solid var(--blog-border);
+    transition: var(--blog-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.post-list li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, 
+        var(--blog-primary) 0%, 
+        var(--blog-secondary) 100%);
+    transform: scaleY(0);
+    transition: var(--blog-transition);
+}
+
+.post-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--blog-shadow-lg);
+    border-color: var(--blog-primary);
+}
+
+.post-list li:hover::before {
+    transform: scaleY(1);
+}
+
+.post-list a {
+    color: var(--blog-text-accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.2rem;
+    transition: var(--blog-transition);
+}
+
+.post-list a:hover {
+    color: var(--blog-primary);
+}
+
+.post-list .date {
+    color: var(--blog-text-muted);
+    font-size: 0.9rem;
+    float: right;
+    font-family: var(--blog-font-code);
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    main.container {
+        margin: 1rem auto;
+    }
+    
+    .post {
+        padding: 1.5rem;
+    }
+    
+    .post h1 {
+        font-size: 2rem;
+    }
+    
+    .post-list .date {
+        float: none;
+        display: block;
+        margin-top: 0.5rem;
+    }
+}
+
+/* スクロールバーのカスタマイズ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--blog-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--blog-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--blog-secondary);
+}
+
+/* フッター */
+footer {
+    background: var(--blog-bg-secondary);
+    border-top: 1px solid var(--blog-border);
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 4rem;
+    color: var(--blog-text-muted);
+}
+
+footer p {
+    margin: 0;
+    font-family: var(--blog-font-code);
+    font-size: 0.9rem;
+}
+
+/* アニメーション */
+@keyframes glow {
+    0%, 100% { 
+        box-shadow: 0 0 5px rgba(0, 212, 255, 0.2); 
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); 
+    }
+}
+
+.post h1:hover {
+    animation: glow 2s ease-in-out infinite;
+}
+
+/* エフェクト：スクロール時のパララックス風 */
+@media (prefers-reduced-motion: no-preference) {
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 107, 53, 0.03) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+        animation: float 20s ease-in-out infinite;
+    }
+}
+
+@keyframes float {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+    }
+    33% { 
+        transform: translateY(-10px) rotate(1deg); 
+    }
+    66% { 
+        transform: translateY(5px) rotate(-1deg); 
+    }
+}

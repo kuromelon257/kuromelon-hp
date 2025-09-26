@@ -39,6 +39,19 @@ function htmlEscape(s = "") {
   }[c]));
 }
 
+// 本文HTMLから最初の画像URLを拾う（SEO強化用）
+function pickFirstImage(html = "") {
+  // <img src="..."> を探す（絶対 or 相対パス）
+  const m = html.match(/<img\s+[^>]*src=["']([^"']+)["'][^>]*>/i);
+  return m ? m[1] : null;
+}
+
+// 絶対URLを組み立てる（siteOrigin は getSiteOrigin() で取得済み）
+function absUrlFor(path, siteOrigin) {
+  // path は "/blog/2/" 形式
+  return `${siteOrigin}${path}`;
+}
+
 // 日付フォーマット YYYY-MM-DD
 function ymd(iso = "") {
   if (!iso) return "";
@@ -114,23 +127,62 @@ async function main() {
 
     // ====== SEO強化：<head> に title/canonical/description/OGP/JSON-LD を挿入 ======
     // 既存テンプレの <title> を差し替え
-    const headerWithTitle = header.replace(/<title>[\s\S]*?<\/title>/i, `<title>${titleEsc} | Kuromelon Blog</title>`);
-    // SEOタグを </head> の直前に挿入
+    const headerWithTitle = header.replace(/<title>[\s\S]*?<\/title>/i, `<title>${titleEsc} | くろメロンのブログ</title>`);
+    
+    // 画像候補（本文の最初の画像、なければリポジトリ内の chackrun_thumb.jpg 等）
+    const firstImg = pickFirstImage(bodyHtml) || "/assets/images/chackrun_thumb.jpg";
+    const ogImage = firstImg.startsWith("http") ? firstImg : `${siteOrigin}${firstImg.replace(/^\//, "")}`;
+
+    // publisher 情報（くろメロン用に設定）
+    const publisher = {
+      "@type": "Organization",
+      "name": "くろメロンのブログ",
+      "alternateName": "くろメロン技術ブログ",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteOrigin}/assets/images/chackrun_thumb.jpg`
+      },
+      "sameAs": [
+        `${siteOrigin}`,
+        `${siteOrigin}/blog/`
+      ]
+    };
+
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": title,
+      "datePublished": new Date(createdAt).toISOString(),
+      "mainEntityOfPage": absUrl,
+      "url": absUrl,
+      "author": {
+        "@type": "Person",
+        "name": "くろメロン"
+      },
+      "publisher": publisher,
+      "image": ogImage,
+      "description": desc
+    };
+
     const seoHead = `
   <link rel="canonical" href="${absUrl}">
+  <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ" href="${siteOrigin}/rss.xml">
+  <link rel="stylesheet" href="/blog/blog.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
   <meta name="description" content="${htmlEscape(desc)}">
   <meta property="og:type" content="article">
   <meta property="og:title" content="${titleEsc}">
+  <meta property="og:description" content="${htmlEscape(desc)}">
   <meta property="og:url" content="${absUrl}">
+  <meta property="og:image" content="${ogImage}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${titleEsc}">
+  <meta name="twitter:description" content="${htmlEscape(desc)}">
+  <meta name="twitter:image" content="${ogImage}">
   <script type="application/ld+json">
-  ${JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": title,
-    "datePublished": new Date(createdAt).toISOString(),
-    "mainEntityOfPage": absUrl,
-    "url": absUrl
-  })}
+  ${JSON.stringify(jsonLd)}
   </script>`;
     const headerFinal = headerWithTitle.replace(/<\/head>/i, `${seoHead}\n</head>`);
 
@@ -169,14 +221,23 @@ ${footer}
     return `<li><a href="${SITE_BASE.replace(/\/+$/, "")}${p.path}">${htmlEscape(p.title)}</a> <span class="date">${ymd(p.createdAt)}</span></li>`;
   }).join("\n");
 
+  // ブログ一覧ページにもダークテーマCSSを適用
+  const headerWithBlogCSS = header.replace(/<\/head>/i, `
+  <link rel="stylesheet" href="/blog/blog.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+</head>`);
+
   const indexHtml = `
-${header}
+${headerWithBlogCSS}
 <main class="container">
-  <h1>Blog</h1>
+  <h1>くろメロンのブログ</h1>
+  <p class="blog-description">iOS開発、Swift、技術に関する記事を発信しています 🚀</p>
   <ul class="post-list">
     ${listItems || "<li>まだ記事がありません</li>"}
   </ul>
-  <p><a href="${SITE_BASE.replace(/\/+$/, "")}/rss.xml">RSS</a></p>
+  <p class="rss-link"><a href="${SITE_BASE.replace(/\/+$/, "")}/rss.xml">📡 RSS購読</a></p>
 </main>
 ${footer}
 `.trim();
@@ -196,14 +257,48 @@ ${footer}
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel>
-  <title>Kuromelon Blog</title>
+  <title>くろメロンのブログ</title>
   <link>${siteOrigin}/blog/</link>
-  <description>Issues to static blog feed</description>
+  <description>くろメロンの技術ブログ - iOS開発、Swift、プログラミングの情報を発信</description>
   ${rssItems}
 </channel></rss>`;
 
   await fs.writeFile("rss.xml", rss, "utf8");
   console.log("[INFO] RSS生成: rss.xml");
+
+  // 8) sitemap.xml 生成（SEO強化：優先度 / changefreq 付き）
+  const sitemapItems = posts.map(p => {
+    return `
+  <url>
+    <loc>${siteOrigin}${p.path}</loc>
+    <lastmod>${new Date(p.createdAt).toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+  }).join("");
+
+  // トップページとブログ一覧も追加
+  const additionalPages = `
+  <url>
+    <loc>${siteOrigin}/</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${siteOrigin}/blog/</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${additionalPages}${sitemapItems}
+</urlset>`;
+
+  await fs.writeFile("sitemap.xml", sitemap, "utf8");
+  console.log("[INFO] sitemap.xml 生成完了");
 
   // 完了
   console.log(`[INFO] 生成完了: 記事 ${posts.length} 件`);
