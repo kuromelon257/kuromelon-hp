@@ -273,6 +273,7 @@ async function main() {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <!-- シンタックスハイライト - highlight.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -312,17 +313,64 @@ async function main() {
   </script>`;
     const headerFinal = headerWithTitle.replace(/<\/head>/i, `${seoHead}\n</head>`);
 
+    // X共有用のURL・テキスト生成
+    const shareUrl = encodeURIComponent(absUrl);
+    const shareText = encodeURIComponent(`${title} | くろメロンのブログ`);
+    const twitterShareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
+
     const html = `
 ${headerFinal}
 <main class="container">
   <article class="post">
     <h1>${titleEsc}</h1>
     <p class="meta">${ymd(createdAt)} · <a href="${it.html_url}" target="_blank" rel="noopener">Issue #${number}</a></p>
+    
+    <!-- 記事共有ボタン -->
+    <div class="share-buttons">
+      <span class="share-label">この記事をシェア:</span>
+      <a href="${twitterShareUrl}" target="_blank" rel="noopener" class="share-btn twitter-share">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+      <button onclick="copyToClipboard('${absUrl}')" class="share-btn copy-link">
+        <i class="fas fa-link"></i> リンクをコピー
+      </button>
+    </div>
+    
     <div class="content">
       ${bodyHtml}
     </div>
+    
+    <!-- 記事下部の共有ボタン -->
+    <div class="share-buttons bottom-share">
+      <p class="share-cta">この記事が役に立ったら、ぜひシェアしてください！</p>
+      <a href="${twitterShareUrl}" target="_blank" rel="noopener" class="share-btn twitter-share large">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+    </div>
   </article>
 </main>
+
+<script>
+// リンクコピー機能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    // コピー成功時の視覚的フィードバック
+    const btn = event.target.closest('.copy-link');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> コピー完了！';
+    btn.style.background = 'var(--blog-success)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(function(err) {
+    console.error('コピーに失敗しました: ', err);
+    alert('リンクのコピーに失敗しました');
+  });
+}
+</script>
+
 ${footer}
 `.trim();
 
@@ -353,6 +401,7 @@ ${footer}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <!-- シンタックスハイライト -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

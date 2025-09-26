@@ -723,6 +723,139 @@ footer p {
     animation: glow 2s ease-in-out infinite;
 }
 
+/* ============================================================
+   記事共有ボタン - X(Twitter)シェア・リンクコピー
+   ============================================================ */
+
+.share-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--blog-bg-secondary);
+    border-radius: var(--blog-radius);
+    border: 1px solid var(--blog-border);
+}
+
+.share-label {
+    color: var(--blog-text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--blog-radius);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--blog-transition);
+    border: none;
+    cursor: pointer;
+    font-family: var(--blog-font-body);
+}
+
+.share-btn.twitter-share {
+    background: #1da1f2;
+    color: white;
+}
+
+.share-btn.twitter-share:hover {
+    background: #0d8bd9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
+}
+
+.share-btn.copy-link {
+    background: var(--blog-bg-card);
+    color: var(--blog-text);
+    border: 1px solid var(--blog-border);
+}
+
+.share-btn.copy-link:hover {
+    background: var(--blog-primary);
+    color: var(--blog-bg);
+    border-color: var(--blog-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--blog-shadow-sm);
+}
+
+.share-btn i {
+    font-size: 1rem;
+}
+
+/* 大きめの共有ボタン */
+.share-btn.large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.share-btn.large i {
+    font-size: 1.2rem;
+}
+
+/* 記事下部の共有セクション */
+.bottom-share {
+    flex-direction: column;
+    text-align: center;
+    margin: 3rem 0 1rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, 
+        var(--blog-bg-secondary) 0%, 
+        rgba(0, 212, 255, 0.05) 100%);
+    border: 2px solid var(--blog-border);
+}
+
+.share-cta {
+    color: var(--blog-text);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .share-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .share-label {
+        text-align: center;
+        white-space: normal;
+    }
+    
+    .share-btn {
+        justify-content: center;
+        padding: 1rem;
+    }
+    
+    .bottom-share {
+        padding: 1.5rem;
+    }
+}
+
+/* アニメーション効果 */
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1); 
+    }
+    50% { 
+        transform: scale(1.05); 
+    }
+}
+
+.share-btn.twitter-share:active {
+    animation: pulse 0.3s ease;
+}
+
 /* エフェクト：スクロール時のパララックス風 */
 @media (prefers-reduced-motion: no-preference) {
     body::before {
