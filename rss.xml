@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+  <title>Kuromelon Blog</title>
+  <link>https://kuromelon257.github.io/blog/</link>
+  <description>Issues to static blog feed</description>
+  
+    <item>
+      <title>テストのブログです</title>
+      <link>https://kuromelon257.github.io/blog/2-post-2/</link>
+      <guid>https://kuromelon257.github.io/blog/2-post-2/</guid>
+      <pubDate>Fri, 26 Sep 2025 15:07:34 GMT</pubDate>
+      <description>テストのブログです（Issue #2）</description>
+    </item>
+</channel></rss>
