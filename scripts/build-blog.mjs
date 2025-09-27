@@ -93,7 +93,7 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
   protectedMarkdown = protectedMarkdown.replace(
     /<blockquote[^>]*class="twitter-tweet"[^>]*>[\s\S]*?<\/blockquote>\s*<script[^>]*src="https:\/\/platform\.twitter\.com\/widgets\.js"[^>]*><\/script>/g,
     (match) => {
-      const placeholder = `__HTML_BLOCK_${htmlBlocks.length}__`;
+      const placeholder = `HTMLBLOCK${htmlBlocks.length}PLACEHOLDER`;
       htmlBlocks.push(match);
       console.log(`[INFO] Twitter埋め込み保護: ${htmlBlocks.length}個目`);
       return placeholder;
@@ -104,7 +104,7 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
   protectedMarkdown = protectedMarkdown.replace(
     /<(span|div|iframe|video|audio|embed|object)[^>]*class="[^"]*"[^>]*>[\s\S]*?<\/\1>/g,
     (match) => {
-      const placeholder = `__HTML_BLOCK_${htmlBlocks.length}__`;
+      const placeholder = `HTMLBLOCK${htmlBlocks.length}PLACEHOLDER`;
       htmlBlocks.push(match);
       console.log(`[INFO] class属性付きHTMLタグ保護: ${htmlBlocks.length}個目`);
       return placeholder;
@@ -115,7 +115,7 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
   protectedMarkdown = protectedMarkdown.replace(
     /<(span|div|p|img)[^>]*style="[^"]*"[^>]*(?:\/>|>[\s\S]*?<\/\1>)/g,
     (match) => {
-      const placeholder = `__HTML_BLOCK_${htmlBlocks.length}__`;
+      const placeholder = `HTMLBLOCK${htmlBlocks.length}PLACEHOLDER`;
       htmlBlocks.push(match);
       console.log(`[INFO] style属性付きHTMLタグ保護: ${htmlBlocks.length}個目`);
       return placeholder;
@@ -145,18 +145,18 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
   
   // 保護したHTMLブロックを復元
   htmlBlocks.forEach((block, index) => {
-    const placeholder = `__HTML_BLOCK_${index}__`;
+    const placeholder = `HTMLBLOCK${index}PLACEHOLDER`;
     
     // 通常のプレースホルダーを復元
     html = html.replace(new RegExp(placeholder, 'g'), block);
     
     // GitHub Markdown APIがエスケープした場合も対応
-    // <strong>HTML_BLOCK_0</strong> や <em>HTML_BLOCK_0</em> など
     const escapedPatterns = [
+      `<p dir="auto">${placeholder}</p>`,
+      `<p>${placeholder}</p>`,
       `<strong>${placeholder}</strong>`,
       `<em>${placeholder}</em>`,
-      `<code>${placeholder}</code>`,
-      `<p>${placeholder}</p>`
+      `<code>${placeholder}</code>`
     ];
     
     escapedPatterns.forEach(escapedPattern => {
