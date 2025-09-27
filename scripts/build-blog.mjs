@@ -79,11 +79,49 @@ async function ghFetchJSON(url) {
   return res.json();
 }
 
-// Markdown → HTML変換（GitHub API使用）
+// Markdown → HTML変換（GitHub API使用、HTMLブロック保護機能付き）
 async function convertMarkdownToHtml(markdown, repo = REPO) {
   if (!markdown) return "";
   
   console.log(`[INFO] Markdown → HTML変換中...`);
+  
+  // HTMLブロック（複数パターン）を一時的に保護
+  const htmlBlocks = [];
+  let protectedMarkdown = markdown;
+  
+  // 1. Twitter埋め込み全体を保護
+  protectedMarkdown = protectedMarkdown.replace(
+    /<blockquote[^>]*class="twitter-tweet"[^>]*>[\s\S]*?<\/blockquote>\s*<script[^>]*src="https:\/\/platform\.twitter\.com\/widgets\.js"[^>]*><\/script>/g,
+    (match) => {
+      const placeholder = `__HTML_BLOCK_${htmlBlocks.length}__`;
+      htmlBlocks.push(match);
+      console.log(`[INFO] Twitter埋め込み保護: ${htmlBlocks.length}個目`);
+      return placeholder;
+    }
+  );
+  
+  // 2. class属性付きHTMLタグを保護（span, div, iframe等）
+  protectedMarkdown = protectedMarkdown.replace(
+    /<(span|div|iframe|video|audio|embed|object)[^>]*class="[^"]*"[^>]*>[\s\S]*?<\/\1>/g,
+    (match) => {
+      const placeholder = `__HTML_BLOCK_${htmlBlocks.length}__`;
+      htmlBlocks.push(match);
+      console.log(`[INFO] class属性付きHTMLタグ保護: ${htmlBlocks.length}個目`);
+      return placeholder;
+    }
+  );
+  
+  // 3. style属性付きHTMLタグも保護
+  protectedMarkdown = protectedMarkdown.replace(
+    /<(span|div|p|img)[^>]*style="[^"]*"[^>]*(?:\/>|>[\s\S]*?<\/\1>)/g,
+    (match) => {
+      const placeholder = `__HTML_BLOCK_${htmlBlocks.length}__`;
+      htmlBlocks.push(match);
+      console.log(`[INFO] style属性付きHTMLタグ保護: ${htmlBlocks.length}個目`);
+      return placeholder;
+    }
+  );
+  
   const res = await fetch(`${API_BASE}/markdown`, {
     method: "POST",
     headers: {
@@ -92,7 +130,7 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
       ...(GH_TOKEN ? { "Authorization": `Bearer ${GH_TOKEN}` } : {})
     },
     body: JSON.stringify({
-      text: markdown,
+      text: protectedMarkdown,
       mode: "gfm", // GitHub Flavored Markdown
       context: repo
     })
@@ -103,7 +141,16 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
     return markdown; // 失敗したらそのまま返す
   }
   
-  return await res.text();
+  let html = await res.text();
+  
+  // 保護したHTMLブロックを復元
+  htmlBlocks.forEach((block, index) => {
+    const placeholder = `__HTML_BLOCK_${index}__`;
+    html = html.replace(new RegExp(placeholder, 'g'), block);
+    console.log(`[INFO] HTMLブロック復元: ${index + 1}個目`);
+  });
+  
+  return html;
 }
 
 // GitHubのコードブロックをhighlight.js用に変換
@@ -183,9 +230,11 @@ function fixGitHubImageUrls(html) {
     fixedHtml = fixedHtml.replace(
       /https:\/\/user-images\.githubusercontent\.com\/[\d]+\/([\d]+-)?([a-f0-9-]+)\.?(\w+)?/g,
       (match, filePrefix, hash, ext) => {
-        const extension = ext || 'png';
-        const newUrl = `https://github.com/user-attachments/assets/${hash}.${extension}`;
-        console.log(`[INFO] 旧形式URL変換: ${hash}.${extension}`);
+        // 拡張子がある場合はそのまま、ない場合は拡張子なしで変換
+        const newUrl = ext 
+          ? `https://github.com/user-attachments/assets/${hash}.${ext}`
+          : `https://github.com/user-attachments/assets/${hash}`;
+        console.log(`[INFO] 旧形式URL変換: ${hash}${ext ? '.' + ext : ''}`);
         convertCount++;
         return newUrl;
       }
