@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iOSDC Japan 2025を楽しみ尽くした話〜初の20分トークをやり切りました！〜 | くろメロンのブログ</title>
+  <meta name="description" content="くろメロンの技術ブログ。iOS開発、Swift、SwiftUI、プログラミングの最新情報とノウハウを発信しています。">
+  <meta name="keywords" content="くろメロン,くろメロンのブログ,iOS開発,Swift,SwiftUI,プログラミング,技術ブログ,アプリ開発">
+  <meta name="author" content="くろメロン">
+  
+  <!-- ファビコン設定（ちゃっくん仕様） -->
+  <link rel="icon" type="image/jpeg" href="/assets/images/chackrun_thumb.jpg?v=2025">
+  <link rel="apple-touch-icon" href="/assets/images/chackrun_thumb.jpg?v=2025">
+  <link rel="shortcut icon" href="/assets/images/chackrun_thumb.jpg?v=2025">
+  
+  <!-- PWA・テーマ設定 -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="msapplication-TileColor" content="#0a0a0a">
+  <meta name="msapplication-TileImage" content="/assets/images/chackrun_thumb.jpg?v=2025">
+  
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <link rel="canonical" href="https://kuromelon.com/blog/3/">
+  <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ" href="https://kuromelon.com/rss.xml">
+  <link rel="stylesheet" href="/blog/blog.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- シンタックスハイライト - highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // GitHubのスタイルをリセットしてからhighlight.jsを適用
+      document.querySelectorAll('pre code').forEach(function(block) {
+        // GitHubのspanスタイルをクリア
+        const spans = block.querySelectorAll('span');
+        spans.forEach(span => {
+          span.className = '';
+          span.style = '';
+        });
+        
+        // highlight.jsを手動で適用
+        if (block.className.includes('language-')) {
+          hljs.highlightElement(block);
+        }
+        
+        // 言語ラベルを追加
+        const language = block.className.match(/language-(w+)/);
+        if (language) {
+          const label = document.createElement('div');
+          label.className = 'code-language-label';
+          label.textContent = language[1].toUpperCase();
+          block.parentNode.insertBefore(label, block);
+        }
+      });
+      
+      // 残りのコードブロックも処理
+      hljs.highlightAll();
+    });
+  </script>
+  
+  <meta name="description" content="はじめに ididblogするために、icreatedblogからしました。 GitHubのissueに本文を書くと、GitHub Actionsがそれを検知して、ブログのHTMLをデプロイする設計です。 トーク後に風邪で寝込んだり、ブログ基盤作りでididblogが遅れました🙏 プロポーザル提出に至るまで 私くろメ">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="iOSDC Japan 2025を楽しみ尽くした話〜初の20分トークをやり切りました！〜">
+  <meta property="og:description" content="はじめに ididblogするために、icreatedblogからしました。 GitHubのissueに本文を書くと、GitHub Actionsがそれを検知して、ブログのHTMLをデプロイする設計です。 トーク後に風邪で寝込んだり、ブログ基盤作りでididblogが遅れました🙏 プロポーザル提出に至るまで 私くろメ">
+  <meta property="og:url" content="https://kuromelon.com/blog/3/">
+  <meta property="og:image" content="https://github.com/user-attachments/assets/f84f44b3-1af5-4227-b24c-0fc19ee6a791">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="iOSDC Japan 2025を楽しみ尽くした話〜初の20分トークをやり切りました！〜">
+  <meta name="twitter:description" content="はじめに ididblogするために、icreatedblogからしました。 GitHubのissueに本文を書くと、GitHub Actionsがそれを検知して、ブログのHTMLをデプロイする設計です。 トーク後に風邪で寝込んだり、ブログ基盤作りでididblogが遅れました🙏 プロポーザル提出に至るまで 私くろメ">
+  <meta name="twitter:image" content="https://github.com/user-attachments/assets/f84f44b3-1af5-4227-b24c-0fc19ee6a791">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BlogPosting","headline":"iOSDC Japan 2025を楽しみ尽くした話〜初の20分トークをやり切りました！〜","datePublished":"2025-09-27T13:31:17.000Z","mainEntityOfPage":"https://kuromelon.com/blog/3/","url":"https://kuromelon.com/blog/3/","author":{"@type":"Person","name":"くろメロン"},"publisher":{"@type":"Organization","name":"くろメロンのブログ","alternateName":"くろメロン技術ブログ","logo":{"@type":"ImageObject","url":"https://kuromelon.com/assets/images/chackrun_thumb.jpg"},"sameAs":["https://kuromelon.com","https://kuromelon.com/blog/"]},"image":"https://github.com/user-attachments/assets/f84f44b3-1af5-4227-b24c-0fc19ee6a791","description":"はじめに ididblogするために、icreatedblogからしました。 GitHubのissueに本文を書くと、GitHub Actionsがそれを検知して、ブログのHTMLをデプロイする設計です。 トーク後に風邪で寝込んだり、ブログ基盤作りでididblogが遅れました🙏 プロポーザル提出に至るまで 私くろメ"}
+  </script>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="/">Home</a> | <a href="/blog/">Blog</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="post">
+    <h1>iOSDC Japan 2025を楽しみ尽くした話〜初の20分トークをやり切りました！〜</h1>
+    <p class="meta">2025-09-27 · <a href="https://github.com/kuromelon257/kuromelon-hp/issues/3" target="_blank" rel="noopener">Issue #3</a></p>
+    
+    <!-- 記事共有ボタン -->
+    <div class="share-buttons">
+      <span class="share-label">この記事をシェア:</span>
+      <a href="https://twitter.com/intent/tweet?text=iOSDC%20Japan%202025%E3%82%92%E6%A5%BD%E3%81%97%E3%81%BF%E5%B0%BD%E3%81%8F%E3%81%97%E3%81%9F%E8%A9%B1%E3%80%9C%E5%88%9D%E3%81%AE20%E5%88%86%E3%83%88%E3%83%BC%E3%82%AF%E3%82%92%E3%82%84%E3%82%8A%E5%88%87%E3%82%8A%E3%81%BE%E3%81%97%E3%81%9F%EF%BC%81%E3%80%9C%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F3%2F" target="_blank" rel="noopener" class="share-btn twitter-share">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+      <button onclick="copyToClipboard('https://kuromelon.com/blog/3/')" class="share-btn copy-link">
+        <i class="fas fa-link"></i> リンクをコピー
+      </button>
+    </div>
+    
+    <div class="content">
+      <p dir="auto"><div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/f84f44b3-1af5-4227-b24c-0fc19ee6a791" 
+       alt="iOSDC Japan 2025の画像" 
+       style="max-width: 70%; height: auto;" />
+</div></p>
+<h3 dir="auto">はじめに</h3>
+<p dir="auto">ididblogするために、icreatedblogからしました。<br>
+GitHubのissueに本文を書くと、GitHub Actionsがそれを検知して、ブログのHTMLをデプロイする設計です。</p>
+<p dir="auto">トーク後に風邪で寝込んだり、ブログ基盤作りでididblogが遅れました🙏</p>
+<h3 dir="auto">プロポーザル提出に至るまで</h3>
+<p dir="auto">私くろメロンは趣味でSpriteKit製の横スクロールアクションゲームを作っていました。今年から通信対戦機能を実装するために、技術調査と導入の検証を進めていたのですが、それがなかなかに苦労してまして...<br>
+「この知見は共有したら誰かの役に立つのでは！？」と思い、社内のLT会を経てiOSDCのプロポーザルを出すことに決めました。</p>
+<p dir="auto">また時を同じくして、WWDC2025にて新技術Wi-Fi AwareがiOS26に導入が見込まれていました。時期的にトークに含められるか微妙でしたが、リアルタイム通信技術を扱う内容で提出したので、Wi-Fi Awareが入ってても違和感ないように工夫しました。</p>
+<p dir="auto"><a href="https://developer.apple.com/jp/videos/play/wwdc2025/228/" rel="nofollow">Wi-Fi Awareによるデバイスの接続性の強化</a></p>
+<p dir="auto">投稿した3つのプロポーザルのうち、<a href="https://fortee.jp/iosdc-japan-2025/proposal/0db42660-4871-4203-9a8d-43bd40f67b81" rel="nofollow">推しの一本</a>が通ってくれたのはとても嬉しかったです！<br>
+社内でもプロポーザルのレビューをしてくださった方々にも大変感謝です。</p>
+<h3 dir="auto">原稿準備と逆風</h3>
+<p dir="auto">息子が生まれて1年4ヶ月になりますが、共働きゆえに家事&amp;育児に追われて、働く時間の捻出だけで手一杯でした。そんな中でのトークの準備はかなり大変でした。<br>
+夜遅くまでスライド作成をしてしまうと、翌朝の家事に出遅れて、妻に渋い顔をされることもしばしば...</p>
+<p dir="auto">それに追い打ちをかけるように、会社での外部登壇における風向きも変わってきました。<br>
+完全に個人の認識ですが、これまで外部登壇をしているエンジニアは「箔がつく」と思っており何かとプラスに働く印象がありました。しかし、完全な成果主義に移り変わると、これらの活動は利益に結びつかないので、意味のないものとみなされるようになった気がしています。また、社内での外部登壇への扱いが変わり、発表直前でスライド内容の変更を余儀無くされました。</p>
+<p dir="auto">体力も限界の中で、誰からも望まれていない感覚になり、この活動を続けることに何度か心が折れそうになりました...😭</p>
+<p dir="auto">それでも本番１週間前にしたこの𝕏のポストが250いいねもいただき、「見てくれる人もいるはずだ！」と気持ちを切り替えて頑張ることができました。いいね、リポスト、ブックマークの数に救われました、ありがとうございます。</p>
+<p dir="auto"><blockquote class="twitter-tweet" data-media-max-width="560"><p lang="ja" dir="ltr">iOS26で登場するWi-Fi Awareですが、Beta表記も無くなったのでトークで触れようと思います🛜<br>匂わせなプロポーザルでしたが、3,4分の尺で双方向リアルタイム通信に焦点をあてて喋ります。こちらの技術に興味があれば、2025/09/20 14:30〜 Track D でお待ちしています🙏<a href="https://twitter.com/hashtag/iosdc?src=hash&amp;ref_src=twsrc%5Etfw">#iosdc</a> <a href="https://t.co/qfiC8yfXEd">https://t.co/qfiC8yfXEd</a> <a href="https://t.co/iL8KYLIxM3">pic.twitter.com/iL8KYLIxM3</a></p>&mdash; くろメロン@iOSDC2025_Day1_14:30_Track D (@kuromelon257) <a href="https://twitter.com/kuromelon257/status/1967585103716274631?ref_src=twsrc%5Etfw">September 15, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<h3 dir="auto">楽しみ尽くした！day0</h3>
+<p dir="auto">day1は緊張やコンディション調整ではしゃげないと思い、初日でスポンサーブースの大半を回りました。<br>
+2ブースを除くすべてを周り、クイズやくじを楽しんだり、各々が取り組んでいる課題などを知れました。<br>
+ビンゴカードで18連ガラガラを回すと、毎年どうしても手に入れられなかったラインストーンTシャツが当たりました。</p>
+<p dir="auto"><blockquote class="twitter-tweet"><p lang="ja" dir="ltr">今日いただいたノベルティはどれも嬉しいものばかり…！出展された企業の方々、ホントにありがとうございます🙏<br>お陰様で18連ガラポンでずっと欲しかった、ラインストーンTシャツ引けて感激です😭 <a href="https://twitter.com/hashtag/iosdc?src=hash&amp;ref_src=twsrc%5Etfw">#iosdc</a> <a href="https://t.co/lrvOFCRnEI">pic.twitter.com/lrvOFCRnEI</a></p>&mdash; くろメロン@iOSDC2025_Day1_14:30_Track D (@kuromelon257) <a href="https://twitter.com/kuromelon257/status/1969045697841267164?ref_src=twsrc%5Etfw">September 19, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p dir="auto">夕方になると元同僚のツヅキさんのトークや、コードバトル決勝を楽しみました。<br>
+コードバトルは見てる側だと、「こうすればよくね？」とか好き放題言えますが、壇上で思いつくわけがないので選手の方々には頭が上がりませんね。</p>
+<p dir="auto">会社のチームメンバーと仲良くCoCo壱でご飯を食べ、ノベルティの大荷物を抱えday0を終えました。</p>
+<h3 dir="auto">いよいよ本番！day1</h3>
+<p dir="auto">朝からトークを見たり、もくもくルームで微調整したり、本番の14:30まで何してたかの記憶があまり無いですね。<br>
+自分のトーク前のリマインド用ポストや、トーク後の資料展開用のポストなどを準備していました。<br>
+お腹痛くなったら嫌なので、コンビニで軽食買ってぼっち飯しながら精神統一などもしましたね。</p>
+<p dir="auto"><blockquote class="twitter-tweet"><p lang="ja" dir="ltr">トークはいかがでしたか？🫡<br>こちら本日のスライドになります。気になるところがありましたら、forteeやリプなどからいつでもどうぞ💁🏻<br>『サーバなしで対戦ゲームが作れる！？ 純正フレームワークで実現するリアルタイム通信』 <a href="https://twitter.com/hashtag/iosdc?src=hash&amp;ref_src=twsrc%5Etfw">#iosdc</a> <a href="https://twitter.com/hashtag/d?src=hash&amp;ref_src=twsrc%5Etfw">#d</a> <a href="https://t.co/b7udaHM8vb">https://t.co/b7udaHM8vb</a></p>&mdash; くろメロン@iOSDC2025_Day1_14:30_Track D (@kuromelon257) <a href="https://twitter.com/kuromelon257/status/1969281607480611237?ref_src=twsrc%5Etfw">September 20, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p dir="auto">迎えたTrack Dの開場前、すでにドアの前で待っていてくださる方を見て、とても嬉しい気持ちになりました。<br>
+昨年はルーキーズLT枠でして、今回が自分のTrackを持つのが初めてだったので、「自分のトークを聞きたいと思ってくださる方がいる！」という事実に、この時点で感無量でした。</p>
+<p dir="auto">開場後に準備をしている間にも、徐々に席が埋まっていき、やる気と緊張がピークになりました。<br>
+そんな中でもDに来てくださった、弊社の強強エンジニアの皆さん、チームメンバー、元同僚、前職の同僚、研究室の同期、勉強会で知り合った方々、応援してくれるスタッフの皆さん、楽しそうに話してる方の姿を見て、緊張もなくなっていきました。</p>
+<p dir="auto"><div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/69505c50-4e32-4d3d-b38e-9d10cf824b10" 
+       alt="壇上の写真" 
+       style="max-width: 70%; height: auto;" />
+</div></p>
+<p dir="auto">いざトークを始めると、練習の何倍もスタミナを消費することに気づきました。<br>
+バテバテになりつつも20分喋り終えまして、やり遂げた感でいっぱいでした。<br>
+トーク中での質疑応答は無かったのですが、Ask the Speakerや懇親会などでいっぱい意見交換や感想をいただけて嬉しかったです。<br>
+「P2P通信で迷っていたから聞けてよかった」「Wi-Fi Aware始めたいから助かった」など、嬉しい感想も直接伝えていただきました。<a href="https://twitter.com/search?q=since%3A2025-09-20_14%3A20%3A00_JST+until%3A2025-09-20_15%3A05%3A00_JST+%23iosdc+%23d&amp;src=savs" rel="nofollow">感想ポスト</a>もありがとうございます。</p>
+<p dir="auto">前述で感じた「誰からも望まれていない」感覚は無くなり、本気で向き合ってよかったと心から思いました🙌</p>
+<p dir="auto">↓打ち上げもんじゃ↓<br>
+<div style="text-align: center;">
+  <img src="https://github.com/user-attachments/assets/bbdb0428-ad4f-475c-bf1e-d4c0a4552d2e" 
+       alt="もんじゃ" 
+       style="max-width: 70%; height: auto;" />
+</div></p>
+<h3 dir="auto">思い残すことが無いように！day2</h3>
+<p dir="auto">最終日は思い残すことが無いように、いろんな方に話しかけてみました。ネットで見たことある方、知り合いの知り合いなどなど<br>
+なんとなくお話しした方のチームメンバーが元同僚だったり、面白い偶然もいっぱいあって笑いっぱなしでした。</p>
+<p dir="auto">イベントごとも思い残すことが無いように、スポンサーブースビンゴのコンプにチャレンジトークン集めもできる限りやりました。day2にも14連を絞り出し、なんと金が２球も出ました。<br>
+パーカーとラインストーンTシャツを毎日着回せる体制が整ったのが嬉しすぎますね！</p>
+<p dir="auto"><blockquote class="twitter-tweet" data-media-max-width="560"><p lang="ja" dir="ltr">チャレンジトークン分も回して金2個いただきました🙏今年のノベルティ好き過ぎてホント嬉しい <a href="https://twitter.com/hashtag/iosdc?src=hash&amp;ref_src=twsrc%5Etfw">#iosdc</a> <a href="https://t.co/eJBdaPaXPR">pic.twitter.com/eJBdaPaXPR</a></p>&mdash; くろメロン@iOSDC2025_Day1_14:30_Track D (@kuromelon257) <a href="https://twitter.com/kuromelon257/status/1969594834660048995?ref_src=twsrc%5Etfw">September 21, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<h3 dir="auto">さいごに</h3>
+<p dir="auto">一言でまとめると「最高！」です。インプット、アウトプット、交流、イベントを楽しみ尽くしたと思います。<br>
+運営、スタッフの皆様、今年も本当にありがとうございました。来年も必ずプロポーザル出します！<br>
+...あと、去年の素材が公式HPや、動画に使われまくっててめちゃくちゃ嬉しかったです。</p>
+    </div>
+    
+    <!-- 記事下部の共有ボタン -->
+    <div class="share-buttons bottom-share">
+      <p class="share-cta">この記事が役に立ったら、ぜひシェアしてください！</p>
+      <a href="https://twitter.com/intent/tweet?text=iOSDC%20Japan%202025%E3%82%92%E6%A5%BD%E3%81%97%E3%81%BF%E5%B0%BD%E3%81%8F%E3%81%97%E3%81%9F%E8%A9%B1%E3%80%9C%E5%88%9D%E3%81%AE20%E5%88%86%E3%83%88%E3%83%BC%E3%82%AF%E3%82%92%E3%82%84%E3%82%8A%E5%88%87%E3%82%8A%E3%81%BE%E3%81%97%E3%81%9F%EF%BC%81%E3%80%9C%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F3%2F" target="_blank" rel="noopener" class="share-btn twitter-share large">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+    </div>
+  </article>
+</main>
+
+<script>
+// リンクコピー機能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    // コピー成功時の視覚的フィードバック
+    const btn = event.target.closest('.copy-link');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> コピー完了！';
+    btn.style.background = 'var(--blog-success)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(function(err) {
+    console.error('コピーに失敗しました: ', err);
+    alert('リンクのコピーに失敗しました');
+  });
+}
+</script>
+
+<footer>
+  <p>&copy; 2025 Kuromelon</p>
+</footer>
+</body>
+</html>
