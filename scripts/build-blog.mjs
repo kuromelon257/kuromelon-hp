@@ -148,6 +148,54 @@ function transformGitHubCodeBlocks(html) {
   return transformedHtml;
 }
 
+// GitHub画像URLをパブリック形式に変換（必要な場合のみ）
+function fixGitHubImageUrls(html) {
+  if (!html) return html;
+  
+  // JWT付きのprivate-user-imagesがあるかチェック
+  const hasJwtImages = /https:\/\/private-user-images\.githubusercontent\.com\//.test(html);
+  const hasOldUserImages = /https:\/\/user-images\.githubusercontent\.com\//.test(html);
+  
+  if (!hasJwtImages && !hasOldUserImages) {
+    console.log(`[INFO] 変換不要: 全ての画像が既にuser-attachments形式です`);
+    return html;
+  }
+  
+  console.log(`[INFO] GitHub画像URL修正開始...`);
+  let fixedHtml = html;
+  let convertCount = 0;
+  
+  // JWT付きのprivate-user-imagesのみ変換
+  if (hasJwtImages) {
+    fixedHtml = fixedHtml.replace(
+      /https:\/\/private-user-images\.githubusercontent\.com\/[\d]+\/([\d]+-)?([a-f0-9-]+)\.(\w+)\?jwt=[^"'\s>]+/g,
+      (match, filePrefix, hash, ext) => {
+        const newUrl = `https://github.com/user-attachments/assets/${hash}.${ext}`;
+        console.log(`[INFO] JWT付きURL変換: ${hash}.${ext}`);
+        convertCount++;
+        return newUrl;
+      }
+    );
+  }
+  
+  // 古い形式のuser-imagesも必要な場合のみ変換
+  if (hasOldUserImages) {
+    fixedHtml = fixedHtml.replace(
+      /https:\/\/user-images\.githubusercontent\.com\/[\d]+\/([\d]+-)?([a-f0-9-]+)\.?(\w+)?/g,
+      (match, filePrefix, hash, ext) => {
+        const extension = ext || 'png';
+        const newUrl = `https://github.com/user-attachments/assets/${hash}.${extension}`;
+        console.log(`[INFO] 旧形式URL変換: ${hash}.${extension}`);
+        convertCount++;
+        return newUrl;
+      }
+    );
+  }
+  
+  console.log(`[INFO] 画像URL変換完了: ${convertCount}個の画像を修正しました`);
+  return fixedHtml;
+}
+
 // サイトの絶対オリジン（独自ドメイン kuromelon.com 使用）
 function getSiteOrigin() {
   return "https://kuromelon.com";
@@ -262,6 +310,9 @@ async function main() {
     // ====== Markdown → HTML変換 ======
     const bodyMarkdown = it.body || ""; // Issue本文（Markdownテキスト）
     let bodyHtml = await convertMarkdownToHtml(bodyMarkdown); // HTMLに変換
+    
+    // GitHub画像URLを修正（JWT期限切れ対策）
+    bodyHtml = fixGitHubImageUrls(bodyHtml);
     
     // GitHubのコードブロックをhighlight.js用に変換
     bodyHtml = transformGitHubCodeBlocks(bodyHtml);
