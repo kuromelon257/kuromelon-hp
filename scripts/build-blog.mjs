@@ -146,7 +146,23 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
   // 保護したHTMLブロックを復元
   htmlBlocks.forEach((block, index) => {
     const placeholder = `__HTML_BLOCK_${index}__`;
+    
+    // 通常のプレースホルダーを復元
     html = html.replace(new RegExp(placeholder, 'g'), block);
+    
+    // GitHub Markdown APIがエスケープした場合も対応
+    // <strong>HTML_BLOCK_0</strong> や <em>HTML_BLOCK_0</em> など
+    const escapedPatterns = [
+      `<strong>${placeholder}</strong>`,
+      `<em>${placeholder}</em>`,
+      `<code>${placeholder}</code>`,
+      `<p>${placeholder}</p>`
+    ];
+    
+    escapedPatterns.forEach(escapedPattern => {
+      html = html.replace(new RegExp(escapedPattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), block);
+    });
+    
     console.log(`[INFO] HTMLブロック復元: ${index + 1}個目`);
   });
   
@@ -217,8 +233,9 @@ function fixGitHubImageUrls(html) {
     fixedHtml = fixedHtml.replace(
       /https:\/\/private-user-images\.githubusercontent\.com\/[\d]+\/([\d]+-)?([a-f0-9-]+)\.(\w+)\?jwt=[^"'\s>]+/g,
       (match, filePrefix, hash, ext) => {
-        const newUrl = `https://github.com/user-attachments/assets/${hash}.${ext}`;
-        console.log(`[INFO] JWT付きURL変換: ${hash}.${ext}`);
+        // 拡張子がある場合はそのまま、ない場合は拡張子なしで変換
+        const newUrl = `https://github.com/user-attachments/assets/${hash}`;
+        console.log(`[INFO] JWT付きURL変換: ${hash} (拡張子なし)`);
         convertCount++;
         return newUrl;
       }
