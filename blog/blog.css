@@ -686,27 +686,21 @@ main.container h1 {
 
 /* レスポンシブ */
 @media (max-width: 768px) {
-    .container {
-        padding: 1rem;
-    }
-    
-    main.container {
-        margin: 1rem auto;
-    }
-    
-    .post {
-        padding: 1.5rem;
-    }
-    
-    .post h1 {
-        font-size: 2rem;
-    }
-    
-    .post-list .date {
-        float: none;
-        display: block;
-        margin-top: 0.5rem;
-    }
+    /* 余白を少し詰めて本文幅を拡張 */
+    .container { padding: 0.75rem; }
+    main.container { margin: 0.75rem auto; }
+    .post { padding: 1rem 1rem 1.5rem; }
+    .post h1 { font-size: 2rem; }
+    .post-list .date { float: none; display: block; margin-top: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+    /* 超狭幅端末（iPhone SE等）ではさらに左右余白を削減 */
+    .container { padding: 0.5rem; }
+    .post { padding: 0.85rem 0.85rem 1.25rem; }
+    .post h1 { font-size: 1.75rem; }
+    /* コードブロックの横スクロール余白最適化 */
+    .content pre { margin-left: -0.25rem; margin-right: -0.25rem; border-left: 2px solid var(--blog-border); border-right: 2px solid var(--blog-border); }
 }
 
 /* スクロールバーのカスタマイズ */
