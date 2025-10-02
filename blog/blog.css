@@ -475,6 +475,14 @@ main.container::before {
     margin: 1.5rem 0;
     border: 1px solid var(--blog-border);
 }
+/* シンプルな埋め込み要素の横幅調整（最小構成） */
+.content video,
+.content iframe {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    border: 0;
+}
 
 /* テーブル（Markdownでよく使う）*/
 .content table {
@@ -910,4 +918,15 @@ footer p {
     66% { 
         transform: translateY(5px) rotate(-1deg); 
     }
+}
+
+/* ============================================================
+   強制ビデオ横幅100%（GitHub由来クラス/インライン幅の上書き）
+   ============================================================ */
+video, .content video, .post video, main video, article video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    box-sizing: border-box;
 }
