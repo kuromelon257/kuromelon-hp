@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>extension DC 2025 Day3 @ LINEヤフー 参加レポート | くろメロンのブログ</title>
+  <meta name="description" content="くろメロンの技術ブログ。iOS開発、Swift、SwiftUI、プログラミングの最新情報とノウハウを発信しています。">
+  <meta name="keywords" content="くろメロン,くろメロンのブログ,iOS開発,Swift,SwiftUI,プログラミング,技術ブログ,アプリ開発">
+  <meta name="author" content="くろメロン">
+  
+  <!-- ファビコン設定（ちゃっくん仕様） -->
+  <link rel="icon" type="image/jpeg" href="/assets/images/chackrun_thumb.jpg?v=2025">
+  <link rel="apple-touch-icon" href="/assets/images/chackrun_thumb.jpg?v=2025">
+  <link rel="shortcut icon" href="/assets/images/chackrun_thumb.jpg?v=2025">
+  
+  <!-- PWA・テーマ設定 -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="msapplication-TileColor" content="#0a0a0a">
+  <meta name="msapplication-TileImage" content="/assets/images/chackrun_thumb.jpg?v=2025">
+  
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <link rel="canonical" href="https://kuromelon.com/blog/5/">
+  <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ" href="https://kuromelon.com/rss.xml">
+  <link rel="stylesheet" href="/blog/blog.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- シンタックスハイライト - highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // GitHubのスタイルをリセットしてからhighlight.jsを適用
+      document.querySelectorAll('pre code').forEach(function(block) {
+        // GitHubのspanスタイルをクリア
+        const spans = block.querySelectorAll('span');
+        spans.forEach(span => {
+          span.className = '';
+          span.style = '';
+        });
+        
+        // highlight.jsを手動で適用
+        if (block.className.includes('language-')) {
+          hljs.highlightElement(block);
+        }
+        
+        // 言語ラベルを追加
+        const language = block.className.match(/language-(w+)/);
+        if (language) {
+          const label = document.createElement('div');
+          label.className = 'code-language-label';
+          label.textContent = language[1].toUpperCase();
+          block.parentNode.insertBefore(label, block);
+        }
+      });
+      
+      // 残りのコードブロックも処理
+      hljs.highlightAll();
+    });
+  </script>
+  
+  <meta name="description" content="とは DeNA・Sansan・LINEヤフー・ZOZOが共催するイベントです。 本イベントでは iOS や Swift をはじめとする最新技術について語り、2025 年上半期に発表・注目されたトピックを振り返ります。 （出典: 公式 connpass ページ） 参加してきた📌 和やかで温かい雰囲気でめっちゃ良かった！">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="extension DC 2025 Day3 @ LINEヤフー 参加レポート">
+  <meta property="og:description" content="とは DeNA・Sansan・LINEヤフー・ZOZOが共催するイベントです。 本イベントでは iOS や Swift をはじめとする最新技術について語り、2025 年上半期に発表・注目されたトピックを振り返ります。 （出典: 公式 connpass ページ） 参加してきた📌 和やかで温かい雰囲気でめっちゃ良かった！">
+  <meta property="og:url" content="https://kuromelon.com/blog/5/">
+  <meta property="og:image" content="https://kuromelon.com/assets/images/chackrun_thumb.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="extension DC 2025 Day3 @ LINEヤフー 参加レポート">
+  <meta name="twitter:description" content="とは DeNA・Sansan・LINEヤフー・ZOZOが共催するイベントです。 本イベントでは iOS や Swift をはじめとする最新技術について語り、2025 年上半期に発表・注目されたトピックを振り返ります。 （出典: 公式 connpass ページ） 参加してきた📌 和やかで温かい雰囲気でめっちゃ良かった！">
+  <meta name="twitter:image" content="https://kuromelon.com/assets/images/chackrun_thumb.jpg">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BlogPosting","headline":"extension DC 2025 Day3 @ LINEヤフー 参加レポート","datePublished":"2025-10-03T11:47:26.000Z","mainEntityOfPage":"https://kuromelon.com/blog/5/","url":"https://kuromelon.com/blog/5/","author":{"@type":"Person","name":"くろメロン"},"publisher":{"@type":"Organization","name":"くろメロンのブログ","alternateName":"くろメロン技術ブログ","logo":{"@type":"ImageObject","url":"https://kuromelon.com/assets/images/chackrun_thumb.jpg"},"sameAs":["https://kuromelon.com","https://kuromelon.com/blog/"]},"image":"https://kuromelon.com/assets/images/chackrun_thumb.jpg","description":"とは DeNA・Sansan・LINEヤフー・ZOZOが共催するイベントです。 本イベントでは iOS や Swift をはじめとする最新技術について語り、2025 年上半期に発表・注目されたトピックを振り返ります。 （出典: 公式 connpass ページ） 参加してきた📌 和やかで温かい雰囲気でめっちゃ良かった！"}
+  </script>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="/">Home</a> | <a href="/blog/">Blog</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="post">
+    <h1>extension DC 2025 Day3 @ LINEヤフー 参加レポート</h1>
+    <p class="meta">2025-10-03 · <a href="https://github.com/kuromelon257/kuromelon-hp/issues/5" target="_blank" rel="noopener">Issue #5</a></p>
+    
+    <!-- 記事共有ボタン -->
+    <div class="share-buttons">
+      <span class="share-label">この記事をシェア:</span>
+      <a href="https://twitter.com/intent/tweet?text=extension%20DC%202025%20Day3%20%40%20LINE%E3%83%A4%E3%83%95%E3%83%BC%20%E5%8F%82%E5%8A%A0%E3%83%AC%E3%83%9D%E3%83%BC%E3%83%88%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F5%2F" target="_blank" rel="noopener" class="share-btn twitter-share">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+      <button onclick="copyToClipboard('https://kuromelon.com/blog/5/')" class="share-btn copy-link">
+        <i class="fas fa-link"></i> リンクをコピー
+      </button>
+    </div>
+    
+    <div class="content">
+      <h2 dir="auto">とは</h2>
+<blockquote>
+<p dir="auto">DeNA・Sansan・LINEヤフー・ZOZOが共催するイベントです。 本イベントでは iOS や Swift をはじめとする最新技術について語り、2025 年上半期に発表・注目されたトピックを振り返ります。</p>
+<p dir="auto">（出典: 公式 connpass ページ）</p>
+</blockquote>
+<p dir="auto">参加してきた📌 和やかで温かい雰囲気でめっちゃ良かった！</p>
+<p dir="auto"><blockquote class="twitter-tweet" data-media-max-width="560"><p lang="qme" dir="ltr">🦌 <a href="https://twitter.com/hashtag/extension_dc?src=hash&amp;ref_src=twsrc%5Etfw">#extension_dc</a> <a href="https://t.co/BfIXF49411">pic.twitter.com/BfIXF49411</a></p>&mdash; aikawa (@aikawa_Japan) <a href="https://twitter.com/aikawa_Japan/status/1974075093174370537?ref_src=twsrc%5Etfw">October 3, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<h2 dir="auto">トークを聞いて</h2>
+<p dir="auto">思ったこととか、自分の言葉で噛み砕いた内容を書いていきます。</p>
+<h3 dir="auto"><a href="https://fortee.jp/iosdc-japan-2025/proposal/659275bb-d6bc-49f8-b616-7518bb5bd233" rel="nofollow">マルチウインドウ実践ガイド</a> by tatsubee さん</h3>
+<p dir="auto">pixiv の iOS エンジニアの方。</p>
+<p dir="auto"><strong>Multi-window対応</strong> は、未対応だと不便になりつつあり、実装できれば差別化ポイントになる領域。</p>
+<ul dir="auto">
+<li>分割表示や複数ウインドウ表示が可能（ユーザー体験の幅が広がる）</li>
+<li>ウインドウサイズも柔軟に縮小可能</li>
+</ul>
+<p dir="auto"><strong>ウインドウコントロールの表示</strong></p>
+<ul dir="auto">
+<li>Toolbar を利用していればウインドウコントロールは自動表示される</li>
+<li>利用していない場合は GeometryReader で位置・サイズ計測して自前配置（UIKit なら Layout Guide）</li>
+</ul>
+<p dir="auto"><strong>多数ウインドウを生成できるため名前付けが重要</strong></p>
+<ul dir="auto">
+<li>Navigation Barのタイトルがウインドウ識別に利用される（= 意味のあるタイトル必須）</li>
+</ul>
+<p dir="auto">自分のアプリ / サービスではどこを並列表示させると価値が最大か、ユースケース洗い出しが必要そう。</p>
+<h3 dir="auto">実装で解き明かす並行処理の歴史：Swift Concurrency から NSThread まで遡ろう by laprasDrum さん</h3>
+<p dir="auto">ZOZOのテックリードの方！</p>
+<p dir="auto">Swift Concurrencyについて目的とか意義を説明いただいた。（いまだに難しいと感じますね...）<br>
+今でこそ簡単な並列処理ですが、それまではDispatch Queueでやるしかなかったですね。エラーの伝播もないですね。</p>
+<p dir="auto">Block Objects、NSThreadなど、かつての記法も見せていただきました。もう直感的に読める感じではないかも、これが残っているコードは読みたくないですね。</p>
+<p dir="auto">なんか、Swift Concurrencyがすごく簡単に感じました。ありがとうございます！</p>
+<h3 dir="auto">Apple の Containerization Framework から学ぶコンテナ技術の仕組みとその裏側 by inductor さん</h3>
+<p dir="auto">Swift Serverサイドの開発やライブラリ提供をされている方。</p>
+<p dir="auto"><strong>Containerization Frameworkの特徴</strong><br>
+OSSかつAppleの公式フレームワークとしては初めて！</p>
+<p dir="auto"><strong>基本的な使用方法</strong></p>
+<ul dir="auto">
+<li>Homebrewで簡単インストール</li>
+<li><code class="notranslate">start</code>コマンドで実行開始</li>
+<li><code class="notranslate">run</code>コマンドで簡単に環境構築・実行</li>
+<li><code class="notranslate">list</code>コマンドで一覧表示</li>
+</ul>
+<p dir="auto">思ったよりハードルが低そうで試してみたい！</p>
+<p dir="auto"><strong>デモで見せていただいた内容</strong></p>
+<ul dir="auto">
+<li>ワンライナーSwiftをCLIで簡単実行</li>
+<li>Nginxサーバーも簡単に起動</li>
+<li>Dockerコンテナのイメージ作成・実行が一発でできる</li>
+</ul>
+<p dir="auto"><strong>理解が深まったポイント</strong><br>
+Docker専用アプリを作らないと使えないと勘違いしていたが、そうではなかった。</p>
+<p dir="auto"><strong>技術的な仕組み</strong><br>
+コンテナごとに独立したリソース（CPU、メモリなど）を割り当てて、柔軟に対応できる仕組み。</p>
+<p dir="auto"><strong>macOSアプリケーションの基礎知識</strong></p>
+<ul dir="auto">
+<li><strong>Launch Daemon</strong>: システム起動時に自動実行されるプロセス</li>
+<li><strong>XPC (Cross-Process Communication)</strong>: プロセス間通信の仕組み。サーバ・クライアント間でのやりとりを担当</li>
+</ul>
+<p dir="auto">Mac起動からコンテナ実行までの一連の流れについても詳しく解説いただいた。</p>
+<p dir="auto"><strong>次にやること</strong></p>
+<ul dir="auto">
+<li>使い勝手を確かめるために、まずは触ってみること</li>
+<li>run, list, logsを触ってみる</li>
+<li>OSSなのでAppleのソースの書き方などを見れる</li>
+<li>コンテナを使う様なものをなんか作ってみる</li>
+</ul>
+<p dir="auto">これ使えば何かができる気がしました。<br>
+vmごとコンテナが分かれている仕様は、セキュリティも担保できるのは強い！</p>
+<h3 dir="auto">overlayPreferenceValue で実現するピュア SwiftUI な Google AdMob ネイティブ広告 by たいやき さん</h3>
+<p dir="auto"><strong>背景・課題</strong><br>
+Google AdMob の SwiftUI 対応ライブラリを作成していただいた！<br>
+公式の Google AdMob SDK が SwiftUI に対応していないのが課題だった。</p>
+<p dir="auto"><a href="https://github.com/Uhucream/AdMobUI">https://github.com/Uhucream/AdMobUI</a></p>
+<p dir="auto"><strong>解決アプローチ</strong><br>
+Apple が公式に取り込んでほしいレベルの実装。</p>
+<p dir="auto"><strong>技術的なポイント</strong><br>
+「重ねて表示すれば解決できる」という発想から <code class="notranslate">overlayPreferenceValue</code> を採用。<br>
+このAPIは付与した View に対してフルサイズでオーバーレイを適用する仕組み。</p>
+<p dir="auto"><strong>参考リンク</strong><br>
+<a href="https://developer.apple.com/documentation/swiftui/view/overlaypreferencevalue(_:_:)" rel="nofollow">https://developer.apple.com/documentation/swiftui/view/overlaypreferencevalue(_:_:)</a></p>
+<p dir="auto"><strong>所感</strong><br>
+<code class="notranslate">overlay</code> より柔軟に使える場面がありそう！他の用途でも活用できそうな技術。</p>
+<h3 dir="auto">アメ車でサンノゼを走ってきたよ！ by S_Shimotori さん</h3>
+<p dir="auto"><strong>WWDC現地参加の体験談</strong><br>
+毎年WWDCの引率をされているとのこと。めちゃくちゃ羨ましい！<br>
+海外での運転経験も豊富で、アメリカでレンタカーを運転されたそう。</p>
+<p dir="auto"><strong>Apple CarPlayの知見</strong></p>
+<ul dir="auto">
+<li><strong>基本認識</strong>: 安全性を重視した機能制限が多いことは知っていた</li>
+<li><strong>新発見</strong>: CarPlay経由でピザの注文ができることを初めて知った</li>
+<li><strong>機能詳細</strong>:
+<ul dir="auto">
+<li>新規注文ではなく、再注文（リオーダー）機能のみ利用可能</li>
+<li>右ハンドル・左ハンドルの違いに応じてUIの配置が自動調整される</li>
+</ul>
+</li>
+</ul>
+<p dir="auto"><strong>個人的な感想</strong><br>
+ペーパーの自分には遠い世界で、羨ましく感じますね</p>
+<h3 dir="auto">パネルディスカッション</h3>
+<ul dir="auto">
+<li>登壇までの裏話面白いですね！</li>
+<li>ビルド速度改善のは勉強になりました</li>
+<li>ZOZOもゴリゴリカスタムUI、参考にしているところいっぱいありますね</li>
+<li>スポンサーブースの感想
+<ul dir="auto">
+<li>HONDAさんは強いですね、物理プロダクトなんてないよww</li>
+<li>規約で展示範囲も限定的なので難しそうですね</li>
+<li>AI系が増えた</li>
+</ul>
+</li>
+<li>社内LT会
+<ul dir="auto">
+<li>ZOZOさんはやっている！（iOSDCに向けたネタだし＋ブラッシュアップ）</li>
+<li>LINEヤフーも盛んに実施</li>
+</ul>
+</li>
+</ul>
+<h2 dir="auto">まとめ</h2>
+<p dir="auto"><strong>技術トレンド</strong></p>
+<ul dir="auto">
+<li><strong>Multi-window</strong>: 差別化要素として重要性が増している。ユースケース設計が鍵</li>
+<li><strong>Swift Concurrency</strong>: 歴史を知ると現在の簡潔さが際立つ</li>
+<li><strong>Containerization Framework</strong>: Apple初のOSSフレームワーク、思った以上に使いやすい</li>
+</ul>
+<p dir="auto"><strong>実装のポイント</strong></p>
+<ul dir="auto">
+<li>公式UIパターン（Toolbar等）に従うと開発・保守が楽</li>
+<li><code class="notranslate">overlayPreferenceValue</code>など、知られていないAPIに解決策がある</li>
+<li>SwiftUI未対応SDKはコミュニティで補完していく流れ</li>
+</ul>
+<p dir="auto"><strong>個人的な収穫</strong></p>
+<ul dir="auto">
+<li>CarPlayの細かい仕様（再注文機能、UI自動調整）を知れた</li>
+<li>コンテナ技術のハードルが思ったより低いことを実感</li>
+<li>WWDC現地参加への憧れが強くなった</li>
+</ul>
+<p dir="auto">温かい雰囲気の中で最新技術と実体験の両方を学べた良いイベントだった！</p>
+<h2 dir="auto">懇親会感想</h2>
+<p dir="auto">{帰り道に書きます！}</p>
+    </div>
+    
+    <!-- 記事下部の共有ボタン -->
+    <div class="share-buttons bottom-share">
+      <p class="share-cta">この記事が役に立ったら、ぜひシェアしてください！</p>
+      <a href="https://twitter.com/intent/tweet?text=extension%20DC%202025%20Day3%20%40%20LINE%E3%83%A4%E3%83%95%E3%83%BC%20%E5%8F%82%E5%8A%A0%E3%83%AC%E3%83%9D%E3%83%BC%E3%83%88%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F5%2F" target="_blank" rel="noopener" class="share-btn twitter-share large">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+    </div>
+  </article>
+</main>
+
+<script>
+// リンクコピー機能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    // コピー成功時の視覚的フィードバック
+    const btn = event.target.closest('.copy-link');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> コピー完了！';
+    btn.style.background = 'var(--blog-success)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(function(err) {
+    console.error('コピーに失敗しました: ', err);
+    alert('リンクのコピーに失敗しました');
+  });
+}
+</script>
+
+<footer>
+  <p>&copy; 2025 Kuromelon</p>
+</footer>
+</body>
+</html>
