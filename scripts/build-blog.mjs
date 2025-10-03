@@ -603,6 +603,7 @@ ${footer}
 
   // ブログ一覧ページにもダークテーマCSS + シンタックスハイライトを適用
   const headerWithBlogCSS = header.replace(/<\/head>/i, `
+  <link rel="canonical" href="${siteOrigin}/blog/">
   <link rel="stylesheet" href="/blog/blog.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
