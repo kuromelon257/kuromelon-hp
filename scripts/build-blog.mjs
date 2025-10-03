@@ -267,6 +267,28 @@ function getSiteOrigin() {
   return "https://kuromelon.com";
 }
 
+// ==============================
+// sitemap.xml 生成ヘルパー
+// posts: { path, createdAt, lastmod }
+// ==============================
+async function writeSitemap(posts, siteOrigin) {
+  // 固定ページ（必要に応じてここに追加）
+  const nowIso = new Date().toISOString();
+  const staticPages = [
+    { loc: `${siteOrigin}/`,          changefreq: 'weekly',  priority: '1.0', lastmod: nowIso },
+    { loc: `${siteOrigin}/blog/`,     changefreq: 'weekly',  priority: '0.8', lastmod: nowIso },
+    { loc: `${siteOrigin}/chackrun/`, changefreq: 'weekly',  priority: '0.9', lastmod: nowIso },
+  ];
+
+  const staticXml = staticPages.map(p => `\n  <url>\n    <loc>${p.loc}</loc>\n    <lastmod>${p.lastmod}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`).join("");
+
+  const postsXml = posts.map(p => `\n  <url>\n    <loc>${siteOrigin}${p.path}</loc>\n    <lastmod>${new Date(p.lastmod || p.createdAt).toISOString()}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`).join("");
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticXml}${postsXml}\n</urlset>`;
+  await fs.writeFile("sitemap.xml", xml, "utf8");
+  console.log(`[INFO] sitemap.xml 更新: URL数 total=${staticPages.length + posts.length}`);
+}
+
 // トップページ用ブログセクション生成
 async function generateTopPageBlogSection(posts, siteOrigin) {
   console.log("[INFO] トップページ用ブログセクション生成開始");
@@ -366,7 +388,9 @@ async function main() {
     const number    = it.number;
     const title     = it.title || `(no title #${number})`;
     const titleEsc  = htmlEscape(title);
-    const createdAt = it.created_at || it.updated_at || new Date().toISOString();
+  // created / updated を明確に分離（lastmodは updated を優先）
+  const createdAt = it.created_at || new Date().toISOString();
+  const updatedAt = it.updated_at || createdAt;
 
     // ====== 採番ルール：Issue番号をそのまま使う（/blog/<番号>/index.html） ======
     const dirName = String(number);
@@ -558,9 +582,15 @@ ${footer}
       title,
       titleEsc,
       createdAt,
+      lastmod: updatedAt,
       path: `/${BLOG_DIR}/${dirName}/`,
       issueUrl: it.html_url
     });
+
+    // インクリメンタル更新（環境変数で有効化）
+    if (process.env.SITEMAP_INCREMENTAL === 'true') {
+      await writeSitemap(posts, siteOrigin);
+    }
   }
 
   // 5) 新しい順に並べ替え
@@ -626,39 +656,8 @@ ${footer}
   await fs.writeFile("rss.xml", rss, "utf8");
   console.log("[INFO] RSS生成: rss.xml");
 
-  // 8) sitemap.xml 生成（SEO強化：優先度 / changefreq 付き）
-  const sitemapItems = posts.map(p => {
-    return `
-  <url>
-    <loc>${siteOrigin}${p.path}</loc>
-    <lastmod>${new Date(p.createdAt).toISOString()}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>`;
-  }).join("");
-
-  // トップページとブログ一覧も追加
-  const additionalPages = `
-  <url>
-    <loc>${siteOrigin}/</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>${siteOrigin}/blog/</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`;
-
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${additionalPages}${sitemapItems}
-</urlset>`;
-
-  await fs.writeFile("sitemap.xml", sitemap, "utf8");
-  console.log("[INFO] sitemap.xml 生成完了");
+  // 8) sitemap.xml 生成（最終一括）
+  await writeSitemap(posts, siteOrigin);
 
   // 9) トップページ用ブログ一覧セクション生成
   await generateTopPageBlogSection(posts, siteOrigin);
