@@ -999,6 +999,24 @@ footer p {
     }
 }
 
+/* インライン挿入シェア（ファーストビュー圧縮） */
+.inline-share {
+    margin: 1.25rem 0 1.5rem;
+    padding: 0.6rem 0.75rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--blog-border);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.inline-share .share-btn { padding: 0.45rem 0.75rem; font-size: 0.75rem; font-weight: 500; }
+.inline-share .share-label { font-size: 0.7rem; opacity: 0.7; }
+@media (max-width: 600px) {
+  .inline-share { margin: 0.9rem 0 1.2rem; padding: 0.5rem 0.6rem; gap: 0.5rem; }
+  .inline-share .share-btn { padding: 0.4rem 0.6rem; font-size: 0.7rem; }
+  .inline-share .share-label { display: none; }
+}
+
 /* 追加モバイル最適化（より控えめなシェアUI） */
 @media (max-width: 768px) {
     .share-buttons {

@@ -580,20 +580,11 @@ ${headerFinal}
     <h1>${titleEsc}</h1>
     <p class="meta">${ymd(createdAt)} · <a href="${it.html_url}" target="_blank" rel="noopener">Issue #${number}</a></p>
     
-    <!-- 記事共有ボタン -->
-    <div class="share-buttons">
-      <span class="share-label">この記事をシェア:</span>
-      <a href="${twitterShareUrl}" target="_blank" rel="noopener" class="share-btn twitter-share">
-        <i class="fab fa-x-twitter"></i> Xでシェア
-      </a>
-      <button onclick="copyToClipboard('${absUrl}')" class="share-btn copy-link">
-        <i class="fas fa-link"></i> リンクをコピー
-      </button>
-    </div>
-    
-    <div class="content">
+    <div class="content" id="post-content">
       ${bodyHtml}
     </div>
+    <!-- 遅延挿入用シェアボタンプレースホルダ -->
+    <div id="deferred-share" data-share-url="${absUrl}" data-share-text="${shareText}"></div>
     
     <!-- 記事下部の共有ボタン -->
     <div class="share-buttons bottom-share">
@@ -606,6 +597,39 @@ ${headerFinal}
 </main>
 
 <script>
+// 遅延シェアボタン挿入（最初の段落後 or 600px表示後）
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const placeholder = document.getElementById('deferred-share');
+    if (!placeholder) return;
+    const container = document.getElementById('post-content');
+    if (!container) return;
+    const firstParagraph = container.querySelector('p, h2, h3, h4, h5, h6');
+    const inject = () => {
+      if (placeholder.dataset.injected) return;
+      const div = document.createElement('div');
+      div.className = 'share-buttons inline-share';
+      div.innerHTML = '<span class="share-label">シェア:</span>' +
+        '<a href="${twitterShareUrl}" target="_blank" rel="noopener" class="share-btn twitter-share">' +
+        '<i class="fab fa-x-twitter"></i> X</a>' +
+        '<button onclick="copyToClipboard(\'${absUrl}\')" class="share-btn copy-link">' +
+        '<i class="fas fa-link"></i> コピー</button>';
+      if (firstParagraph && firstParagraph.parentNode) {
+        firstParagraph.parentNode.insertBefore(div, firstParagraph.nextSibling);
+      } else {
+        container.insertBefore(div, container.firstChild);
+      }
+      placeholder.dataset.injected = '1';
+    };
+    // 1) INTERSECTION: ユーザが本文領域をスクロールで見始めたら
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { inject(); io.disconnect(); } });
+    }, { rootMargin: '0px 0px -60% 0px' });
+    if (firstParagraph) io.observe(firstParagraph);
+    // 2) フォールバック: 2.5秒後に未挿入なら挿入
+    setTimeout(inject, 2500);
+  } catch (e) { console.warn('share inject failed', e); }
+});
 // リンクコピー機能
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(function() {
