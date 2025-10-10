@@ -334,7 +334,7 @@ async function generateTopPageBlogSection(posts, siteOrigin) {
         <a href="${url}">${htmlEscape(p.title)}</a>
       </h3>
       <p class="blog-excerpt">
-        くろメロンの技術ブログ - iOS開発やSwiftに関する最新情報をお届けします
+        くろメロンの技術ブログ - 生成AI / iOS開発 / Swift に関する最新情報をお届けします
       </p>
       <div class="blog-card-footer">
         <a href="${url}" class="blog-read-more">記事を読む <i class="fas fa-arrow-right"></i></a>
@@ -435,7 +435,12 @@ async function main() {
     console.log(`[INFO] 記事 #${number}: Markdown変換完了 (${bodyMarkdown.length} chars → ${bodyHtml.length} chars)`);
     
     const absUrl   = `${siteOrigin}/${BLOG_DIR}/${dirName}/`; // 絶対URL（canonical/OGP用）
-    const desc     = stripTags(bodyHtml).slice(0, 160);       // 簡易メタディスクリプション
+    let descRaw = stripTags(bodyHtml).slice(0, 160);
+    // 生成AI キーワードが本文冒頭に含まれない場合は文末に追記（重複回避）
+    if (!/生成AI/.test(descRaw)) {
+      descRaw = (descRaw + ' 生成AI').trim();
+    }
+    const desc = descRaw; // メタ・構造化共通利用
 
     // ====== SEO強化：<head> に title/canonical/description/OGP/JSON-LD を挿入 ======
     // 既存テンプレの <title> を差し替え
@@ -634,14 +639,14 @@ ${footer}
 
   // ブログ一覧ページ: 強化版SEO (OGP / meta / JSON-LD Blog & BreadcrumbList / RSS)
   const blogTitle = 'くろメロンのブログ | iOS / Swift技術記事一覧';
-  const blogDesc  = 'くろメロンのブログ。iOS開発 / Swift / Xcode / WWDC / 技術アウトプットのまとめ。';
+  const blogDesc  = 'くろメロンのブログ。生成AI / iOS開発 / Swift / Xcode / WWDC / 技術アウトプットのまとめ。';
   const headerForBlog = header.replace(/<title>[\s\S]*?<\/title>/i, `<title>${blogTitle}<\/title>`);
   const blogJsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
     "name": "くろメロンのブログ",
     "url": `${siteOrigin}/blog/`,
-    "description": "iOS開発 / Swift / Xcode / WWDC / 技術アウトプット",
+  "description": "生成AI / iOS開発 / Swift / Xcode / WWDC / 技術アウトプット",
     "publisher": {
       "@type": "Organization",
       "name": "くろメロン",
