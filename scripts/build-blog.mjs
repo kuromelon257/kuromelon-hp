@@ -133,6 +133,19 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
       return placeholder;
     }
   );
+
+  // 5. すべての <script>...</script> ブロックを保護
+  //    ユーザーが手動で安全なもののみを書き込むポリシーのためホワイトリストを撤廃
+  //    注意: この変更により任意の script がそのまま出力されるため、リポジトリ改ざん時の XSS リスクが上がる
+  protectedMarkdown = protectedMarkdown.replace(
+    /<script\b[\s\S]*?<\/script>/gi,
+    (match) => {
+      const placeholder = `HTMLBLOCK${htmlBlocks.length}PLACEHOLDER`;
+      htmlBlocks.push(match);
+      console.log(`[INFO] scriptタグ保護(汎用): ${htmlBlocks.length}個目`);
+      return placeholder;
+    }
+  );
   
   const res = await fetch(`${API_BASE}/markdown`, {
     method: "POST",
