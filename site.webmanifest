@@ -1,6 +1,7 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "くろメロン",
+  "short_name": "くろメロン",
+  "description": "くろメロン | 生成AI / iOSアプリ開発 / Swift / ゲーム開発 / 技術ブログ",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +16,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#5f9a75",
-  "background_color": "#5f9a75",
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
   "display": "standalone"
 }
