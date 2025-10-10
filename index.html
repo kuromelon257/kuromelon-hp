@@ -12,10 +12,37 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kuromelon.com/">
     <meta property="og:image" content="https://kuromelon.com/assets/images/hero.jpg">
+        <meta property="og:site_name" content="くろメロンのブログ">
+        <meta property="og:locale" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="くろメロン | Kuromelon | iOSアプリ・ゲーム開発ポートフォリオ">
     <meta name="twitter:description" content="くろメロン（Kuromelon）のiOSアプリ・ゲーム開発ポートフォリオ。SwiftやSpriteKitを使った作品や実績を紹介。">
     <meta name="twitter:image" content="https://kuromelon.com/assets/images/hero.jpg">
+        <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ RSS" href="https://kuromelon.com/rss.xml">
+        <!-- Structured Data: WebSite + Organization -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "くろメロンのブログ",
+            "alternateName": "Kuromelon Portfolio",
+            "url": "https://kuromelon.com/",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://www.google.com/search?q=site:kuromelon.com+{search_term_string}",
+                "query-input": "required name=search_term_string"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "くろメロン",
+                "url": "https://kuromelon.com/",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://kuromelon.com/assets/images/chackrun_thumb.jpg"
+                }
+            }
+        }
+        </script>
     
     <!-- ファビコン設定（ちゃっくん仕様） -->
     <link rel="icon" type="image/jpeg" href="/assets/images/chackrun_thumb.jpg">
@@ -38,7 +65,7 @@
                     <ul class="nav-links">
                         <li><a href="#about">About</a></li>
                         <li><a href="#works">Works</a></li>
-                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="/blog/">Blog</a></li>
                         <li><a href="#contact">Contact</a></li>
                         <li><a href="chackrun/" class="nav-special">Chackrun</a></li>
                     </ul>
@@ -51,7 +78,10 @@
         <div class="hero-content">
             <h2>Swift × GameDev × Creativity</h2>
             <p>iOSアプリエンジニア &amp; Indie Game Developer</p>
-            <a href="#works" class="btn-primary">作品を見る</a>
+            <div class="hero-buttons">
+                <a href="#works" class="btn-primary">作品を見る</a>
+                <a href="/blog/" class="btn-secondary" style="margin-left:12px;">ブログ記事を見る</a>
+            </div>
         </div>
     </section>
 

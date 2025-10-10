@@ -435,11 +435,14 @@ async function main() {
       ]
     };
 
+    const publishedIso = new Date(createdAt).toISOString();
+    const modifiedIso  = new Date(updatedAt).toISOString();
     const jsonLd = {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": title,
-      "datePublished": new Date(createdAt).toISOString(),
+      "datePublished": publishedIso,
+      "dateModified": modifiedIso,
       "mainEntityOfPage": absUrl,
       "url": absUrl,
       "author": {
@@ -504,6 +507,9 @@ async function main() {
   <meta property="og:description" content="${htmlEscape(desc)}">
   <meta property="og:url" content="${absUrl}">
   <meta property="og:image" content="${ogImage}">
+  <meta property="og:site_name" content="くろメロンのブログ">
+  <meta property="article:published_time" content="${publishedIso}">
+  <meta property="article:modified_time" content="${modifiedIso}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${titleEsc}">
   <meta name="twitter:description" content="${htmlEscape(desc)}">
