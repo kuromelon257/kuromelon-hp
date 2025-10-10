@@ -632,28 +632,68 @@ ${footer}
     return `<li><a href="${siteOrigin}${p.path}">${htmlEscape(p.title)}</a> <span class="date">${ymd(p.createdAt)}</span></li>`;
   }).join("\n");
 
-  // ブログ一覧ページにもダークテーマCSS + シンタックスハイライトを適用
-  const headerWithBlogCSS = header.replace(/<\/head>/i, `
+  // ブログ一覧ページ: 強化版SEO (OGP / meta / JSON-LD Blog & BreadcrumbList / RSS)
+  const blogTitle = 'くろメロンのブログ | iOS / Swift技術記事一覧';
+  const blogDesc  = 'くろメロンのブログ。iOS開発 / Swift / Xcode / WWDC / 技術アウトプットのまとめ。';
+  const headerForBlog = header.replace(/<title>[\s\S]*?<\/title>/i, `<title>${blogTitle}<\/title>`);
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "くろメロンのブログ",
+    "url": `${siteOrigin}/blog/`,
+    "description": "iOS開発 / Swift / Xcode / WWDC / 技術アウトプット",
+    "publisher": {
+      "@type": "Organization",
+      "name": "くろメロン",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteOrigin}/assets/images/chackrun_thumb.jpg`
+      }
+    }
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": `${siteOrigin}/`},
+      {"@type": "ListItem", "position": 2, "name": "ブログ", "item": `${siteOrigin}/blog/`}
+    ]
+  };
+  const headerWithBlogCSS = headerForBlog.replace(/<\/head>/i, `
   <link rel="canonical" href="${siteOrigin}/blog/">
+  <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ RSS" href="${siteOrigin}/rss.xml">
+  <meta name="description" content="${htmlEscape(blogDesc)}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="くろメロンのブログ">
+  <meta property="og:description" content="${htmlEscape(blogDesc)}">
+  <meta property="og:url" content="${siteOrigin}/blog/">
+  <meta property="og:image" content="${siteOrigin}/assets/images/chackrun_thumb.jpg">
+  <meta property="og:site_name" content="くろメロンのブログ">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="くろメロンのブログ">
+  <meta name="twitter:description" content="${htmlEscape(blogDesc)}">
+  <meta name="twitter:image" content="${siteOrigin}/assets/images/chackrun_thumb.jpg">
   <link rel="stylesheet" href="/blog/blog.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
   <!-- シンタックスハイライト -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      hljs.highlightAll();
-    });
+    document.addEventListener('DOMContentLoaded', function() { hljs.highlightAll(); });
   </script>
+  <script type="application/ld+json">${JSON.stringify(blogJsonLd)}</script>
+  <script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
 </head>`);
 
   const indexHtml = `
 ${headerWithBlogCSS}
 <main class="container">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="${siteOrigin}/">ホーム</a> &gt; <span>ブログ</span>
+  </nav>
   <h1>くろメロンのブログ</h1>
   <p class="blog-description">iOS開発、Swift、技術に関する記事を発信しています 🚀</p>
   <ul class="post-list">
