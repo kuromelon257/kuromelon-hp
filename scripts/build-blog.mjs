@@ -461,7 +461,9 @@ async function main() {
       },
       "sameAs": [
         `${siteOrigin}`,
-        `${siteOrigin}/blog/`
+        `${siteOrigin}/blog/`,
+        `${siteOrigin}/chackrun/`,
+        "https://github.com/kuromelon257"
       ]
     };
 
@@ -477,11 +479,26 @@ async function main() {
       "url": absUrl,
       "author": {
         "@type": "Person",
-        "name": "くろメロン"
+        "name": "くろメロン",
+        "url": `${siteOrigin}/`,
+        "sameAs": [
+          "https://github.com/kuromelon257"
+        ]
       },
       "publisher": publisher,
       "image": ogImage,
-      "description": desc
+      "description": desc,
+      "keywords": "生成AI,iOS,Swift,ゲーム開発,技術ブログ"
+    };
+
+    const breadcrumbJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "ホーム", "item": `${siteOrigin}/`},
+        {"@type": "ListItem", "position": 2, "name": "ブログ", "item": `${siteOrigin}/blog/`},
+        {"@type": "ListItem", "position": 3, "name": title, "item": absUrl}
+      ]
     };
 
     const seoHead = `
@@ -544,9 +561,8 @@ async function main() {
   <meta name="twitter:title" content="${titleEsc}">
   <meta name="twitter:description" content="${htmlEscape(desc)}">
   <meta name="twitter:image" content="${ogImage}">
-  <script type="application/ld+json">
-  ${JSON.stringify(jsonLd)}
-  </script>`;
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+  <script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>`;
     const headerFinal = headerWithTitle.replace(/<\/head>/i, `${seoHead}\n</head>`);
 
     // X共有用のURL・テキスト生成
@@ -557,6 +573,9 @@ async function main() {
     const html = `
 ${headerFinal}
 <main class="container">
+  <nav class="breadcrumb" aria-label="breadcrumb" style="font-size:0.85rem;margin:0 0 1rem;opacity:0.85;">
+    <a href="${siteOrigin}/">ホーム</a> &gt; <a href="${siteOrigin}/blog/">ブログ</a> &gt; <span>${titleEsc}</span>
+  </nav>
   <article class="post">
     <h1>${titleEsc}</h1>
     <p class="meta">${ymd(createdAt)} · <a href="${it.html_url}" target="_blank" rel="noopener">Issue #${number}</a></p>
