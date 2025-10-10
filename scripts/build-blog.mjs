@@ -639,7 +639,8 @@ ${footer}
       createdAt,
       lastmod: updatedAt,
       path: `/${BLOG_DIR}/${dirName}/`,
-      issueUrl: it.html_url
+      issueUrl: it.html_url,
+      image: ogImage // 一覧表示用サムネ（本文先頭画像 or フォールバック）
     });
 
     // インクリメンタル更新（環境変数で有効化）
@@ -653,7 +654,18 @@ ${footer}
 
   // 6) 一覧ページ生成（/blog/index.html）
   const listItems = posts.map(p => {
-    return `<li><a href="${siteOrigin}${p.path}">${htmlEscape(p.title)}</a> <span class="date">${ymd(p.createdAt)}</span></li>`;
+    const date = ymd(p.createdAt);
+    const img = p.image || `${siteOrigin}/assets/images/chackrun_thumb.jpg`;
+    const safeTitle = htmlEscape(p.title);
+    return `<li class="post-item">
+      <a href="${siteOrigin}${p.path}" class="post-link">
+        <img class="post-thumb" src="${img}" alt="${safeTitle} サムネイル" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+        <div class="post-info">
+          <span class="post-title">${safeTitle}</span>
+          <span class="date">${date}</span>
+        </div>
+      </a>
+    </li>`;
   }).join("\n");
 
   // ブログ一覧ページ: 強化版SEO (OGP / meta / JSON-LD Blog & BreadcrumbList / RSS)
