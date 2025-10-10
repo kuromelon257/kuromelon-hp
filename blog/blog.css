@@ -774,23 +774,26 @@ main.container h1 {
 
 /* レスポンシブ（モバイル調整） */
 @media (max-width: 768px) {
-    .container { padding: 0.5rem; max-width: 100%; }
+    /* 更に左右マージン圧縮 */
+    .container { padding: 0.35rem; max-width: 100%; }
     main.container { margin: 0.5rem auto; border-radius: 0; box-shadow: none; border: none; background: transparent; }
-    .post { padding: 0.75rem 0.75rem 1.25rem; }
-    .post h1 { font-size: 1.65rem; line-height: 1.25; }
-    .content h2 { font-size: 1.35rem; }
-    .content h3 { font-size: 1.15rem; }
+    .post { padding: 0.7rem 0.6rem 1.15rem; }
+    /* 視線のジャンプを抑えるためタイトル縮小 */
+    .post h1 { font-size: 1.5rem; line-height: 1.22; }
+    .content h2 { font-size: 1.25rem; }
+    .content h3 { font-size: 1.1rem; }
     .content p, .content li { line-height: 1.65; }
     .share-buttons { padding: 1rem; }
     .bottom-share { margin: 2.25rem 0 1rem; }
     .post-list .date { float: none; display: block; margin-top: 0.5rem; }
 }
 @media (max-width: 480px) {
-    .container { padding: 0.4rem; }
-    .post { padding: 0.7rem 0.6rem 1.1rem; }
-    .post h1 { font-size: 1.5rem; }
-    .content h2 { font-size: 1.25rem; }
-    .content h3 { font-size: 1.05rem; }
+    .container { padding: 0.25rem; }
+    .post { padding: 0.65rem 0.5rem 1rem; }
+    /* 片手操作時の視認性と改行頻度バランス (約32〜36字幅想定) */
+    .post h1 { font-size: 1.3rem; line-height: 1.2; }
+    .content h2 { font-size: 1.15rem; }
+    .content h3 { font-size: 1rem; }
     .content pre { margin-left: -0.4rem; margin-right: -0.4rem; border-left: 2px solid var(--blog-border); border-right: 2px solid var(--blog-border); }
 }
 
