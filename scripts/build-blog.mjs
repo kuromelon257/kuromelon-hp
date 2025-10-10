@@ -121,6 +121,18 @@ async function convertMarkdownToHtml(markdown, repo = REPO) {
       return placeholder;
     }
   );
+
+  // 4. class属性を持たない <iframe> （YouTube等の素の埋め込み）を保護
+  // 既に上の処理で class="..." 付きiframeは保護されているので、ここでは class= が無いものだけ対象
+  protectedMarkdown = protectedMarkdown.replace(
+    /<iframe(?:(?!class=)[^>])*?>[\s\S]*?<\/iframe>/gi,
+    (match) => {
+      const placeholder = `HTMLBLOCK${htmlBlocks.length}PLACEHOLDER`;
+      htmlBlocks.push(match);
+      console.log(`[INFO] iframe(無class) 埋め込み保護: ${htmlBlocks.length}個目`);
+      return placeholder;
+    }
+  );
   
   const res = await fetch(`${API_BASE}/markdown`, {
     method: "POST",
