@@ -669,15 +669,15 @@ ${footer}
   }).join("\n");
 
   // ブログ一覧ページ: 強化版SEO (OGP / meta / JSON-LD Blog & BreadcrumbList / RSS)
-  const blogTitle = 'くろメロンのブログ | iOS / Swift技術記事一覧';
-  const blogDesc  = 'くろメロンのブログ。生成AI / iOS開発 / Swift / Xcode / WWDC / 技術アウトプットのまとめ。';
+  const blogTitle = 'くろメロンのブログ | 生成AI × iOS / Swift × ゲーム開発 × 登壇レポ';
+  const blogDesc  = '生成AI活用 / iOSアプリ開発 / Swift / SpriteKit / ゲーム開発 / iOSDC登壇 / カンファレンス参加レポ / Sora 2動画生成検証 / extension DC など学びと検証をまとめる技術ブログ。';
   const headerForBlog = header.replace(/<title>[\s\S]*?<\/title>/i, `<title>${blogTitle}<\/title>`);
   const blogJsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
     "name": "くろメロンのブログ",
     "url": `${siteOrigin}/blog/`,
-  "description": "生成AI / iOS開発 / Swift / Xcode / WWDC / 技術アウトプット",
+  "description": "生成AI活用 / iOS / Swift / SpriteKit / ゲーム開発 / iOSDC / カンファレンス / Sora 2 / extension DC 技術アウトプット",
     "publisher": {
       "@type": "Organization",
       "name": "くろメロン",
@@ -730,8 +730,8 @@ ${headerWithBlogCSS}
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="${siteOrigin}/">ホーム</a> &gt; <span>ブログ</span>
   </nav>
-  <h1>くろメロンのブログ</h1>
-  <p class="blog-description">iOS開発、Swift、技術に関する記事を発信しています 🚀</p>
+  <h1>くろメロンのブログ | 生成AI × iOS / Swift × ゲーム開発</h1>
+  <p class="blog-description">生成AI活用・iOS / Swift・SpriteKitによるゲーム開発・iOSDC登壇ノウハウ・カンファレンス参加レポ（extension DC / iOSDC）・Sora 2動画生成検証などを深掘りして発信する技術ブログです。</p>
   <ul class="post-list">
     ${listItems || "<li>まだ記事がありません</li>"}
   </ul>
