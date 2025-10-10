@@ -60,13 +60,11 @@ body {
         #0f0f0f 50%, 
         var(--blog-bg-secondary) 100%) !important;
     background-attachment: fixed;
-    
     /* 細かいドットパターン */
     background-image: 
         radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 1px, transparent 1px),
         radial-gradient(circle at 80% 50%, rgba(255, 107, 53, 0.05) 1px, transparent 1px);
     background-size: 50px 50px, 30px 30px;
-}
 
 /* ヘッダーのダーク化 */
 header {
@@ -774,23 +772,26 @@ main.container h1 {
     font-family: var(--blog-font-code);
 }
 
-/* レスポンシブ */
+/* レスポンシブ（モバイル調整） */
 @media (max-width: 768px) {
-    /* 余白を少し詰めて本文幅を拡張 */
-    .container { padding: 0.75rem; }
-    main.container { margin: 0.75rem auto; }
-    .post { padding: 1rem 1rem 1.5rem; }
-    .post h1 { font-size: 2rem; }
+    .container { padding: 0.5rem; max-width: 100%; }
+    main.container { margin: 0.5rem auto; border-radius: 0; box-shadow: none; border: none; background: transparent; }
+    .post { padding: 0.75rem 0.75rem 1.25rem; }
+    .post h1 { font-size: 1.65rem; line-height: 1.25; }
+    .content h2 { font-size: 1.35rem; }
+    .content h3 { font-size: 1.15rem; }
+    .content p, .content li { line-height: 1.65; }
+    .share-buttons { padding: 1rem; }
+    .bottom-share { margin: 2.25rem 0 1rem; }
     .post-list .date { float: none; display: block; margin-top: 0.5rem; }
 }
-
 @media (max-width: 480px) {
-    /* 超狭幅端末（iPhone SE等）ではさらに左右余白を削減 */
-    .container { padding: 0.5rem; }
-    .post { padding: 0.85rem 0.85rem 1.25rem; }
-    .post h1 { font-size: 1.75rem; }
-    /* コードブロックの横スクロール余白最適化 */
-    .content pre { margin-left: -0.25rem; margin-right: -0.25rem; border-left: 2px solid var(--blog-border); border-right: 2px solid var(--blog-border); }
+    .container { padding: 0.4rem; }
+    .post { padding: 0.7rem 0.6rem 1.1rem; }
+    .post h1 { font-size: 1.5rem; }
+    .content h2 { font-size: 1.25rem; }
+    .content h3 { font-size: 1.05rem; }
+    .content pre { margin-left: -0.4rem; margin-right: -0.4rem; border-left: 2px solid var(--blog-border); border-right: 2px solid var(--blog-border); }
 }
 
 /* スクロールバーのカスタマイズ */
@@ -1013,4 +1014,7 @@ video, .content video, .post video, main video, article video {
     height: auto !important;
     display: block;
     box-sizing: border-box;
+}
+
+/* 末尾調整（lintエラー回避用） */
 }
