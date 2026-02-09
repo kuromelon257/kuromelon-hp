@@ -77,12 +77,12 @@
   <meta property="og:image" content="https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768">
   <meta property="og:site_name" content="くろメロンのブログ">
   <meta property="article:published_time" content="2026-02-09T04:25:35.000Z">
-  <meta property="article:modified_time" content="2026-02-09T04:25:35.000Z">
+  <meta property="article:modified_time" content="2026-02-09T05:45:45.000Z">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発">
   <meta name="twitter:description" content="1. 何が起きた Anthropic社がオープンソースで 「anthropics/knowledge-work-plugins」 を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude C 生成AI">
   <meta name="twitter:image" content="https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発","datePublished":"2026-02-09T04:25:35.000Z","dateModified":"2026-02-09T04:25:35.000Z","mainEntityOfPage":"https://kuromelon.com/blog/6/","url":"https://kuromelon.com/blog/6/","author":{"@type":"Person","name":"くろメロン","url":"https://kuromelon.com/","sameAs":["https://github.com/kuromelon257"]},"publisher":{"@type":"Organization","name":"くろメロンのブログ","alternateName":"くろメロン技術ブログ","logo":{"@type":"ImageObject","url":"https://kuromelon.com/assets/images/chackrun_thumb.jpg"},"sameAs":["https://kuromelon.com","https://kuromelon.com/blog/","https://kuromelon.com/chackrun/","https://github.com/kuromelon257"]},"image":"https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768","description":"1. 何が起きた Anthropic社がオープンソースで 「anthropics/knowledge-work-plugins」 を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude C 生成AI","keywords":"生成AI,iOS,Swift,ゲーム開発,技術ブログ"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発","datePublished":"2026-02-09T04:25:35.000Z","dateModified":"2026-02-09T05:45:45.000Z","mainEntityOfPage":"https://kuromelon.com/blog/6/","url":"https://kuromelon.com/blog/6/","author":{"@type":"Person","name":"くろメロン","url":"https://kuromelon.com/","sameAs":["https://github.com/kuromelon257"]},"publisher":{"@type":"Organization","name":"くろメロンのブログ","alternateName":"くろメロン技術ブログ","logo":{"@type":"ImageObject","url":"https://kuromelon.com/assets/images/chackrun_thumb.jpg"},"sameAs":["https://kuromelon.com","https://kuromelon.com/blog/","https://kuromelon.com/chackrun/","https://github.com/kuromelon257"]},"image":"https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768","description":"1. 何が起きた Anthropic社がオープンソースで 「anthropics/knowledge-work-plugins」 を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude C 生成AI","keywords":"生成AI,iOS,Swift,ゲーム開発,技術ブログ"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://kuromelon.com/"},{"@type":"ListItem","position":2,"name":"ブログ","item":"https://kuromelon.com/blog/"},{"@type":"ListItem","position":3,"name":"Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発","item":"https://kuromelon.com/blog/6/"}]}</script>
 </head>
 <body>
@@ -569,6 +569,51 @@ claude plugin install legal</code></pre>
     )
 
     <span class="pl-k">return</span> {<span class="pl-s">"review"</span>: <span class="pl-s1">response</span>.<span class="pl-c1">text</span>}</code></pre>
+<p dir="auto">動かしてみたところ、以下のようなプラグインを使用したかのような出力結果が得られた。</p>
+<div class="highlight highlight-text-md" dir="auto"><pre class="notranslate"><span class="pl-mh">## <span class="pl-en">NDAトリアージレポート</span></span>
+
+<span class="pl-s">**</span>分類<span class="pl-s">**</span>: RED (重大な問題)
+<span class="pl-s">**</span>当事者<span class="pl-s">**</span>: Acme Corporation および Beta Technologies Inc.
+<span class="pl-s">**</span>種類<span class="pl-s">**</span>: 相互秘密保持契約 (Mutual NDA)
+<span class="pl-s">**</span>期間<span class="pl-s">**</span>: 契約期間2年、秘密保持義務存続期間3年
+<span class="pl-s">**</span>準拠法<span class="pl-s">**</span>: カリフォルニア州法
+<span class="pl-s">**</span>審査基準<span class="pl-s">**</span>: デフォルト基準
+
+<span class="pl-mh">## <span class="pl-en">スクリーニング結果</span></span>
+
+<span class="pl-ml">|</span> 基準 <span class="pl-ml">|</span> ステータス <span class="pl-ml">|</span> 詳細 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span>:------------------------------------<span class="pl-ml">|</span>:-----------<span class="pl-ml">|</span>:---------------------------------------------------------------------------------------------------------------------------------<span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 相互義務 (Mutual Obligations) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 本NDAは相互秘密保持契約です。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 秘密情報の定義範囲 (Definition Scope) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 合理的な範囲であり、過度に広範ではありません。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 期間 (Term) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 契約期間2年、秘密保持義務存続期間3年は標準的な範囲です。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 標準的除外規定 (Standard Carveouts) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 公知情報、開示前の既知情報、第三者からの適法な入手情報、独立開発情報、法的強制による開示の全てが含まれています。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 許可される開示 (Permitted Disclosures) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 従業員、契約者、アドバイザーへの開示が認められています。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 返還・破棄 (Return/Destruction) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 契約終了時または要求時の返還・破棄義務があり、法令遵守またはバックアップ目的でのコピー保持の例外が明示されています。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 残留条項 (Residuals Clause) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 残留条項はありません。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 従業員勧誘禁止 (Non-Solicitation) <span class="pl-ml">|</span> FAIL <span class="pl-ml">|</span> 従業員勧誘禁止条項 (第11条) が含まれています。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 競業禁止 (Non-Compete) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 競業禁止条項はありません。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 差止請求による救済 (Injunctive Relief) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 損害賠償額の予定条項はなく、差止請求による救済の可能性が記述されています。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 準拠法 (Governing Law) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> カリフォルニア州は商業取引において確立された法域であり、管轄裁判所も一致しています。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> 譲渡 (Assignment) <span class="pl-ml">|</span> PASS <span class="pl-ml">|</span> 相手方の事前の書面による同意なしには譲渡できない、一般的な規定です。 <span class="pl-ml">|</span>
+<span class="pl-ml">|</span> その他の規定 (Unusual Provisions) <span class="pl-ml">|</span> FLAG <span class="pl-ml">|</span> 従業員勧誘禁止条項はNDAに含めるべきではない条項です。 <span class="pl-ml">|</span>
+
+<span class="pl-mh">## <span class="pl-en">発見された問題</span></span>
+
+<span class="pl-mh">### <span class="pl-en">問題1 -- RED: 従業員勧誘禁止条項 (Non-Solicitation Clause)</span></span>
+<span class="pl-s">**</span>内容<span class="pl-s">**</span>: 第11条に、契約期間中およびその後12ヶ月間、当事者が「本件目的」に関連して接触した相手方の従業員を直接勧誘して雇用することを禁止する条項が含まれています。一般的な求人広告は違反とみなされない旨の記述はあります。
+<span class="pl-s">**</span>リスク<span class="pl-s">**</span>: 秘密保持契約は秘密情報の保護を目的とするものであり、従業員勧誘禁止のような競業避止義務に類する条項を含めるべきではありません。このような条項は、将来の採用活動を不必要に制限し、また意図しない法的責任を生じさせる可能性があります。従業員勧誘禁止条項は、通常、秘密保持契約の範囲外の事項と見なされます。
+<span class="pl-s">**</span>提案される修正<span class="pl-s">**</span>: 第11条の「NON-SOLICITATION」条項を完全に削除することを推奨します。相手方が強く主張する場合は、対象者を重要な個人に限定し、期間を短縮するよう交渉するか、別途の契約で対処することを提案します。
+
+<span class="pl-mh">## <span class="pl-en">勧告</span></span>
+
+本NDAは、従業員勧誘禁止条項を含むため、<span class="pl-s">**</span>RED (重大な問題)<span class="pl-s">**</span> に分類されます。標準的な秘密保持契約に含めるべきではない条項が含まれているため、署名すべきではありません。
+
+<span class="pl-mh">## <span class="pl-en">次のステップ</span></span>
+
+<span class="pl-s">1</span><span class="pl-v">.</span>  <span class="pl-s">**</span>法務部門への連携<span class="pl-s">**</span>: 本NDAを貴社の法務部門に転送し、詳細なレビューを依頼してください。
+<span class="pl-s">2</span><span class="pl-v">.</span>  <span class="pl-s">**</span>カウンタープロポーザルの準備<span class="pl-s">**</span>: 貴社の標準的な秘密保持契約書を相手方へのカウンタープロポーザルとして用意するか、または本NDAの第11条の削除を交渉する準備をしてください。
+<span class="pl-s">3</span><span class="pl-v">.</span>  <span class="pl-s">**</span>交渉<span class="pl-s">**</span>: 法務部門の指示に従い、問題のある条項の修正または削除について相手方と交渉してください。</pre></div>
+<p dir="auto">Geminiであってもプラグインの内容を多少補正させてあげれば、かなり近しい結果が得られることがわかった。</p>
 <h3 dir="auto">何をやっているか</h3>
 <p dir="auto">処理の流れは3段階：</p>
 <p dir="auto"><strong>起動時（ファイル読み込み）：</strong></p>
@@ -588,7 +633,6 @@ claude plugin install legal</code></pre>
 <li><strong>出力の安定化</strong>：<code class="notranslate">response_mime_type: "application/json"</code> でJSON出力を強制する</li>
 <li><strong>LLMの差し替え</strong>：<code class="notranslate">model="gemini-2.0-flash"</code> を変えるだけで別モデルに切り替えられる。<code class="notranslate">.md</code> ファイルはそのまま</li>
 </ul>
-<p dir="auto">※ AWS（Lambda + API Gateway など）での動作確認は現在進行中。</p>
 <p dir="auto">ビジネスロジックの大部分がリポジトリの <code class="notranslate">.md</code> ファイルに収まっているので、SaaS化しても機能追加の主な作業は「Markdownを書く（またはAnthropicの更新を取り込む）」ことになる。</p>
 <hr>
 <h2 dir="auto">まとめ</h2>
