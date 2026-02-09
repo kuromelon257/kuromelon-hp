@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発 | くろメロンのブログ</title>
+  <meta name="description" content="くろメロンの技術ブログ。iOS開発、Swift、SwiftUI、プログラミングの最新情報とノウハウを発信しています。">
+  <meta name="keywords" content="くろメロン,くろメロンのブログ,iOS開発,Swift,SwiftUI,プログラミング,技術ブログ,アプリ開発">
+  <meta name="author" content="くろメロン">
+  
+  <!-- Favicon / PWA Icons -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Kuromelon" />
+  <link rel="manifest" href="/site.webmanifest" />
+  
+  <!-- PWA・テーマ設定 -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="msapplication-TileColor" content="#0a0a0a">
+  <meta name="msapplication-TileImage" content="/apple-touch-icon.png">
+  
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <link rel="canonical" href="https://kuromelon.com/blog/6/">
+  <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ" href="https://kuromelon.com/rss.xml">
+  <link rel="stylesheet" href="/blog/blog.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- シンタックスハイライト - highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // GitHubのスタイルをリセットしてからhighlight.jsを適用
+      document.querySelectorAll('pre code').forEach(function(block) {
+        // GitHubのspanスタイルをクリア
+        const spans = block.querySelectorAll('span');
+        spans.forEach(span => {
+          span.className = '';
+          span.style = '';
+        });
+        
+        // highlight.jsを手動で適用
+        if (block.className.includes('language-')) {
+          hljs.highlightElement(block);
+        }
+        
+        // 言語ラベルを追加
+        const language = block.className.match(/language-(w+)/);
+        if (language) {
+          const label = document.createElement('div');
+          label.className = 'code-language-label';
+          label.textContent = language[1].toUpperCase();
+          block.parentNode.insertBefore(label, block);
+        }
+      });
+      
+      // 残りのコードブロックも処理
+      hljs.highlightAll();
+    });
+  </script>
+  
+  <meta name="description" content="1. 何が起きた Anthropic社がオープンソースで 「anthropics/knowledge-work-plugins」 を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude C 生成AI">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発">
+  <meta property="og:description" content="1. 何が起きた Anthropic社がオープンソースで 「anthropics/knowledge-work-plugins」 を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude C 生成AI">
+  <meta property="og:url" content="https://kuromelon.com/blog/6/">
+  <meta property="og:image" content="https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768">
+  <meta property="og:site_name" content="くろメロンのブログ">
+  <meta property="article:published_time" content="2026-02-09T04:25:35.000Z">
+  <meta property="article:modified_time" content="2026-02-09T04:25:35.000Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発">
+  <meta name="twitter:description" content="1. 何が起きた Anthropic社がオープンソースで 「anthropics/knowledge-work-plugins」 を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude C 生成AI">
+  <meta name="twitter:image" content="https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発","datePublished":"2026-02-09T04:25:35.000Z","dateModified":"2026-02-09T04:25:35.000Z","mainEntityOfPage":"https://kuromelon.com/blog/6/","url":"https://kuromelon.com/blog/6/","author":{"@type":"Person","name":"くろメロン","url":"https://kuromelon.com/","sameAs":["https://github.com/kuromelon257"]},"publisher":{"@type":"Organization","name":"くろメロンのブログ","alternateName":"くろメロン技術ブログ","logo":{"@type":"ImageObject","url":"https://kuromelon.com/assets/images/chackrun_thumb.jpg"},"sameAs":["https://kuromelon.com","https://kuromelon.com/blog/","https://kuromelon.com/chackrun/","https://github.com/kuromelon257"]},"image":"https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768","description":"1. 何が起きた Anthropic社がオープンソースで 「anthropics/knowledge-work-plugins」 を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude C 生成AI","keywords":"生成AI,iOS,Swift,ゲーム開発,技術ブログ"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://kuromelon.com/"},{"@type":"ListItem","position":2,"name":"ブログ","item":"https://kuromelon.com/blog/"},{"@type":"ListItem","position":3,"name":"Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発","item":"https://kuromelon.com/blog/6/"}]}</script>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="/">Home</a> | <a href="/blog/">Blog</a>
+  </nav>
+</header>
+
+<main class="container">
+  <nav class="breadcrumb" aria-label="breadcrumb" style="font-size:0.85rem;margin:0 0 1rem;opacity:0.85;">
+    <a href="https://kuromelon.com/">ホーム</a> &gt; <a href="https://kuromelon.com/blog/">ブログ</a> &gt; <span>Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発</span>
+  </nav>
+  <article class="post">
+    <h1>Anthropic社「knowledge-work-plugins」から読み解く、特化型エージェントの導入・運用・開発</h1>
+    <p class="meta">2026-02-09 · <a href="https://github.com/kuromelon257/kuromelon-hp/issues/6" target="_blank" rel="noopener">Issue #6</a></p>
+    
+    <div class="content" id="post-content">
+      <h2 dir="auto">1. 何が起きた</h2>
+<p dir="auto">Anthropic社がオープンソースで<a href="https://github.com/anthropics/knowledge-work-plugins">「anthropics/knowledge-work-plugins」</a>を公開した。ざっくり言えば、Claudeを法務・財務・営業といった特定職種の実務エージェントに仕立てるためのプラグイン集だ。Claude Coworkでの利用が主な想定だが、Claude Code（CLI）でも使える。</p>
+<p dir="auto">カバーしている領域は11個：</p>
+<ol dir="auto">
+<li>Productivity（タスク・カレンダー管理）</li>
+<li>Sales（見込み客調査・パイプライン分析）</li>
+<li>Customer Support（チケット対応・ナレッジベース構築）</li>
+<li>Product Management（仕様書作成・ユーザーリサーチ）</li>
+<li>Marketing（コンテンツ制作・ブランドボイス適用）</li>
+<li>Legal（契約レビュー・コンプライアンス）</li>
+<li>Finance（財務諸表分析・勘定照合）</li>
+<li>Data（SQL生成・統計解析・可視化）</li>
+<li>Enterprise Search（社内ドキュメント横断検索）</li>
+<li>Bio-research（前臨床研究・文献調査）</li>
+<li>Cowork-plugin-management（カスタムプラグイン構築）</li>
+</ol>
+<p dir="auto">何がインパクトだったかというと、SaaS企業の株価が動くレベルの反響があったこと。法務や経理のように「定型的だが専門知識が要る業務」を丸ごとAIエージェントに委ねられる道筋が、具体的なコードとして示された。単に仕事が奪われるという話ではなく、「ベテランの頭の中にある業務ノウハウをMarkdownに書き出してAIに読ませる」という運用モデルが具体的に見えてきたことが本質だと思う。</p>
+<p dir="auto">（参考：<a href="https://xtech.nikkei.com/atcl/nxt/column/18/03492/020500001/" rel="nofollow">「SaaSの死」に3つの疑問　再び株価急落、震源はAnthropicのAI新機能</a>、<a href="https://business.nikkei.com/atcl/gen/19/00511/020600059/" rel="nofollow">死ぬSaaS・死なないSaaSの境界線は　アンソロピックショックに震える市場</a>）</p>
+<hr>
+<h2 dir="auto">2. 実際にLegalプラグインを導入してみた</h2>
+<p dir="auto">ここからは、実際にLegal（法務）プラグインをインストールして動かしてみた記録。Cowork（GUI）とClaude Code（CLI）の両方で試した。</p>
+<h3 dir="auto">Claude Code（CLI）の場合</h3>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768"><img width="100%" alt="スクリーンショット 2026-02-04 12 09 02" src="https://github.com/user-attachments/assets/0cff6aa5-a218-4079-beaa-4ceea8626768" style="max-width: 100%;"></a>
+<p dir="auto">CLIは2ステップ。まず「マーケットプレイス」を登録してから、プラグインをインストールする。</p>
+<pre><code class="language-shell"><span class="pl-c"><span class="pl-c">#</span> マーケットプレイスを追加（デフォルトには入っていない）</span>
+claude plugin marketplace add anthropics/knowledge-work-plugins
+
+<span class="pl-c"><span class="pl-c">#</span> プラグインをインストール</span>
+claude plugin install legal</code></pre>
+<p dir="auto">ポイントは、<code class="notranslate">legal</code> プラグインはデフォルトの <code class="notranslate">claude-plugins-official</code> とは別のリポジトリにあること。先に <code class="notranslate">marketplace add</code> しないと <code class="notranslate">install</code> で見つからない。ここは最初ちょっと戸惑った。インストール後、Claude Codeを再起動すれば反映される。</p>
+<h3 dir="auto">Cowork（Desktop/Web）の場合</h3>
+<p dir="auto">Coworkのほうが導入自体はシンプルで、<a href="https://claude.com/plugins/legal" rel="nofollow">claude.com/plugins/legal</a> にアクセスしてインストールボタンを押すだけ。CLIのようなマーケットプレイス登録は不要。</p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c5b028e6-f5f2-47e4-93d7-3135f4088170"><img width="100%" alt="スクリーンショット 2026-02-04 12 10 32" src="https://github.com/user-attachments/assets/c5b028e6-f5f2-47e4-93d7-3135f4088170" style="max-width: 100%;"></a>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/87e0259e-ee83-49d1-b03f-0f98c04717b4"><img width="100%" alt="スクリーンショット 2026-02-04 12 10 52" src="https://github.com/user-attachments/assets/87e0259e-ee83-49d1-b03f-0f98c04717b4" style="max-width: 100%;"></a>
+<p dir="auto">……と思ったら、一発では通らなかった。</p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/80c71991-6223-424e-9fd8-ad886bef06df"><img width="100%" alt="スクリーンショット 2026-02-04 12 12 50" src="https://github.com/user-attachments/assets/80c71991-6223-424e-9fd8-ad886bef06df" style="max-width: 100%;"></a>
+<p dir="auto">プラグインに対する許可設定がOFFになっていたのが原因。設定画面で許可をONにしてリトライしたら通った。</p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3abb2c1b-c7df-4b88-8cbf-f7989be972b0"><img width="100%" alt="スクリーンショット 2026-02-04 12 16 04" src="https://github.com/user-attachments/assets/3abb2c1b-c7df-4b88-8cbf-f7989be972b0" style="max-width: 100%;"></a>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/84e67264-e350-43b7-8004-deb014ad90e5"><img width="100%" alt="スクリーンショット 2026-02-04 12 14 52" src="https://github.com/user-attachments/assets/84e67264-e350-43b7-8004-deb014ad90e5" style="max-width: 100%;"></a>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bf64586a-0a29-4110-b7cb-3d79c601b45f"><img width="100%" alt="スクリーンショット 2026-02-04 12 15 18" src="https://github.com/user-attachments/assets/bf64586a-0a29-4110-b7cb-3d79c601b45f" style="max-width: 100%;"></a>
+<h3 dir="auto">NDAを食わせてみる</h3>
+<p dir="auto">インストールしただけでは面白くないので、サンプルのNDA（秘密保持契約書）を用意して <code class="notranslate">/legal:triage-nda</code> コマンドで分析させてみた。</p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/def591e7-a5fc-47b8-bec7-dc165802ed31"><img width="100%" alt="スクリーンショット 2026-02-04 12 18 01" src="https://github.com/user-attachments/assets/def591e7-a5fc-47b8-bec7-dc165802ed31" style="max-width: 100%;"></a>
+<p dir="auto">結果は「RED（署名すべきでない）」。除外規定の欠如、従業員への開示規定なし、返還・破棄条項なし、準拠法の未記載——といったリスクを一覧で指摘してきた。具体的な修正文案まで出してくれるので、法務の一次スクリーニングとしては十分実用的に見える。</p>
+<p dir="auto">ただ気になった点もある。同じNDAを何度か食わせてみたが、出力のフォーマットが毎回微妙に変わる。指摘する項目は概ね同じだが、表の形式やセクションの並びが安定しない。実務で使うならこのあたりの出力安定性はカスタマイズで詰める必要がありそうだ（この話は後述するSkillのカスタマイズの章で触れる）。</p>
+<hr>
+<h2 dir="auto">3. プラグインの中身は「ただのMarkdown」だった</h2>
+<p dir="auto">リポジトリを開いて最初に驚いたのは、コードがほぼないこと。プラグインの実体は Command、Skill、Connector の3要素で構成されているのだが、どれもMarkdownかJSONで書かれているだけだ。Legalプラグインのディレクトリ構造を見ると一目瞭然：</p>
+<pre class="notranslate"><code class="notranslate">legal/
+├── .claude-plugin/
+│   └── plugin.json           # プラグインの名前・説明（数行のJSON）
+├── .mcp.json                 # 外部ツールの接続先URL
+├── CONNECTORS.md             # 接続先ツールの一覧
+├── commands/                 # スラッシュコマンド（.mdが5つ）
+│   ├── review-contract.md
+│   ├── triage-nda.md
+│   ├── vendor-check.md
+│   ├── brief.md
+│   └── respond.md
+└── skills/                   # ドメイン知識（フォルダごとにSKILL.md）
+    ├── contract-review/
+    │   └── SKILL.md
+    ├── nda-triage/
+    │   └── SKILL.md
+    └── ...（他4つ）
+</code></pre>
+<h3 dir="auto">Command：「何をどの順番でやるか」の手順書</h3>
+<p dir="auto"><code class="notranslate">/legal:review-contract</code> のようにスラッシュで呼び出すもの。中身は <a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/commands/review-contract.md"><code class="notranslate">commands/review-contract.md</code></a> というMarkdownファイルで、YAMLフロントマターに説明文、本文にワークフローの手順が書いてある。</p>
+<div class="highlight highlight-text-md" dir="auto"><pre class="notranslate"><span class="pl-s">---</span>
+<span class="pl-ent">description</span>: <span class="pl-s">組織の交渉プレイブックに基づいて契約書をレビューする</span>
+<span class="pl-ent">argument-hint</span>: <span class="pl-s"><span class="pl-pds">"</span>&lt;契約書ファイルまたはテキスト&gt;<span class="pl-pds">"</span></span>
+<span class="pl-s">---</span>
+
+<span class="pl-mh">## <span class="pl-en">ワークフロー</span></span>
+
+<span class="pl-mh">### <span class="pl-en">Step 1: 契約書を受け取る</span></span>
+<span class="pl-mh">### <span class="pl-en">Step 2: 背景情報を聞く</span></span>
+<span class="pl-mh">### <span class="pl-en">Step 3: プレイブックを読み込む</span></span>
+<span class="pl-mh">### <span class="pl-en">Step 4: 条項ごとに分析する</span></span>
+<span class="pl-mh">### <span class="pl-en">Step 5: 逸脱箇所をフラグ付けする（GREEN / YELLOW / RED）</span></span>
+<span class="pl-mh">### <span class="pl-en">Step 6: 修正案（レッドライン）を生成する</span></span>
+<span class="pl-mh">### <span class="pl-en">Step 7: ビジネスインパクトのサマリーを出す</span></span>
+...</pre></div>
+<p dir="auto">要するに「契約書を受け取れ→背景を聞け→プレイブックを読め→条項ごとに分析しろ→……」という段取りがMarkdownで書かれているだけ。Claudeはこれを読んで、手順通りに動く。</p>
+<p dir="auto">注目したいのは Step 3 の「プレイブックを読み込む」。ここにはこう書かれている：</p>
+<blockquote>
+<p dir="auto">ローカル設定（<code class="notranslate">legal.local.md</code> 等）から組織の契約レビュー用プレイブックを探す。<br>
+プレイブックには以下を定義すること：</p>
+<ul dir="auto">
+<li><strong>標準ポジション</strong>：各主要条項に対する組織の希望条件</li>
+<li><strong>許容範囲</strong>：エスカレーションなしで合意できる範囲</li>
+<li><strong>エスカレーション条件</strong>：シニアカウンセルや外部弁護士のレビューが必要な条件</li>
+</ul>
+<p dir="auto"><strong>プレイブックが未設定の場合：</strong> ユーザーに未設定であることを伝え、(1) プレイブック作成を支援する、(2) 一般的な商慣行の基準でレビューを進める、のいずれかを提示する。</p>
+</blockquote>
+<p dir="auto">つまりCommandの中に「プレイブックを読め、なければ作るのを手伝え」という指示まで入っている。プレイブック自体のテンプレートは <a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/README.md">README</a> に掲載されており、<code class="notranslate">.claude/legal.local.md</code> に配置する想定だ。こんな感じ：</p>
+<div class="highlight highlight-text-md" dir="auto"><pre class="notranslate"><span class="pl-mh"># <span class="pl-en">法務プレイブック設定</span></span>
+
+<span class="pl-mh">## <span class="pl-en">契約レビューのポジション</span></span>
+
+<span class="pl-mh">### <span class="pl-en">責任制限（Limitation of Liability）</span></span>
+<span class="pl-v">-</span> 標準ポジション：支払済み/支払予定額の12ヶ月分を上限とする相互キャップ
+<span class="pl-v">-</span> 許容範囲：6〜24ヶ月分
+<span class="pl-v">-</span> エスカレーション条件：無制限の責任、結果損害の包含
+
+<span class="pl-mh">### <span class="pl-en">補償（Indemnification）</span></span>
+<span class="pl-v">-</span> 標準ポジション：IP侵害とデータ漏洩に対する相互補償
+<span class="pl-v">-</span> 許容範囲：第三者請求に限定した補償
+<span class="pl-v">-</span> エスカレーション条件：一方的な補償義務、上限なしの補償
+
+<span class="pl-mh">### <span class="pl-en">知的財産</span></span>
+<span class="pl-v">-</span> 標準ポジション：各当事者が既存IPを保持、顧客データは顧客が所有
+<span class="pl-v">-</span> エスカレーション条件：広範なIP譲渡条項、既存IPへの職務著作規定
+
+<span class="pl-mh">### <span class="pl-en">データ保護</span></span>
+<span class="pl-v">-</span> 標準ポジション：個人データ処理にはDPA（データ処理契約）を要求
+<span class="pl-v">-</span> 要件：再委託先の通知、契約終了時のデータ削除、72時間以内の漏洩通知
+<span class="pl-v">-</span> エスカレーション条件：DPAの提供なし、保護措置のない国外データ移転
+...</pre></div>
+<p dir="auto">（<a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/README.md">出典：legal/README.md</a>）</p>
+<p dir="auto">このテンプレートを自社の基準に書き換えれば、Claudeがレビュー時にそれを参照して判断するようになる。前章で試したNDAトリアージでも同じ仕組みで、<a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/commands/triage-nda.md"><code class="notranslate">commands/triage-nda.md</code></a> の Step 2 に「<code class="notranslate">legal.local.md</code> からNDAスクリーニング基準を読め」という指示がある。</p>
+<h3 dir="auto">Skill：「どう判断するか」の専門知識</h3>
+<p dir="auto">Commandが「手順」なら、Skillは「知識」。各スキルのフォルダに入っている <code class="notranslate">SKILL.md</code> には、その分野の判断基準やドメイン知識が書かれている。</p>
+<p dir="auto">たとえば <a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/skills/contract-review/SKILL.md"><code class="notranslate">skills/contract-review/SKILL.md</code></a> の冒頭はこうだ：</p>
+<div class="highlight highlight-text-md" dir="auto"><pre class="notranslate">あなたは企業法務チームの契約レビューアシスタントです。
+組織の交渉プレイブックに基づいて契約書を分析し、
+逸脱箇所を特定・重大度分類し、実行可能な修正案を生成します。</pre></div>
+<p dir="auto">この<code class="notranslate">SKILL.md</code> には、たとえば次のような「判断に必要な材料」がまとまっている：</p>
+<ul dir="auto">
+<li>レビュー手順
+<ol dir="auto">
+<li>契約種別の特定</li>
+<li>自社の立場の確認</li>
+<li>全文通読</li>
+<li>条項ごとの分析</li>
+<li>全体的なリスク評価</li>
+</ol>
+</li>
+<li>逸脱の分類
+<ul dir="auto">
+<li>GREEN：許容範囲</li>
+<li>YELLOW：要交渉</li>
+<li>RED：要エスカレーション</li>
+</ul>
+</li>
+<li>交渉の優先度
+<ul dir="auto">
+<li>Tier 1：必須</li>
+<li>Tier 2：強い希望</li>
+<li>Tier 3：譲歩候補</li>
+</ul>
+</li>
+<li>レッドライン作成：修正案（レッドライン）生成のベストプラクティス</li>
+</ul>
+<p dir="auto">CommandがSkillを参照して動くので、手順と知識が分離されている構造だ。</p>
+<p dir="auto">CommandとSkillの使い分けをまとめるとこう：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th>Command</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>置き場所</td>
+<td><code class="notranslate">commands/xxx.md</code></td>
+<td><code class="notranslate">skills/xxx/SKILL.md</code></td>
+</tr>
+<tr>
+<td>呼び出し方</td>
+<td>ユーザーが <code class="notranslate">/legal:xxx</code> で明示的に実行</td>
+<td>Claudeが文脈に応じて自動で参照</td>
+</tr>
+<tr>
+<td>中身</td>
+<td>ワークフローの手順</td>
+<td>ドメイン知識・判断基準</td>
+</tr>
+<tr>
+<td>例えるなら</td>
+<td>業務マニュアルの「手順書」</td>
+<td>ベテラン社員の「ノウハウ集」</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3 dir="auto">具体例（プログラミング）</h3>
+<p dir="auto">たとえば「バグ修正」をエージェントにやらせたい場合：</p>
+<ul dir="auto">
+<li><strong>Command（手順）</strong>：<code class="notranslate">/fix-bug</code> のようなコマンドを用意して、「再現手順の確認→原因の切り分け→テスト追加→修正→リグレッション確認→変更点の要約」までの順番を固定する</li>
+<li><strong>Skill（知識）</strong>：そのリポジトリ固有の「アーキテクチャ」「コーディング規約」「テスト方針」「よくある落とし穴（例：この層からDBを触らない）」などをまとめておき、Commandの各ステップで参照させる</li>
+</ul>
+<p dir="auto">同じCommandでも、Skillを差し替えれば「TypeScript + Next.jsの作法」「Python + FastAPIの作法」みたいに“判断の癖”を入れ替えられる。</p>
+<h3 dir="auto">具体例（Legal：契約書レビュー）</h3>
+<p dir="auto"><code class="notranslate">/legal:review-contract</code> を例にすると：</p>
+<ul dir="auto">
+<li><strong>Command（手順）</strong>：契約書を受け取り、背景情報を聞き、プレイブック有無を確認し、条項ごとに分析し、GREEN/YELLOW/REDで分類し、レッドライン案とサマリーを出す……という「レビューの段取り」を固定する</li>
+<li><strong>Skill（知識）</strong>：GREEN/YELLOW/REDの基準、条項別の典型論点、交渉の優先度（Tier 1/2/3）、レッドライン作成のベストプラクティスなど「どう判断するか」を持たせる</li>
+</ul>
+<p dir="auto">プレイブック（<code class="notranslate">legal.local.md</code>）はSkillの一部というより「組織の個別ルール」なので、Skillより優先して適用される“上書きレイヤー”として扱うのがわかりやすい。</p>
+<h3 dir="auto">Connector：外部ツールとの接続設定</h3>
+<p dir="auto">SlackやBox、Jiraなどの外部ツールとの接続を担う。実体はルート直下の <a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/.mcp.json"><code class="notranslate">.mcp.json</code></a> で、MCPサーバーのURLが並んでいるだけ。</p>
+<pre><code class="language-json">{
+  <span class="pl-ent">"mcpServers"</span>: {
+    <span class="pl-ent">"slack"</span>: { <span class="pl-ent">"type"</span>: <span class="pl-s"><span class="pl-pds">"</span>http<span class="pl-pds">"</span></span>, <span class="pl-ent">"url"</span>: <span class="pl-s"><span class="pl-pds">"</span>https://mcp.slack.com/mcp<span class="pl-pds">"</span></span> },
+    <span class="pl-ent">"box"</span>:   { <span class="pl-ent">"type"</span>: <span class="pl-s"><span class="pl-pds">"</span>http<span class="pl-pds">"</span></span>, <span class="pl-ent">"url"</span>: <span class="pl-s"><span class="pl-pds">"</span>https://mcp.box.com<span class="pl-pds">"</span></span> },
+    <span class="pl-ii">...</span>
+  }
+}</code></pre>
+<p dir="auto">面白いのは、CommandやSkillの中では <code class="notranslate">~~cloud storage</code> や <code class="notranslate">~~chat</code> のようなプレースホルダーで外部ツールを参照していること（<a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/CONNECTORS.md">CONNECTORS.md</a> に対応表がある）。「Boxに保存しろ」ではなく「~~cloud storageに保存しろ」と書いてあるので、接続先をEgnyteやSharePointに差し替えてもCommand側の書き換えは不要になっている。</p>
+<h3 dir="auto">つまり全部「設定ファイル」</h3>
+<p dir="auto">ここまで見てわかるように、プラグインにプログラミング言語で書かれたロジックは一切ない。Markdown（手順と知識）+ JSON（メタデータと接続先）だけで、専門エージェントが成立している。「AIエージェント開発」と聞くと身構えるが、やっていることは業務マニュアルとノウハウ集をMarkdownで書いてフォルダに置いているだけ。</p>
+<hr>
+<h2 dir="auto">4. Legalプラグインのコマンド一覧と、できること</h2>
+<p dir="auto">前章でプラグインの構造がわかったところで、Legalプラグインに実際に入っているコマンドを一覧にしておく。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>コマンド</th>
+<th>やること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">/legal:review-contract</code></td>
+<td>契約書をプレイブック基準でレビューし、逸脱箇所をGREEN/YELLOW/REDで分類</td>
+</tr>
+<tr>
+<td><code class="notranslate">/legal:triage-nda</code></td>
+<td>NDAを受け取り、署名可否をスクリーニング</td>
+</tr>
+<tr>
+<td><code class="notranslate">/legal:vendor-check</code></td>
+<td>特定ベンダーとの既存契約の状況を横断検索</td>
+</tr>
+<tr>
+<td><code class="notranslate">/legal:brief</code></td>
+<td>デイリーサマリーやトピック調査など、法務ブリーフィングを生成</td>
+</tr>
+<tr>
+<td><code class="notranslate">/legal:respond</code></td>
+<td>よくある法務相談（データ主体のリクエスト、NDA依頼等）への定型回答を作成</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">（<a href="https://github.com/anthropics/knowledge-work-plugins/tree/main/legal/commands">出典：legal/commands/</a>）</p>
+<p dir="auto">2章で試した <code class="notranslate">/legal:triage-nda</code> はこの中の1つ。どのコマンドも、前章で見た通り「Markdownに書かれた手順」+「SKILL.mdの専門知識」+「プレイブック（<code class="notranslate">legal.local.md</code>）の自社基準」の組み合わせで動く。</p>
+<hr>
+<h2 dir="auto">5. プレイブックを書き換えてみた</h2>
+<p dir="auto">3章で紹介したプレイブック（<code class="notranslate">legal.local.md</code>）を実際にカスタマイズして、結果が変わるか試してみた。</p>
+<h3 dir="auto">やったこと</h3>
+<p dir="auto"><code class="notranslate">.claude/legal.local.md</code> に以下の設定を追加した：</p>
+<div class="highlight highlight-text-md" dir="auto"><pre class="notranslate"><span class="pl-mh"># <span class="pl-en">Legal Playbook Configuration</span></span>
+
+<span class="pl-mh">## <span class="pl-en">Limitation of Liability（責任制限）</span></span>
+<span class="pl-v">-</span> Standard position: capped at $1M
+<span class="pl-v">-</span> Yellow (要確認): $1M〜$2M
+<span class="pl-v">-</span> Red (エスカレーション): $2M超 または uncapped</pre></div>
+<p dir="auto">Claudeもプレイブックを認識している様子：</p>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/336e5c91-3593-4ed5-abcb-c9bad9a4dfd2"><img width="100%" alt="スクリーンショット 2026-02-04 15 48 05" src="https://github.com/user-attachments/assets/336e5c91-3593-4ed5-abcb-c9bad9a4dfd2" style="max-width: 100%;"></a>
+<h3 dir="auto">プレイブックあり vs なしの違い</h3>
+<p dir="auto">2章で最初に試したとき（プレイブック未設定）は、レポートに <code class="notranslate">Review Basis: Default Standards（ローカル設定なし）</code> と表示されていた。プレイブック設定後に同じNDAを再度食わせると、<code class="notranslate">Review Basis: Playbook + Default Standards</code> に変わり、損害賠償のチェック結果にプレイブックの基準が反映された：</p>
+<blockquote>
+<p dir="auto">Liability Cap | FLAG | $2M（プレイブック: $1M〜$2MはYellow）</p>
+</blockquote>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8b14762b-eef1-44d3-814d-d72610c343d8"><img width="100%" alt="スクリーンショット 2026-02-04 16 17 25" src="https://github.com/user-attachments/assets/8b14762b-eef1-44d3-814d-d72610c343d8" style="max-width: 100%;"></a>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/fdd832b7-e2c8-43a5-84b3-96fe438ae337"><img width="100%" alt="スクリーンショット 2026-02-04 16 18 26" src="https://github.com/user-attachments/assets/fdd832b7-e2c8-43a5-84b3-96fe438ae337" style="max-width: 100%;"></a>
+<p dir="auto">プレイブックの基準がちゃんとレビューに反映されていることが確認できた。つまり <code class="notranslate">legal.local.md</code> に自社の判断基準を書くだけで、Claudeのレビュー基準を組織に合わせられる。</p>
+<h3 dir="auto">出力のブレをどう抑えるか</h3>
+<p dir="auto">2章で触れた「出力フォーマットが毎回変わる」問題。これはSKILL.mdに出力テンプレートを追記することで改善できるはず。たとえば「レポートは必ずこの表形式で出力しろ」「セクションの順序はこうしろ」といった制約を書き足せば、出力は安定する方向に向かう。プラグインのカスタマイズは、判断基準だけでなく出力形式の統制にも使えるということだ。</p>
+<hr>
+<h2 dir="auto">6. Connectorと外部連携の可能性</h2>
+<p dir="auto">Legalプラグインの <a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/.mcp.json"><code class="notranslate">.mcp.json</code></a> には、以下のツールがデフォルトで接続先として定義されている：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>カテゴリ</th>
+<th>プレースホルダー</th>
+<th>デフォルト接続先</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>チャット</td>
+<td><code class="notranslate">~~chat</code></td>
+<td>Slack</td>
+</tr>
+<tr>
+<td>クラウドストレージ</td>
+<td><code class="notranslate">~~cloud storage</code></td>
+<td>Box, Egnyte</td>
+</tr>
+<tr>
+<td>オフィススイート</td>
+<td><code class="notranslate">~~office suite</code></td>
+<td>Microsoft 365</td>
+</tr>
+<tr>
+<td>プロジェクト管理</td>
+<td><code class="notranslate">~~project tracker</code></td>
+<td>Atlassian (Jira)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">（<a href="https://github.com/anthropics/knowledge-work-plugins/blob/main/legal/CONNECTORS.md">出典：CONNECTORS.md</a>）</p>
+<p dir="auto">3章で触れた <code class="notranslate">~~category</code> プレースホルダーのおかげで、CommandやSkill側は特定のツール名に依存していない。たとえばSlackの代わりにTeamsを使いたければ、<code class="notranslate">.mcp.json</code> の接続先URLを差し替えるだけでいい。</p>
+<h3 dir="auto">カスタムConnectorの追加</h3>
+<p dir="auto">デフォルトにないツール（例：Azure DevOps）と連携したい場合は、自前でMCPサーバーを用意して <code class="notranslate">.mcp.json</code> に追加すればいい（Azure DevOps MCPは現在動作確認中）。たとえばこんなワークフローが組める：</p>
+<ol dir="auto">
+<li>Azure DevOpsのBoardに「新規契約案件」のチケットが作成される</li>
+<li>Legalエージェントがチケット内容を読み取り、Boxから関連ファイルを取得してレビュー開始</li>
+<li>レビュー結果をAzure DevOpsのコメントに自動投稿、ステータスを「法務チェック中」に更新</li>
+</ol>
+<p dir="auto">Connector自体はURLの設定にすぎないので、MCPサーバーさえ用意できれば何でもつなげる。</p>
+<hr>
+<h2 dir="auto">7. 組織でプラグインを運用するなら</h2>
+<p dir="auto">ここまでの話をまとめると、プラグインのカスタマイズは大きく3つ：</p>
+<ol dir="auto">
+<li><strong>プレイブック（<code class="notranslate">legal.local.md</code>）</strong>：自社の判断基準を定義する</li>
+<li><strong>SKILL.md</strong>：出力フォーマットやドメイン知識を調整する</li>
+<li><strong><code class="notranslate">.mcp.json</code></strong>：接続する外部ツールを差し替え・追加する</li>
+</ol>
+<p dir="auto">どれもMarkdownかJSONの編集だけで完結する。ということは、これをGitで管理すればそのまま組織の資産になる。</p>
+<h3 dir="auto">Gitで管理するメリット</h3>
+<ul dir="auto">
+<li>プレイブックの変更履歴が残る（「いつ、誰が、何の基準を変えたか」が追える）</li>
+<li>SKILL.mdの更新をプルリクエストでレビューできる（業務ルール変更のガバナンス）</li>
+<li>社内の法務チーム全員が同じプレイブックを使える</li>
+</ul>
+<h3 dir="auto">プライベートマーケットプレイスという選択肢</h3>
+<p dir="auto">CLI版では <code class="notranslate">claude plugin marketplace add</code> でGitHubリポジトリをマーケットプレイスとして登録できる。これを社内のプライベートリポジトリで運用すれば、自社カスタマイズ済みのプラグインを全社員に配布できる。</p>
+<pre><code class="language-shell"><span class="pl-c"><span class="pl-c">#</span> 社内リポジトリをマーケットプレイスとして追加</span>
+claude plugin marketplace add mycompany/legal-plugins
+
+<span class="pl-c"><span class="pl-c">#</span> 社内カスタマイズ版をインストール</span>
+claude plugin install legal</code></pre>
+<p dir="auto">Markdownで書かれた業務ナレッジをGitで版管理して、CLIやCowork経由で社員に配る。プロンプトが個人の手元でバラバラに管理される状態を防げるので、かなり実用的だと思う。</p>
+<hr>
+<h2 dir="auto">8. このノウハウをSaaSとして提供するなら</h2>
+<p dir="auto">ここまで見てきたように、プラグインの実体は「Skill（ドメイン知識）」「Command（ワークフロー手順）」「Playbook（組織固有の基準）」のMarkdownだった。ということは、これらをAPIの裏側に組み込めば、Claude CoworkやClaude Codeを使わなくても同じことをWebサービスとして提供できる。</p>
+<p dir="auto">あえてGemini APIで実装してみることで、このプロンプト設計がClaude以外のLLMでも再現できるのか検証する狙いもある。</p>
+<p dir="auto">プラグインの3要素がAPIのどこにマッピングされるかを整理するとこうなる：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>プラグインの要素</th>
+<th>Gemini APIでの役割</th>
+<th>配置先</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skill</strong>（ドメイン知識）</td>
+<td>System Instructionに埋め込む</td>
+<td>サーバー側で固定</td>
+</tr>
+<tr>
+<td><strong>Command</strong>（ワークフロー手順）</td>
+<td>ユーザーメッセージとして送る</td>
+<td>サーバー側で固定</td>
+</tr>
+<tr>
+<td><strong>Playbook</strong>（組織固有の基準）</td>
+<td>System Instructionに追加</td>
+<td>APIリクエストで受け取る</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3 dir="auto">そのまま使えるのか？</h3>
+<p dir="auto">ただし、リポジトリの <code class="notranslate">.md</code> ファイルをそのままGemini APIに流し込むと問題がある。Claude Code / Cowork 固有の記述が含まれているからだ。調査したところ、主に以下の5箇所：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>問題</th>
+<th>該当ファイル</th>
+<th>具体的な記述</th>
+<th>なぜ壊れるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ローカルファイル参照</td>
+<td>commands/, skills/</td>
+<td><code class="notranslate">Look for ... playbook in local settings (e.g., legal.local.md)</code></td>
+<td>ファイルシステムがないのに「読め」と指示される。ハルシネーションの原因</td>
+</tr>
+<tr>
+<td>ファイルアップロードUI</td>
+<td>commands/</td>
+<td><code class="notranslate">**File upload**: PDF, DOCX...</code></td>
+<td>API経由ではUIがない</td>
+</tr>
+<tr>
+<td>MCP/CLM連携</td>
+<td>commands/</td>
+<td><code class="notranslate">If a CLM system is connected via MCP:</code></td>
+<td>MCP自体がGeminiに存在しない</td>
+</tr>
+<tr>
+<td>YAMLフロントマター</td>
+<td>commands/, skills/</td>
+<td><code class="notranslate">argument-hint:</code>, <code class="notranslate">name:</code></td>
+<td>Claude Codeプラグイン用のメタデータ</td>
+</tr>
+<tr>
+<td>スラッシュコマンド表記</td>
+<td>commands/</td>
+<td><code class="notranslate"># /review-contract</code></td>
+<td>Geminiにはスラッシュコマンドがない</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">一方、サブエージェント呼び出しや <code class="notranslate">~~category</code> プレースホルダーはcommand/skill本文には含まれていなかった。問題箇所は限定的なので、Python側でパッチを当てれば実ファイルがそのまま使える。</p>
+<h3 dir="auto">コード例：実ファイル読み込み + 追加プロンプト</h3>
+<p dir="auto">「PDFの契約書」と「プレイブック（組織の判断基準）」を受け取り、契約レビュー結果を返すAPI。リポジトリをcloneして <code class="notranslate">legal/</code> ディレクトリを参照する構成。</p>
+<pre><code class="language-python"><span class="pl-k">from</span> <span class="pl-s1">fastapi</span> <span class="pl-k">import</span> <span class="pl-v">FastAPI</span>, <span class="pl-v">UploadFile</span>, <span class="pl-v">Form</span>
+<span class="pl-k">from</span> <span class="pl-s1">google</span> <span class="pl-k">import</span> <span class="pl-s1">genai</span>
+<span class="pl-k">from</span> <span class="pl-s1">google</span>.<span class="pl-s1">genai</span> <span class="pl-k">import</span> <span class="pl-s1">types</span>
+<span class="pl-k">from</span> <span class="pl-s1">pathlib</span> <span class="pl-k">import</span> <span class="pl-v">Path</span>
+
+<span class="pl-s1">app</span> <span class="pl-c1">=</span> <span class="pl-en">FastAPI</span>()
+<span class="pl-s1">client</span> <span class="pl-c1">=</span> <span class="pl-s1">genai</span>.<span class="pl-c1">Client</span>()  <span class="pl-c"># GOOGLE_API_KEY 環境変数を参照</span>
+
+<span class="pl-c1">PLUGIN_DIR</span> <span class="pl-c1">=</span> <span class="pl-en">Path</span>(<span class="pl-s">"legal"</span>)  <span class="pl-c"># git clone したリポジトリの legal/ を指定</span>
+
+<span class="pl-c"># ── Skill + Command を実ファイルから読み込み ──</span>
+<span class="pl-c1">SKILL</span> <span class="pl-c1">=</span> (<span class="pl-c1">PLUGIN_DIR</span> <span class="pl-c1">/</span> <span class="pl-s">"skills"</span> <span class="pl-c1">/</span> <span class="pl-s">"contract-review"</span> <span class="pl-c1">/</span> <span class="pl-s">"SKILL.md"</span>).<span class="pl-c1">read_text</span>()
+<span class="pl-c1">COMMAND</span> <span class="pl-c1">=</span> (<span class="pl-c1">PLUGIN_DIR</span> <span class="pl-c1">/</span> <span class="pl-s">"commands"</span> <span class="pl-c1">/</span> <span class="pl-s">"review-contract.md"</span>).<span class="pl-c1">read_text</span>()
+
+<span class="pl-c"># ローカル前提の記述をAPI利用に読み替えるための短い補足</span>
+<span class="pl-c1">API_ADJUST</span> <span class="pl-c1">=</span> (
+    <span class="pl-s">"この指示はAPI経由で実行される。ローカルファイル参照・UI手順・MCP/CLM連携の指示は、"</span>
+    <span class="pl-s">"システム指示や本メッセージ内の情報で代替すること。"</span>
+)
+
+
+<span class="pl-en">@<span class="pl-s1">app</span>.<span class="pl-c1">post</span>(<span class="pl-s">"/review"</span>)</span>
+<span class="pl-k">async</span> <span class="pl-k">def</span> <span class="pl-en">review_contract</span>(
+    <span class="pl-s1">file</span>: <span class="pl-smi">UploadFile</span>,
+    <span class="pl-s1">playbook</span>: <span class="pl-smi">str</span> <span class="pl-c1">=</span> <span class="pl-en">Form</span>(<span class="pl-s1">default</span><span class="pl-c1">=</span><span class="pl-s">""</span>),
+):
+    <span class="pl-s1">pdf_bytes</span> <span class="pl-c1">=</span> <span class="pl-k">await</span> <span class="pl-s1">file</span>.<span class="pl-c1">read</span>()
+
+    <span class="pl-c"># Skill → system instruction / Playbook → system instructionに追加</span>
+    <span class="pl-s1">system</span> <span class="pl-c1">=</span> <span class="pl-c1">SKILL</span> <span class="pl-c1">+</span> <span class="pl-s">"<span class="pl-cce">\n</span><span class="pl-cce">\n</span>"</span> <span class="pl-c1">+</span> <span class="pl-c1">API_ADJUST</span>
+    <span class="pl-k">if</span> <span class="pl-s1">playbook</span>:
+        <span class="pl-s1">system</span> <span class="pl-c1">+=</span> (
+            <span class="pl-s">"<span class="pl-cce">\n</span><span class="pl-cce">\n</span>## 組織のプレイブック（この基準を優先して判定すること）<span class="pl-cce">\n</span>"</span>
+            <span class="pl-c1">+</span> <span class="pl-s1">playbook</span>
+        )
+
+    <span class="pl-c"># Command + PDF → contents としてまとめてAPIに投げる</span>
+    <span class="pl-s1">response</span> <span class="pl-c1">=</span> <span class="pl-s1">client</span>.<span class="pl-c1">models</span>.<span class="pl-c1">generate_content</span>(
+        <span class="pl-s1">model</span><span class="pl-c1">=</span><span class="pl-s">"gemini-2.0-flash"</span>,
+        <span class="pl-s1">config</span><span class="pl-c1">=</span><span class="pl-s1">types</span>.<span class="pl-c1">GenerateContentConfig</span>(
+            <span class="pl-s1">system_instruction</span><span class="pl-c1">=</span><span class="pl-s1">system</span>,
+        ),
+        <span class="pl-s1">contents</span><span class="pl-c1">=</span>[
+            <span class="pl-s1">types</span>.<span class="pl-c1">Part</span>.<span class="pl-c1">from_bytes</span>(
+                <span class="pl-s1">data</span><span class="pl-c1">=</span><span class="pl-s1">pdf_bytes</span>,
+                <span class="pl-s1">mime_type</span><span class="pl-c1">=</span><span class="pl-s">"application/pdf"</span>,
+            ),
+            <span class="pl-c1">COMMAND</span>,
+        ],
+    )
+
+    <span class="pl-k">return</span> {<span class="pl-s">"review"</span>: <span class="pl-s1">response</span>.<span class="pl-c1">text</span>}</code></pre>
+<h3 dir="auto">何をやっているか</h3>
+<p dir="auto">処理の流れは3段階：</p>
+<p dir="auto"><strong>起動時（ファイル読み込み）：</strong></p>
+<ol dir="auto">
+<li>リポジトリの <code class="notranslate">.md</code> ファイルをそのまま読み込む</li>
+<li>API実行前提の短い補足プロンプト（<code class="notranslate">API_ADJUST</code>）を用意する</li>
+</ol>
+<p dir="auto"><strong>リクエスト時（API呼び出し）：</strong><br>
+3. <strong>SKILL</strong> と補足プロンプトをSystem Instructionに設定し、リクエストの <strong>Playbook</strong> があれば追加<br>
+4. <strong>COMMAND</strong> とPDFをcontentsとしてGemini APIに送信</p>
+<p dir="auto">ポイントは、リポジトリの <code class="notranslate">.md</code> ファイルをそのまま使っていること。ドメイン知識（SKILL.md）やワークフロー手順（command .md）の本体には手を入れず、「ローカル前提の記述はAPI向けに読み替える」という1〜2行の補足だけを追加している。プラグインが更新されたら <code class="notranslate">git pull</code> するだけで最新のノウハウが反映される。</p>
+<h3 dir="auto">SaaSとして拡張するなら</h3>
+<p dir="auto">この最小構成をベースに拡張するとしたら：</p>
+<ul dir="auto">
+<li><strong>Skill/Commandの切り替え</strong>：エンドポイントを <code class="notranslate">/review</code>（契約レビュー）、<code class="notranslate">/triage-nda</code>（NDAトリアージ）のように分け、<code class="notranslate">PLUGIN_DIR</code> から異なる <code class="notranslate">.md</code> ファイルを読み込む</li>
+<li><strong>Playbookの永続化</strong>：組織ごとのプレイブックをDBに保存し、APIキーで自動適用</li>
+<li><strong>出力の安定化</strong>：<code class="notranslate">response_mime_type: "application/json"</code> でJSON出力を強制する</li>
+<li><strong>LLMの差し替え</strong>：<code class="notranslate">model="gemini-2.0-flash"</code> を変えるだけで別モデルに切り替えられる。<code class="notranslate">.md</code> ファイルはそのまま</li>
+</ul>
+<p dir="auto">※ AWS（Lambda + API Gateway など）での動作確認は現在進行中。</p>
+<p dir="auto">ビジネスロジックの大部分がリポジトリの <code class="notranslate">.md</code> ファイルに収まっているので、SaaS化しても機能追加の主な作業は「Markdownを書く（またはAnthropicの更新を取り込む）」ことになる。</p>
+<hr>
+<h2 dir="auto">まとめ</h2>
+<p dir="auto">knowledge-work-pluginsの正体は、Markdownで書かれた業務マニュアルとノウハウ集だった。コードは1行もない。</p>
+<p dir="auto">やっていることを整理すると：</p>
+<ul dir="auto">
+<li><strong>Command</strong>（手順書）で「何をどの順番でやるか」を定義</li>
+<li><strong>Skill</strong>（ノウハウ集）で「どう判断するか」の知識を与える</li>
+<li><strong>Connector</strong>（接続設定）で外部ツールとつなぐ</li>
+<li><strong>Playbook</strong>（<code class="notranslate">legal.local.md</code>）で自社の基準にカスタマイズ</li>
+</ul>
+<p dir="auto">これらを全部Gitで管理すれば、「ベテランの頭の中にある業務ノウハウをMarkdownに書き出して、AIに読ませて、バージョン管理する」という運用モデルが完成する。</p>
+<p dir="auto">AIエージェント開発というと大げさに聞こえるが、実態は「業務を知っている人がMarkdownを書く」ことだった。エンジニアリングの問題というより、業務知識の棚卸しと構造化の問題。そう考えると、これは法務に限らず、どの職種でも同じアプローチで展開できるはずだ。</p>
+    </div>
+    <!-- 遅延挿入用シェアボタンプレースホルダ -->
+    <div id="deferred-share" data-share-url="https://kuromelon.com/blog/6/" data-share-text="Anthropic%E7%A4%BE%E3%80%8Cknowledge-work-plugins%E3%80%8D%E3%81%8B%E3%82%89%E8%AA%AD%E3%81%BF%E8%A7%A3%E3%81%8F%E3%80%81%E7%89%B9%E5%8C%96%E5%9E%8B%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%81%AE%E5%B0%8E%E5%85%A5%E3%83%BB%E9%81%8B%E7%94%A8%E3%83%BB%E9%96%8B%E7%99%BA%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0"></div>
+    
+    <!-- 記事下部の共有ボタン -->
+    <div class="share-buttons bottom-share">
+      <p class="share-cta">この記事が役に立ったら、ぜひシェアしてください！</p>
+      <a href="https://twitter.com/intent/tweet?text=Anthropic%E7%A4%BE%E3%80%8Cknowledge-work-plugins%E3%80%8D%E3%81%8B%E3%82%89%E8%AA%AD%E3%81%BF%E8%A7%A3%E3%81%8F%E3%80%81%E7%89%B9%E5%8C%96%E5%9E%8B%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%81%AE%E5%B0%8E%E5%85%A5%E3%83%BB%E9%81%8B%E7%94%A8%E3%83%BB%E9%96%8B%E7%99%BA%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F6%2F" target="_blank" rel="noopener" class="share-btn twitter-share large">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+    </div>
+  </article>
+</main>
+
+<script>
+// 遅延シェアボタン挿入（最初の段落後 or 600px表示後）
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const placeholder = document.getElementById('deferred-share');
+    if (!placeholder) return;
+    const container = document.getElementById('post-content');
+    if (!container) return;
+    const firstParagraph = container.querySelector('p, h2, h3, h4, h5, h6');
+    const inject = () => {
+      if (placeholder.dataset.injected) return;
+      const div = document.createElement('div');
+      div.className = 'share-buttons inline-share';
+      div.innerHTML = '<span class="share-label">シェア:</span>' +
+        '<a href="https://twitter.com/intent/tweet?text=Anthropic%E7%A4%BE%E3%80%8Cknowledge-work-plugins%E3%80%8D%E3%81%8B%E3%82%89%E8%AA%AD%E3%81%BF%E8%A7%A3%E3%81%8F%E3%80%81%E7%89%B9%E5%8C%96%E5%9E%8B%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%81%AE%E5%B0%8E%E5%85%A5%E3%83%BB%E9%81%8B%E7%94%A8%E3%83%BB%E9%96%8B%E7%99%BA%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F6%2F" target="_blank" rel="noopener" class="share-btn twitter-share">' +
+        '<i class="fab fa-x-twitter"></i> X</a>' +
+        '<button onclick="copyToClipboard('https://kuromelon.com/blog/6/')" class="share-btn copy-link">' +
+        '<i class="fas fa-link"></i> コピー</button>';
+      if (firstParagraph && firstParagraph.parentNode) {
+        firstParagraph.parentNode.insertBefore(div, firstParagraph.nextSibling);
+      } else {
+        container.insertBefore(div, container.firstChild);
+      }
+      placeholder.dataset.injected = '1';
+    };
+    // 1) INTERSECTION: ユーザが本文領域をスクロールで見始めたら
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { inject(); io.disconnect(); } });
+    }, { rootMargin: '0px 0px -60% 0px' });
+    if (firstParagraph) io.observe(firstParagraph);
+    // 2) フォールバック: 2.5秒後に未挿入なら挿入
+    setTimeout(inject, 2500);
+  } catch (e) { console.warn('share inject failed', e); }
+});
+// リンクコピー機能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    // コピー成功時の視覚的フィードバック
+    const btn = event.target.closest('.copy-link');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> コピー完了！';
+    btn.style.background = 'var(--blog-success)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(function(err) {
+    console.error('コピーに失敗しました: ', err);
+    alert('リンクのコピーに失敗しました');
+  });
+}
+</script>
+
+<footer>
+  <p>&copy; 2025 Kuromelon</p>
+</footer>
+</body>
+</html>
