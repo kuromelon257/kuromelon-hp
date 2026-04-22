@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>相手の戦術おみとおし！ポケモンチャンピオンズAI支援アプリを開発して、復帰勢でも戦えるようになった話 | くろメロンのブログ</title>
+  <meta name="description" content="くろメロンの技術ブログ。iOS開発、Swift、SwiftUI、プログラミングの最新情報とノウハウを発信しています。">
+  <meta name="keywords" content="くろメロン,くろメロンのブログ,iOS開発,Swift,SwiftUI,プログラミング,技術ブログ,アプリ開発">
+  <meta name="author" content="くろメロン">
+  
+  <!-- Favicon / PWA Icons -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Kuromelon" />
+  <link rel="manifest" href="/site.webmanifest" />
+  
+  <!-- PWA・テーマ設定 -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="msapplication-TileColor" content="#0a0a0a">
+  <meta name="msapplication-TileImage" content="/apple-touch-icon.png">
+  
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <link rel="canonical" href="https://kuromelon.com/blog/7/">
+  <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ" href="https://kuromelon.com/rss.xml">
+  <link rel="stylesheet" href="/blog/blog.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- シンタックスハイライト - highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // GitHubのスタイルをリセットしてからhighlight.jsを適用
+      document.querySelectorAll('pre code').forEach(function(block) {
+        // GitHubのspanスタイルをクリア
+        const spans = block.querySelectorAll('span');
+        spans.forEach(span => {
+          span.className = '';
+          span.style = '';
+        });
+        
+        // highlight.jsを手動で適用
+        if (block.className.includes('language-')) {
+          hljs.highlightElement(block);
+        }
+        
+        // 言語ラベルを追加
+        const language = block.className.match(/language-(w+)/);
+        if (language) {
+          const label = document.createElement('div');
+          label.className = 'code-language-label';
+          label.textContent = language[1].toUpperCase();
+          block.parentNode.insertBefore(label, block);
+        }
+      });
+      
+      // 残りのコードブロックも処理
+      hljs.highlightAll();
+    });
+  </script>
+  
+  <meta name="description" content="1. 10年ぶりのポケモン対戦復帰、知識差で負け続ける...ブリジュラスってなに？ ポケモンチャンピオンズ配信を機に、対戦に10年(?)振りにやってみました。 先日BWからポケモンバンクを経由して、HOMEに連れてきたポケモンたちと再び戦えるのを本当に待ってたんですよ。 いざやってみると、令和ポケモンたちが規格外の強さ 生成AI">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="相手の戦術おみとおし！ポケモンチャンピオンズAI支援アプリを開発して、復帰勢でも戦えるようになった話">
+  <meta property="og:description" content="1. 10年ぶりのポケモン対戦復帰、知識差で負け続ける...ブリジュラスってなに？ ポケモンチャンピオンズ配信を機に、対戦に10年(?)振りにやってみました。 先日BWからポケモンバンクを経由して、HOMEに連れてきたポケモンたちと再び戦えるのを本当に待ってたんですよ。 いざやってみると、令和ポケモンたちが規格外の強さ 生成AI">
+  <meta property="og:url" content="https://kuromelon.com/blog/7/">
+  <meta property="og:image" content="https://github.com/user-attachments/assets/58e3e9a9-54bb-4a8a-82ba-32ca48f0fc0c">
+  <meta property="og:site_name" content="くろメロンのブログ">
+  <meta property="article:published_time" content="2026-04-22T14:44:07.000Z">
+  <meta property="article:modified_time" content="2026-04-22T14:44:07.000Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="相手の戦術おみとおし！ポケモンチャンピオンズAI支援アプリを開発して、復帰勢でも戦えるようになった話">
+  <meta name="twitter:description" content="1. 10年ぶりのポケモン対戦復帰、知識差で負け続ける...ブリジュラスってなに？ ポケモンチャンピオンズ配信を機に、対戦に10年(?)振りにやってみました。 先日BWからポケモンバンクを経由して、HOMEに連れてきたポケモンたちと再び戦えるのを本当に待ってたんですよ。 いざやってみると、令和ポケモンたちが規格外の強さ 生成AI">
+  <meta name="twitter:image" content="https://github.com/user-attachments/assets/58e3e9a9-54bb-4a8a-82ba-32ca48f0fc0c">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"相手の戦術おみとおし！ポケモンチャンピオンズAI支援アプリを開発して、復帰勢でも戦えるようになった話","datePublished":"2026-04-22T14:44:07.000Z","dateModified":"2026-04-22T14:44:07.000Z","mainEntityOfPage":"https://kuromelon.com/blog/7/","url":"https://kuromelon.com/blog/7/","author":{"@type":"Person","name":"くろメロン","url":"https://kuromelon.com/","sameAs":["https://github.com/kuromelon257"]},"publisher":{"@type":"Organization","name":"くろメロンのブログ","alternateName":"くろメロン技術ブログ","logo":{"@type":"ImageObject","url":"https://kuromelon.com/assets/images/chackrun_thumb.jpg"},"sameAs":["https://kuromelon.com","https://kuromelon.com/blog/","https://kuromelon.com/chackrun/","https://github.com/kuromelon257"]},"image":"https://github.com/user-attachments/assets/58e3e9a9-54bb-4a8a-82ba-32ca48f0fc0c","description":"1. 10年ぶりのポケモン対戦復帰、知識差で負け続ける...ブリジュラスってなに？ ポケモンチャンピオンズ配信を機に、対戦に10年(?)振りにやってみました。 先日BWからポケモンバンクを経由して、HOMEに連れてきたポケモンたちと再び戦えるのを本当に待ってたんですよ。 いざやってみると、令和ポケモンたちが規格外の強さ 生成AI","keywords":"生成AI,iOS,Swift,ゲーム開発,技術ブログ"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://kuromelon.com/"},{"@type":"ListItem","position":2,"name":"ブログ","item":"https://kuromelon.com/blog/"},{"@type":"ListItem","position":3,"name":"相手の戦術おみとおし！ポケモンチャンピオンズAI支援アプリを開発して、復帰勢でも戦えるようになった話","item":"https://kuromelon.com/blog/7/"}]}</script>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="/">Home</a> | <a href="/blog/">Blog</a>
+  </nav>
+</header>
+
+<main class="container">
+  <nav class="breadcrumb" aria-label="breadcrumb" style="font-size:0.85rem;margin:0 0 1rem;opacity:0.85;">
+    <a href="https://kuromelon.com/">ホーム</a> &gt; <a href="https://kuromelon.com/blog/">ブログ</a> &gt; <span>相手の戦術おみとおし！ポケモンチャンピオンズAI支援アプリを開発して、復帰勢でも戦えるようになった話</span>
+  </nav>
+  <article class="post">
+    <h1>相手の戦術おみとおし！ポケモンチャンピオンズAI支援アプリを開発して、復帰勢でも戦えるようになった話</h1>
+    <p class="meta">2026-04-22 · <a href="https://github.com/kuromelon257/kuromelon-hp/issues/7" target="_blank" rel="noopener">Issue #7</a></p>
+    
+    <div class="content" id="post-content">
+      <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/58e3e9a9-54bb-4a8a-82ba-32ca48f0fc0c"><img width="1440" height="870" alt="Image" src="https://github.com/user-attachments/assets/58e3e9a9-54bb-4a8a-82ba-32ca48f0fc0c" style="max-width: 100%; height: auto; max-height: 870px;; aspect-ratio: 1440 / 870; background-color: var(--bgColor-muted); border-radius: 6px; display: block" class="js-gh-image-fallback"></a>
+<h2 dir="auto">1. 10年ぶりのポケモン対戦復帰、知識差で負け続ける...ブリジュラスってなに？</h2>
+<p dir="auto">ポケモンチャンピオンズ配信を機に、対戦に10年(?)振りにやってみました。<br>
+先日BWからポケモンバンクを経由して、HOMEに連れてきたポケモンたちと再び戦えるのを本当に待ってたんですよ。</p>
+<p dir="auto">いざやってみると、令和ポケモンたちが規格外の強さでビックリ...<br>
+<strong>オオニューラ、ブリジュラス、メガフラエッテ、イダイトウ</strong><br>
+この辺りに何度も壊滅させられました。</p>
+<p dir="auto">でも、負け続けて感じることもありました。</p>
+<ul dir="auto">
+<li>「これ素早さ知ってれば勝ってたかも？」</li>
+<li>「この型を知っていれば対策できたなー」</li>
+<li>「この技の威力と攻撃の値を知っていれば、なんとなくの計算で耐えることわかったのに！」</li>
+</ul>
+<p dir="auto">そう、ルールもタイプ相性も立ち回りの基本も覚えているのに、<strong>知らないポケモン・技が多すぎたのです</strong>。<br>
+知らないということは、シングルバトルにおける6見せ時に何も考えられず、不利なじゃんけんをしているようなものです。</p>
+<p dir="auto">つまり、復帰勢の私が欲している情報は...6見せ時に</p>
+<ol dir="auto">
+<li>相手のポケモンのアイコンを爆速でググり</li>
+<li>とくせい・わざ・種族値を知って</li>
+<li>相手のパーティのタイプを俯瞰して通りやすいタイプを判断し</li>
+<li>相手の選出・コンボを予想してから</li>
+<li>自分の選出を決めるのをサポートしてくれる何か</li>
+</ol>
+<p dir="auto">だったのです。</p>
+<hr>
+<h2 dir="auto">2. 作ったもの：相手の戦術を即座に可視化するアプリ</h2>
+<p dir="auto">そこで、私を全力でサポートするmacOSアプリを自作しました。<br>
+こちらがそのデモです↓</p>
+<p dir="auto"><blockquote class="twitter-tweet" data-media-max-width="560"><p lang="ja" dir="ltr">自分と相手のポケモンの自動検出から、全通りのダメージ計算、AIによる選出・展開予想もさせました🎉<br>AIの指示通りギャラドスで物理受けしたけど、きもったまと確定急所を考慮できてなかったようで…この様です👀 <a href="https://t.co/nGXgHH9Zn3">pic.twitter.com/nGXgHH9Zn3</a></p>&mdash; くろメロン@AIエンジニア (@kuromelon257) <a href="https://twitter.com/kuromelon257/status/2044189148458934545?ref_src=twsrc%5Etfw">April 14, 2026</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p dir="auto">上記の私が欲していた情報を全て出してくれてます。</p>
+<h3 dir="auto">できること：</h3>
+<ul dir="auto">
+<li>相手ポケモンの<strong>タイプ・種族値・特性</strong>を即座に表示</li>
+<li>使用率の高い<strong>技構成</strong>をサジェスト</li>
+<li>タイプ相性から<strong>有利不利</strong>を整理</li>
+<li><strong>ダメージ計算</strong>を実施して落とせる/されるパターンを提示</li>
+<li>上記情報から<strong>相手の選出を予想し、自分の選出を提案</strong></li>
+</ul>
+<p dir="auto">プレイヤーはこのアプリに<strong>何も入力しません</strong>。ゲームを普通にプレイするだけで、裏で自動的に動きます。</p>
+<p dir="auto">動作するタイミングは<strong>6体見せの選出画面のみ</strong>です。対戦中の戦術判断やターンごとの操作には一切介入しません。</p>
+<p dir="auto">あくまで「選出前に相手を知るための情報提示」であり、バトル中のリアルタイム支援や自動化とは別物です。（私見ですがこれがフェアプレーの境かと考えています。規約・ガイドラインと照合は後述の章でお話ししてます。）</p>
+<p dir="auto">初見のポケモンでも、<strong>「知らないから負ける」をなくす</strong>のが目的のアプリなのです。</p>
+<hr>
+<h2 dir="auto">3. 仕組み：映像を読んで、AIが解析する</h2>
+<p dir="auto">手入力をなくすために、映像から直接情報を取得する設計にしました。</p>
+<pre class="notranslate"><code class="notranslate">HDMIキャプチャ → OCR → 画像分類 → データ照合 → 表示
+</code></pre>
+<ol dir="auto">
+<li><strong>映像取得</strong>：キャプチャボードでゲーム画面をMacに入力</li>
+<li><strong>OCR</strong>：「選出してください」画面を自動検出</li>
+<li><strong>画像分類</strong>：選出画面の画像からポケモンの種族を特定</li>
+<li><strong>データ照合</strong>：タイプ・種族値・特性・技構成をローカルDBから引く</li>
+<li><strong>AI利用</strong>：材料が出揃ったら判定はAIに任せる</li>
+</ol>
+<h3 dir="auto">3-1. 映像取得</h3>
+<p dir="auto"><strong>使用フレームワーク：AVFoundation</strong></p>
+<p dir="auto"><code class="notranslate">AVCaptureSession</code> でHDMIキャプチャデバイスを自動検出し、フレームを取得します。外部キャプチャボードが見つからない場合は内蔵カメラにフォールバックします。</p>
+<pre><code class="language-swift"><span class="pl-k">let</span> <span class="pl-s1">discovery</span> <span class="pl-c1">=</span> <span class="pl-smi">AVCaptureDevice</span><span class="pl-kos">.</span><span class="pl-en">DiscoverySession</span><span class="pl-kos">(</span>
+    deviceTypes<span class="pl-kos">:</span> <span class="pl-kos">[</span><span class="pl-kos">.</span>externalUnknown<span class="pl-kos">]</span><span class="pl-kos">,</span>
+    mediaType<span class="pl-kos">:</span> <span class="pl-kos">.</span>video<span class="pl-kos">,</span>
+    position<span class="pl-kos">:</span> <span class="pl-kos">.</span>unspecified
+<span class="pl-kos">)</span>
+<span class="pl-k">let</span> <span class="pl-s1">device</span> <span class="pl-c1">=</span> discovery<span class="pl-kos">.</span>devices<span class="pl-kos">.</span>first
+    <span class="pl-c1">??</span> <span class="pl-smi">AVCaptureDevice</span><span class="pl-kos">.</span><span class="pl-en">default</span><span class="pl-kos">(</span>for<span class="pl-kos">:</span> <span class="pl-kos">.</span>video<span class="pl-kos">)</span></code></pre>
+<p dir="auto">フレームはデリゲートキューで受け取り、重い処理は別キューに逃がす設計にしています。3秒ごとにサンプリングするため、CPU負荷を最小限に抑えられています。</p>
+<h3 dir="auto">3-2. OCR</h3>
+<p dir="auto"><strong>使用フレームワーク：Vision（VNRecognizeTextRequest）</strong></p>
+<p dir="auto">3秒ごとに取得したフレームに対して日本語OCRを実行します。「選出してください」というテキストが含まれているかを判定するだけなので、全文の精度より検出速度を優先しています。</p>
+<pre><code class="language-swift"><span class="pl-k">let</span> <span class="pl-s1">request</span> <span class="pl-c1">=</span> <span class="pl-en">VNRecognizeTextRequest</span> <span class="pl-kos">{</span> request<span class="pl-kos">,</span> _ <span class="pl-k">in</span>
+    <span class="pl-k">let</span> <span class="pl-s1">text</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span>request<span class="pl-kos">.</span>results <span class="pl-k">as?</span> <span class="pl-kos">[</span><span class="pl-smi">VNRecognizedTextObservation</span><span class="pl-kos">]</span> <span class="pl-c1">??</span> <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+        <span class="pl-kos">.</span><span class="pl-en">compactMap</span> <span class="pl-kos">{</span> $0<span class="pl-kos">.</span><span class="pl-en">topCandidates</span><span class="pl-kos">(</span><span class="pl-c1">1</span><span class="pl-kos">)</span><span class="pl-kos">.</span>first<span class="pl-c1"><span class="pl-c1">?</span></span><span class="pl-kos">.</span>string <span class="pl-kos">}</span>
+        <span class="pl-kos">.</span><span class="pl-en">joined</span><span class="pl-kos">(</span>separator<span class="pl-kos">:</span> <span class="pl-s">"</span><span class="pl-s">\n</span><span class="pl-s">"</span><span class="pl-kos">)</span>
+
+    <span class="pl-k">if</span> text<span class="pl-kos">.</span><span class="pl-en">contains</span><span class="pl-kos">(</span><span class="pl-s">"</span><span class="pl-s">選出してください</span><span class="pl-s">"</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-en">onBattleDetected</span><span class="pl-kos">(</span>cgImage<span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+request<span class="pl-kos">.</span>recognitionLanguages <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-s">"</span><span class="pl-s">ja-JP</span><span class="pl-s">"</span><span class="pl-kos">,</span> <span class="pl-s">"</span><span class="pl-s">en-US</span><span class="pl-s">"</span><span class="pl-kos">]</span>
+request<span class="pl-kos">.</span>recognitionLevel <span class="pl-c1">=</span> <span class="pl-kos">.</span>accurate</code></pre>
+<p dir="auto">OCRの難所は誤認識への対処でした。「選出してください」の検出は1フレームの誤読で誤発火しないよう、同じ滞在中は1回だけ解析するフラグ管理を加えています。</p>
+<p dir="auto">オンデバイスなので、実行しまくれるのがいいですね！</p>
+<h3 dir="auto">3-3. 画像分類</h3>
+<p dir="auto"><strong>使用フレームワーク：Vision（VNGenerateImageFeaturePrintRequest）</strong></p>
+<p dir="auto">選出画面の右側にある6スロットをクロップし、それぞれのスプライト画像を約210種のポケモンスプライトDBと照合します。機械学習モデルの自作は不要で、Apple Visionの特徴量ベースマッチングを使っています。</p>
+<pre><code class="language-swift">// 起動時にスプライト全件の特徴量をキャッシュ
+<span class="pl-en">func</span> buildIfNeeded<span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-k">for</span> <span class="pl-s1">url</span> <span class="pl-k">in</span> spriteURLs <span class="pl-kos">{</span>
+        <span class="pl-k">let</span> <span class="pl-s1">request</span> <span class="pl-c1">=</span> <span class="pl-en">VNGenerateImageFeaturePrintRequest</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+        <span class="pl-c1"><span class="pl-k">try</span></span> handler<span class="pl-kos">.</span><span class="pl-en">perform</span><span class="pl-kos">(</span><span class="pl-kos">[</span>request<span class="pl-kos">]</span><span class="pl-kos">)</span>
+        <span class="pl-k">let</span> <span class="pl-s1">fp</span> <span class="pl-c1">=</span> request<span class="pl-kos">.</span>results!<span class="pl-kos">.</span>first <span class="pl-k">as!</span> <span class="pl-smi">VNFeaturePrintObservation</span>
+        entries<span class="pl-kos">.</span><span class="pl-en">append</span><span class="pl-kos">(</span><span class="pl-en">Entry</span><span class="pl-kos">(</span>id<span class="pl-kos">:</span> url<span class="pl-kos">.</span>stem<span class="pl-kos">,</span> featurePrint<span class="pl-kos">:</span> fp<span class="pl-kos">)</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+// クロップ画像との距離を全件計算し最小を返す
+<span class="pl-en">func</span> match<span class="pl-kos">(</span>image<span class="pl-kos">:</span> <span class="pl-smi">CGImage</span><span class="pl-kos">)</span> <span class="pl-k">throws</span> <span class="pl-c1">-&gt;</span> <span class="pl-smi">Result</span><span class="pl-c1"><span class="pl-c1">?</span></span> <span class="pl-kos">{</span>
+    <span class="pl-k">let</span> <span class="pl-s1">queryPrint</span> <span class="pl-c1">=</span> <span class="pl-c1"><span class="pl-k">try</span></span> <span class="pl-en">featurePrint</span><span class="pl-kos">(</span>for<span class="pl-kos">:</span> image<span class="pl-kos">)</span>
+    <span class="pl-k">return</span> db<span class="pl-kos">.</span>entries<span class="pl-kos">.</span><span class="pl-en">min</span><span class="pl-kos">(</span>by<span class="pl-kos">:</span> <span class="pl-kos">{</span>
+        <span class="pl-k">var</span> <span class="pl-s1">d0</span><span class="pl-kos">:</span> <span class="pl-smi">Float</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">d1</span><span class="pl-kos">:</span> <span class="pl-smi">Float</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
+        <span class="pl-c1"><span class="pl-k">try</span><span class="pl-c1">?</span></span> $0<span class="pl-kos">.</span>featurePrint<span class="pl-kos">.</span><span class="pl-en">computeDistance</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span>d0<span class="pl-kos">,</span> to<span class="pl-kos">:</span> queryPrint<span class="pl-kos">)</span>
+        <span class="pl-c1"><span class="pl-k">try</span><span class="pl-c1">?</span></span> $1<span class="pl-kos">.</span>featurePrint<span class="pl-kos">.</span><span class="pl-en">computeDistance</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span>d1<span class="pl-kos">,</span> to<span class="pl-kos">:</span> queryPrint<span class="pl-kos">)</span>
+        <span class="pl-k">return</span> d0 <span class="pl-c1">&lt;</span> d1
+    <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">map</span> <span class="pl-kos">{</span> <span class="pl-en">Result</span><span class="pl-kos">(</span>id<span class="pl-kos">:</span> $0<span class="pl-kos">.</span>id<span class="pl-kos">,</span> distance<span class="pl-kos">:</span> <span class="pl-c1">...</span><span class="pl-kos">)</span> <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></code></pre>
+<p dir="auto">シンプルですが実用的な精度が出ました！時々失敗するのは色違いですね。色リザードンがプテラと誤認することが時々ありますが、リトライボタンでどうにか対処しました。</p>
+<p dir="auto">これもオンデバイスなので、実行しまくれるのがいいですね！</p>
+<h3 dir="auto">3-4. データ照合</h3>
+<p dir="auto"><strong>ローカルJSONから種族値・技使用率をマッピング</strong></p>
+<p dir="auto">画像からポケモンが確定したら、ローカルDBからタイプ・種族値・特性・技構成を引きます。</p>
+<p dir="auto">工夫したのは<strong>OCR誤認識への対処</strong>です。自分のチーム情報はOCRで取得するため、どうぐ名・わざ名が誤認識ありで入ってきます。その場合は、リストに最も近い文字列に倒す処理で、いい感じにアプリが認識できました。</p>
+<h3 dir="auto">3-5. AI利用</h3>
+<p dir="auto"><strong>使用モデル：Apple Intelligence / Claude Code CLI / OpenAI Codex CLI</strong></p>
+<p dir="auto">素材が揃ったら、選出アドバイスの生成をAIに委ねます。最初は <strong>Apple Intelligence（FoundationModels）</strong> を使いました。オンデバイスで動くため外部API不要・低遅延という理想的な構成でしたが、ポケモンの戦術理解という専門性の高いタスクでは出力品質が安定せず、実用には至りませんでした。</p>
+<p dir="auto">そこで最終的に <strong>Claude Code CLI</strong> と <strong>OpenAI Codex CLI</strong> をサブプロセスとして呼び出す構成に落ち着きました。プロセスをforkして標準入力にプロンプトを渡し、JSONLストリームで回答を受け取ります。</p>
+<pre><code class="language-swift">process<span class="pl-kos">.</span>executableURL <span class="pl-c1">=</span> <span class="pl-en">URL</span><span class="pl-kos">(</span>fileURLWithPath<span class="pl-kos">:</span> claudePath<span class="pl-kos">)</span>
+process<span class="pl-kos">.</span>arguments <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+    <span class="pl-s">"</span><span class="pl-s">-p</span><span class="pl-s">"</span><span class="pl-kos">,</span> prompt<span class="pl-kos">,</span>
+    <span class="pl-s">"</span><span class="pl-s">--output-format</span><span class="pl-s">"</span><span class="pl-kos">,</span> <span class="pl-s">"</span><span class="pl-s">stream-json</span><span class="pl-s">"</span><span class="pl-kos">,</span>
+    <span class="pl-s">"</span><span class="pl-s">--verbose</span><span class="pl-s">"</span><span class="pl-kos">,</span>
+    <span class="pl-s">"</span><span class="pl-s">--model</span><span class="pl-s">"</span><span class="pl-kos">,</span> model<span class="pl-kos">.</span>rawValue<span class="pl-kos">,</span>
+<span class="pl-kos">]</span></code></pre>
+<p dir="auto">AIには「相手の有力選出2パターン」「本命の相手選出3匹」「自分の推奨選出」「最も警戒すべき相手1匹」を求めます。回答末尾に必ずJSONブロックで選出をまとめさせ、UIへのマッピングを安定させています。</p>
+<p dir="auto">3バックエンドはUI上で切り替え可能にしており、Apple Intelligenceは将来のモデル改善に期待して残してあります。</p>
+<p dir="auto">APIの方はお金かかるからね...</p>
+<hr>
+<h2 dir="auto">4. 設計でこだわったこと</h2>
+<p dir="auto"><strong>AIは「判断の補助」に徹する。</strong></p>
+<p dir="auto">AIが選出を決めるわけではありません。プレイヤーが判断するための情報を、素早く、邪魔にならない形で出す。それだけです。</p>
+<p dir="auto">設計方針は3つです：</p>
+<ul dir="auto">
+<li><strong>入力をなくす</strong>：ゲーム中に何かを操作させない</li>
+<li><strong>多くの選択肢・情報を提示</strong>：あればあるだけ私は助かる派</li>
+<li><strong>ゲームの流れを止めない</strong>：ツールの存在を意識させない</li>
+</ul>
+<p dir="auto">「AIを使っている感」を出すのではなく、<strong>セカンドオピニオン的なアドバイザー</strong>を目指しました。<br>
+「こいつと俺の意見が一致したら間違いなさそう！」みたいな存在です。</p>
+<hr>
+<h2 dir="auto">5. 結果：知識不足による負けが減った</h2>
+<p dir="auto">アプリを使い始めてから、知識不足による負けが明らかに減りました。</p>
+<p dir="auto">初見のポケモンへの対応ができるようになり、6体見せの段階で構成意図が読めるようになってきました。</p>
+<p dir="auto">もちろんプレイスキルの向上もありますが、<strong>情報格差を埋めたことが大きかった</strong>と実感しています。</p>
+<h3 dir="auto">作ってわかったこと</h3>
+<p dir="auto"><strong>精度よりUXが先でした。</strong></p>
+<p dir="auto">「何か入力してください」が1つあるだけで、ツールは使われなくなります。対戦中に画面を離れる行為自体がストレスになるからです。そもそもそんな時間もないですし。</p>
+<p dir="auto">このアプリの価値は強い答えを出すことではなく、<strong>自然に使えること</strong>だと思います。</p>
+<p dir="auto">この挑戦で知識差で負けることを、技術で減らせました。その体験が、このアプリを作った一番の収穫でした。</p>
+<h3 dir="auto">応用できるかも</h3>
+<p dir="auto">オンデバイスで映像の解析をバンバン回して、AIに判断というフローは何にでも応用効くのではないかと考えています。</p>
+<p dir="auto">たとえば、将棋番組の解説させたり...、もっと世の中の役に立つ方法はあるはずです。<br>
+なにか、いい社会課題やネタを見つけたら、別の形でアプリ配信できればと思います。</p>
+<p dir="auto">ネタを磨いて、iOSDCとかにも出せると尚良いですね！！</p>
+<hr>
+<h2 dir="auto">6. このツールの立ち位置についてのお気持ち表明</h2>
+<p dir="auto">開発にあたって、Pokémon Championsの利用規約やガイドラインは確認しました。</p>
+<p dir="auto">規約で明示的に禁止されているのは「ボット・Mod・スクリプト等によってゲーム内の操作を修正・自動化すること」です。このアプリはゲームクライアントに一切触れません。HDMIで出力された映像を読み取り、手元のDBと照合して情報を表示するだけで、入力の自動化もゲームデータの改変も行っていません。</p>
+<p dir="auto">また、解析が動くのは<strong>対戦前の6体見せ画面のみ</strong>です。バトル中のターン判断や行動選択には関与せず、リアルタイムの戦術支援や操作の自動化とは設計上まったく異なります。</p>
+<p dir="auto">構造的には <strong>「攻略本を手元に開いておく」に近い</strong> です。人間が目視で確認して手動で調べることを、映像解析で素早くやっているにすぎません。</p>
+<p dir="auto">一方で「本来想定していない使用方法」という観点では、なんとも言えない状態であることは認識しています。競技の文脈では、情報へのアクセス速度そのものが有利不利になりえます。</p>
+<p dir="auto">このアプリは<strong>個人使用・非配布</strong>を前提に開発しており、公式大会での使用は想定していません。あくまで「復帰勢が新しいポケモンを覚えるための補助輪」として作ったものです。ゲーム自体を楽しむための道具として、その範囲で使うのが適切だと考えています。</p>
+<h3 dir="auto">やろうと思えば</h3>
+<p dir="auto">ここまで読んでくれた方は予想がつくと思いますが、正直なところ「ポケモンバトルの全自動化」は技術的には超余裕で実装できます👀</p>
+<p dir="auto">金策ニンフィアをはじめとするUSB-Cにコントローラー入力情報を送る仕組みを使えば、AIの判断結果に応じて情報を送るだけなので。定石通り動くだけなら、AIすらいらないですね。</p>
+<h2 dir="auto">終わりに</h2>
+<p dir="auto">ご質問等は𝕏にお気軽にどうぞ🙇</p>
+    </div>
+    <!-- 遅延挿入用シェアボタンプレースホルダ -->
+    <div id="deferred-share" data-share-url="https://kuromelon.com/blog/7/" data-share-text="%E7%9B%B8%E6%89%8B%E3%81%AE%E6%88%A6%E8%A1%93%E3%81%8A%E3%81%BF%E3%81%A8%E3%81%8A%E3%81%97%EF%BC%81%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%83%81%E3%83%A3%E3%83%B3%E3%83%94%E3%82%AA%E3%83%B3%E3%82%BAAI%E6%94%AF%E6%8F%B4%E3%82%A2%E3%83%97%E3%83%AA%E3%82%92%E9%96%8B%E7%99%BA%E3%81%97%E3%81%A6%E3%80%81%E5%BE%A9%E5%B8%B0%E5%8B%A2%E3%81%A7%E3%82%82%E6%88%A6%E3%81%88%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%9F%E8%A9%B1%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0"></div>
+    
+    <!-- 記事下部の共有ボタン -->
+    <div class="share-buttons bottom-share">
+      <p class="share-cta">この記事が役に立ったら、ぜひシェアしてください！</p>
+      <a href="https://twitter.com/intent/tweet?text=%E7%9B%B8%E6%89%8B%E3%81%AE%E6%88%A6%E8%A1%93%E3%81%8A%E3%81%BF%E3%81%A8%E3%81%8A%E3%81%97%EF%BC%81%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%83%81%E3%83%A3%E3%83%B3%E3%83%94%E3%82%AA%E3%83%B3%E3%82%BAAI%E6%94%AF%E6%8F%B4%E3%82%A2%E3%83%97%E3%83%AA%E3%82%92%E9%96%8B%E7%99%BA%E3%81%97%E3%81%A6%E3%80%81%E5%BE%A9%E5%B8%B0%E5%8B%A2%E3%81%A7%E3%82%82%E6%88%A6%E3%81%88%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%9F%E8%A9%B1%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F7%2F" target="_blank" rel="noopener" class="share-btn twitter-share large">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+    </div>
+  </article>
+</main>
+
+<script>
+// 遅延シェアボタン挿入（最初の段落後 or 600px表示後）
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const placeholder = document.getElementById('deferred-share');
+    if (!placeholder) return;
+    const container = document.getElementById('post-content');
+    if (!container) return;
+    const firstParagraph = container.querySelector('p, h2, h3, h4, h5, h6');
+    const inject = () => {
+      if (placeholder.dataset.injected) return;
+      const div = document.createElement('div');
+      div.className = 'share-buttons inline-share';
+      div.innerHTML = '<span class="share-label">シェア:</span>' +
+        '<a href="https://twitter.com/intent/tweet?text=%E7%9B%B8%E6%89%8B%E3%81%AE%E6%88%A6%E8%A1%93%E3%81%8A%E3%81%BF%E3%81%A8%E3%81%8A%E3%81%97%EF%BC%81%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%83%81%E3%83%A3%E3%83%B3%E3%83%94%E3%82%AA%E3%83%B3%E3%82%BAAI%E6%94%AF%E6%8F%B4%E3%82%A2%E3%83%97%E3%83%AA%E3%82%92%E9%96%8B%E7%99%BA%E3%81%97%E3%81%A6%E3%80%81%E5%BE%A9%E5%B8%B0%E5%8B%A2%E3%81%A7%E3%82%82%E6%88%A6%E3%81%88%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%9F%E8%A9%B1%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F7%2F" target="_blank" rel="noopener" class="share-btn twitter-share">' +
+        '<i class="fab fa-x-twitter"></i> X</a>' +
+        '<button onclick="copyToClipboard('https://kuromelon.com/blog/7/')" class="share-btn copy-link">' +
+        '<i class="fas fa-link"></i> コピー</button>';
+      if (firstParagraph && firstParagraph.parentNode) {
+        firstParagraph.parentNode.insertBefore(div, firstParagraph.nextSibling);
+      } else {
+        container.insertBefore(div, container.firstChild);
+      }
+      placeholder.dataset.injected = '1';
+    };
+    // 1) INTERSECTION: ユーザが本文領域をスクロールで見始めたら
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { inject(); io.disconnect(); } });
+    }, { rootMargin: '0px 0px -60% 0px' });
+    if (firstParagraph) io.observe(firstParagraph);
+    // 2) フォールバック: 2.5秒後に未挿入なら挿入
+    setTimeout(inject, 2500);
+  } catch (e) { console.warn('share inject failed', e); }
+});
+// リンクコピー機能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    // コピー成功時の視覚的フィードバック
+    const btn = event.target.closest('.copy-link');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> コピー完了！';
+    btn.style.background = 'var(--blog-success)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(function(err) {
+    console.error('コピーに失敗しました: ', err);
+    alert('リンクのコピーに失敗しました');
+  });
+}
+</script>
+
+<footer>
+  <p>&copy; 2025 Kuromelon</p>
+</footer>
+</body>
+</html>
