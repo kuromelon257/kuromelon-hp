@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2009年に描いた漫画『クリスマスの逆襲』を公開します | くろメロンのブログ</title>
+  <meta name="description" content="くろメロンの技術ブログ。iOS開発、Swift、SwiftUI、プログラミングの最新情報とノウハウを発信しています。">
+  <meta name="keywords" content="くろメロン,くろメロンのブログ,iOS開発,Swift,SwiftUI,プログラミング,技術ブログ,アプリ開発">
+  <meta name="author" content="くろメロン">
+  
+  <!-- Favicon / PWA Icons -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Kuromelon" />
+  <link rel="manifest" href="/site.webmanifest" />
+  
+  <!-- PWA・テーマ設定 -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="msapplication-TileColor" content="#0a0a0a">
+  <meta name="msapplication-TileImage" content="/apple-touch-icon.png">
+  
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <link rel="canonical" href="https://kuromelon.com/blog/8/">
+  <link rel="alternate" type="application/rss+xml" title="くろメロンのブログ" href="https://kuromelon.com/rss.xml">
+  <link rel="stylesheet" href="/blog/blog.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- シンタックスハイライト - highlight.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/swift.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // GitHubのスタイルをリセットしてからhighlight.jsを適用
+      document.querySelectorAll('pre code').forEach(function(block) {
+        // GitHubのspanスタイルをクリア
+        const spans = block.querySelectorAll('span');
+        spans.forEach(span => {
+          span.className = '';
+          span.style = '';
+        });
+        
+        // highlight.jsを手動で適用
+        if (block.className.includes('language-')) {
+          hljs.highlightElement(block);
+        }
+        
+        // 言語ラベルを追加
+        const language = block.className.match(/language-(w+)/);
+        if (language) {
+          const label = document.createElement('div');
+          label.className = 'code-language-label';
+          label.textContent = language[1].toUpperCase();
+          block.parentNode.insertBefore(label, block);
+        }
+      });
+      
+      // 残りのコードブロックも処理
+      hljs.highlightAll();
+    });
+  </script>
+  
+  <meta name="description" content="はじめに 2009年に描いた短編漫画『クリスマスの逆襲』を、ここに公開します。 当時から「いつかこの漫画がアニメになったら…」と夢見ていた作品です。 17年たった今年、その夢がやっと叶い、アニメにすることができました🎄 アニメを見てくれた方にも、原作を読んでもらえたらうれしいです。 原作『クリスマスの逆襲』（全10ペ 生成AI">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="2009年に描いた漫画『クリスマスの逆襲』を公開します">
+  <meta property="og:description" content="はじめに 2009年に描いた短編漫画『クリスマスの逆襲』を、ここに公開します。 当時から「いつかこの漫画がアニメになったら…」と夢見ていた作品です。 17年たった今年、その夢がやっと叶い、アニメにすることができました🎄 アニメを見てくれた方にも、原作を読んでもらえたらうれしいです。 原作『クリスマスの逆襲』（全10ペ 生成AI">
+  <meta property="og:url" content="https://kuromelon.com/blog/8/">
+  <meta property="og:image" content="https://kuromelon.com/assets/blog/christmas-no-gyakushu/1.jpg">
+  <meta property="og:site_name" content="くろメロンのブログ">
+  <meta property="article:published_time" content="2026-10-30T08:34:37.000Z">
+  <meta property="article:modified_time" content="2026-10-30T08:34:37.000Z">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2009年に描いた漫画『クリスマスの逆襲』を公開します">
+  <meta name="twitter:description" content="はじめに 2009年に描いた短編漫画『クリスマスの逆襲』を、ここに公開します。 当時から「いつかこの漫画がアニメになったら…」と夢見ていた作品です。 17年たった今年、その夢がやっと叶い、アニメにすることができました🎄 アニメを見てくれた方にも、原作を読んでもらえたらうれしいです。 原作『クリスマスの逆襲』（全10ペ 生成AI">
+  <meta name="twitter:image" content="https://kuromelon.com/assets/blog/christmas-no-gyakushu/1.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"2009年に描いた漫画『クリスマスの逆襲』を公開します","datePublished":"2026-10-30T08:34:37.000Z","dateModified":"2026-10-30T08:34:37.000Z","mainEntityOfPage":"https://kuromelon.com/blog/8/","url":"https://kuromelon.com/blog/8/","author":{"@type":"Person","name":"くろメロン","url":"https://kuromelon.com/","sameAs":["https://github.com/kuromelon257"]},"publisher":{"@type":"Organization","name":"くろメロンのブログ","alternateName":"くろメロン技術ブログ","logo":{"@type":"ImageObject","url":"https://kuromelon.com/assets/images/chackrun_thumb.jpg"},"sameAs":["https://kuromelon.com","https://kuromelon.com/blog/","https://kuromelon.com/chackrun/","https://github.com/kuromelon257"]},"image":"https://kuromelon.com/assets/blog/christmas-no-gyakushu/1.jpg","description":"はじめに 2009年に描いた短編漫画『クリスマスの逆襲』を、ここに公開します。 当時から「いつかこの漫画がアニメになったら…」と夢見ていた作品です。 17年たった今年、その夢がやっと叶い、アニメにすることができました🎄 アニメを見てくれた方にも、原作を読んでもらえたらうれしいです。 原作『クリスマスの逆襲』（全10ペ 生成AI","keywords":"生成AI,iOS,Swift,ゲーム開発,技術ブログ"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://kuromelon.com/"},{"@type":"ListItem","position":2,"name":"ブログ","item":"https://kuromelon.com/blog/"},{"@type":"ListItem","position":3,"name":"2009年に描いた漫画『クリスマスの逆襲』を公開します","item":"https://kuromelon.com/blog/8/"}]}</script>
+</head>
+<body>
+<header>
+  <nav>
+    <a href="/">Home</a> | <a href="/blog/">Blog</a>
+  </nav>
+</header>
+
+<main class="container">
+  <nav class="breadcrumb" aria-label="breadcrumb" style="font-size:0.85rem;margin:0 0 1rem;opacity:0.85;">
+    <a href="https://kuromelon.com/">ホーム</a> &gt; <a href="https://kuromelon.com/blog/">ブログ</a> &gt; <span>2009年に描いた漫画『クリスマスの逆襲』を公開します</span>
+  </nav>
+  <article class="post">
+    <h1>2009年に描いた漫画『クリスマスの逆襲』を公開します</h1>
+    <p class="meta">2026-10-30 · <a href="https://github.com/kuromelon257/kuromelon-hp/issues/8" target="_blank" rel="noopener">Issue #8</a></p>
+    
+    <div class="content" id="post-content">
+      <h2 dir="auto">はじめに</h2>
+<p dir="auto">2009年に描いた短編漫画『クリスマスの逆襲』を、ここに公開します。</p>
+<p dir="auto">当時から「いつかこの漫画がアニメになったら…」と夢見ていた作品です。<br>
+17年たった今年、その夢がやっと叶い、アニメにすることができました🎄</p>
+<p dir="auto">アニメを見てくれた方にも、原作を読んでもらえたらうれしいです。</p>
+<h2 dir="auto">原作『クリスマスの逆襲』（全10ページ）</h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/006894761c25aec58f3e314fe88c0a1355fa0bc1d7f6cd5b15d6d26cb858fdef/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f312e6a7067"><img src="https://camo.githubusercontent.com/006894761c25aec58f3e314fe88c0a1355fa0bc1d7f6cd5b15d6d26cb858fdef/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f312e6a7067" alt="クリスマスの逆襲 1ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/1.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/81d7232cce4f4b471cbd65a7f5fc8938977255583021af390db6df7b37200e10/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f322e6a7067"><img src="https://camo.githubusercontent.com/81d7232cce4f4b471cbd65a7f5fc8938977255583021af390db6df7b37200e10/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f322e6a7067" alt="クリスマスの逆襲 2ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/2.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/eaa4f89eb66c1cb638f313f3a8ff41487825ca9296ee2ae2c82b32566ef9cb4a/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f332e6a7067"><img src="https://camo.githubusercontent.com/eaa4f89eb66c1cb638f313f3a8ff41487825ca9296ee2ae2c82b32566ef9cb4a/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f332e6a7067" alt="クリスマスの逆襲 3ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/3.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/18a4225dc8f46e69064a6cdc665c0500742c4209730ee695caaee37af5668e7b/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f342e6a7067"><img src="https://camo.githubusercontent.com/18a4225dc8f46e69064a6cdc665c0500742c4209730ee695caaee37af5668e7b/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f342e6a7067" alt="クリスマスの逆襲 4ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/4.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6de7ad4dbf9f3920c1093da4f8c606016fcca52a712fcaf36d0f05442242188d/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f352e6a7067"><img src="https://camo.githubusercontent.com/6de7ad4dbf9f3920c1093da4f8c606016fcca52a712fcaf36d0f05442242188d/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f352e6a7067" alt="クリスマスの逆襲 5ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/5.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b3ac4c61ee5d966558abe705cb7d1393f93c2554e9b892b0cbe5b74f259ae6d2/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f362e6a7067"><img src="https://camo.githubusercontent.com/b3ac4c61ee5d966558abe705cb7d1393f93c2554e9b892b0cbe5b74f259ae6d2/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f362e6a7067" alt="クリスマスの逆襲 6ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/6.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5e1a365461a1da44c44c573c31bfa8c30586b1077ab12c144f2047587e3fca7d/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f372e6a7067"><img src="https://camo.githubusercontent.com/5e1a365461a1da44c44c573c31bfa8c30586b1077ab12c144f2047587e3fca7d/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f372e6a7067" alt="クリスマスの逆襲 7ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/7.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/116c258f836cb52d31ae22c4b19a7b353595193b755e6a8be93309fdfa487372/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f382e6a7067"><img src="https://camo.githubusercontent.com/116c258f836cb52d31ae22c4b19a7b353595193b755e6a8be93309fdfa487372/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f382e6a7067" alt="クリスマスの逆襲 8ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/8.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/bf460e00a6f2b9827653d5b3eb1db63a57b1cfa6f65b4ebb2f4538941e8e3dfd/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f392e6a7067"><img src="https://camo.githubusercontent.com/bf460e00a6f2b9827653d5b3eb1db63a57b1cfa6f65b4ebb2f4538941e8e3dfd/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f392e6a7067" alt="クリスマスの逆襲 9ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/9.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3b22f46c23c0a46f6e7f678895807554aadc5a494cebee10a2636fd895ecd394/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f31302e6a7067"><img src="https://camo.githubusercontent.com/3b22f46c23c0a46f6e7f678895807554aadc5a494cebee10a2636fd895ecd394/68747470733a2f2f6b75726f6d656c6f6e2e636f6d2f6173736574732f626c6f672f6368726973746d61732d6e6f2d6779616b757368752f31302e6a7067" alt="クリスマスの逆襲 10ページ" width="100%" data-canonical-src="https://kuromelon.com/assets/blog/christmas-no-gyakushu/10.jpg" style="max-width: 100%;"></a></p>
+<p dir="auto">PDF でまとめて読みたい方はこちら：<a href="https://kuromelon.com/assets/blog/christmas-no-gyakushu/christmas-no-gyakushu.pdf" rel="nofollow">クリスマスの逆襲（PDF）</a></p>
+<h2 dir="auto">さいごに</h2>
+<p dir="auto">読んでくださった方、ありがとうございます！<br>
+感想をもらえるとめちゃくちゃ喜びます🙏</p>
+    </div>
+    <!-- 遅延挿入用シェアボタンプレースホルダ -->
+    <div id="deferred-share" data-share-url="https://kuromelon.com/blog/8/" data-share-text="2009%E5%B9%B4%E3%81%AB%E6%8F%8F%E3%81%84%E3%81%9F%E6%BC%AB%E7%94%BB%E3%80%8E%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9%E3%81%AE%E9%80%86%E8%A5%B2%E3%80%8F%E3%82%92%E5%85%AC%E9%96%8B%E3%81%97%E3%81%BE%E3%81%99%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0"></div>
+    
+    <!-- 記事下部の共有ボタン -->
+    <div class="share-buttons bottom-share">
+      <p class="share-cta">この記事が役に立ったら、ぜひシェアしてください！</p>
+      <a href="https://twitter.com/intent/tweet?text=2009%E5%B9%B4%E3%81%AB%E6%8F%8F%E3%81%84%E3%81%9F%E6%BC%AB%E7%94%BB%E3%80%8E%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9%E3%81%AE%E9%80%86%E8%A5%B2%E3%80%8F%E3%82%92%E5%85%AC%E9%96%8B%E3%81%97%E3%81%BE%E3%81%99%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F8%2F" target="_blank" rel="noopener" class="share-btn twitter-share large">
+        <i class="fab fa-x-twitter"></i> Xでシェア
+      </a>
+    </div>
+  </article>
+</main>
+
+<script>
+// 遅延シェアボタン挿入（最初の段落後 or 600px表示後）
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const placeholder = document.getElementById('deferred-share');
+    if (!placeholder) return;
+    const container = document.getElementById('post-content');
+    if (!container) return;
+    const firstParagraph = container.querySelector('p, h2, h3, h4, h5, h6');
+    const inject = () => {
+      if (placeholder.dataset.injected) return;
+      const div = document.createElement('div');
+      div.className = 'share-buttons inline-share';
+      div.innerHTML = '<span class="share-label">シェア:</span>' +
+        '<a href="https://twitter.com/intent/tweet?text=2009%E5%B9%B4%E3%81%AB%E6%8F%8F%E3%81%84%E3%81%9F%E6%BC%AB%E7%94%BB%E3%80%8E%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9%E3%81%AE%E9%80%86%E8%A5%B2%E3%80%8F%E3%82%92%E5%85%AC%E9%96%8B%E3%81%97%E3%81%BE%E3%81%99%20%7C%20%E3%81%8F%E3%82%8D%E3%83%A1%E3%83%AD%E3%83%B3%E3%81%AE%E3%83%96%E3%83%AD%E3%82%B0&url=https%3A%2F%2Fkuromelon.com%2Fblog%2F8%2F" target="_blank" rel="noopener" class="share-btn twitter-share">' +
+        '<i class="fab fa-x-twitter"></i> X</a>' +
+        '<button onclick="copyToClipboard('https://kuromelon.com/blog/8/')" class="share-btn copy-link">' +
+        '<i class="fas fa-link"></i> コピー</button>';
+      if (firstParagraph && firstParagraph.parentNode) {
+        firstParagraph.parentNode.insertBefore(div, firstParagraph.nextSibling);
+      } else {
+        container.insertBefore(div, container.firstChild);
+      }
+      placeholder.dataset.injected = '1';
+    };
+    // 1) INTERSECTION: ユーザが本文領域をスクロールで見始めたら
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { inject(); io.disconnect(); } });
+    }, { rootMargin: '0px 0px -60% 0px' });
+    if (firstParagraph) io.observe(firstParagraph);
+    // 2) フォールバック: 2.5秒後に未挿入なら挿入
+    setTimeout(inject, 2500);
+  } catch (e) { console.warn('share inject failed', e); }
+});
+// リンクコピー機能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    // コピー成功時の視覚的フィードバック
+    const btn = event.target.closest('.copy-link');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> コピー完了！';
+    btn.style.background = 'var(--blog-success)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(function(err) {
+    console.error('コピーに失敗しました: ', err);
+    alert('リンクのコピーに失敗しました');
+  });
+}
+</script>
+
+<footer>
+  <p>&copy; 2025 Kuromelon</p>
+</footer>
+</body>
+</html>
